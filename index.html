@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>KinBird — Electrician Install Guide</title>
+<style>
+:root{
+  --ink:#12211c; --ink2:#4a5c55; --line:#dce3e0; --bg:#f6f8f7; --card:#ffffff;
+  --green:#0f3d2e; --accent:#1f7a5c; --amber:#a86400; --red:#9b2c2c; --blue:#1f5f7a;
+  --mono:ui-monospace,'SF Mono',Menlo,monospace;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding-bottom:70px}
+header{position:sticky;top:0;z-index:50;background:var(--green);color:#fff;padding:12px 16px 10px;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+header h1{margin:0;font-size:17px;font-weight:700}
+header p{margin:2px 0 0;font-size:12px;opacity:.8}
+.bar{height:8px;background:rgba(255,255,255,.2);border-radius:5px;margin-top:8px;overflow:hidden}
+.bar>i{display:block;height:100%;width:0;background:#7ee0b4;transition:width .3s}
+.pct{font:700 12px var(--mono);margin-top:4px}
+.wrap{max-width:820px;margin:0 auto;padding:14px}
+.rule0{background:#fff4f4;border:2px solid var(--red);border-radius:12px;padding:14px 16px;margin:12px 0}
+.rule0 b{color:var(--red)}
+.bn{display:block;margin-top:6px;font-size:14px;color:var(--ink2);background:#f0f4f2;border-radius:8px;padding:8px 10px}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;margin:14px 0;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.head{padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none}
+.head .num{flex:0 0 34px;height:34px;border-radius:9px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font:700 15px var(--mono)}
+.head .t{flex:1}
+.head .t h2{margin:0;font-size:16px}
+.head .t small{color:var(--ink2);font-size:12.5px}
+.head .chev{font-size:20px;color:var(--ink2);transition:transform .2s}
+section.open .chev{transform:rotate(90deg)}
+.body{display:none;padding:0 16px 16px}
+section.open .body{display:block}
+.goal{background:#f2f8fb;border-left:4px solid var(--blue);padding:9px 12px;border-radius:0 8px 8px 0;margin:6px 0 12px;font-size:14px}
+.term{background:#12211c;color:#e8f0ec;border-radius:10px;padding:12px 14px;font:13px/1.7 var(--mono);white-space:pre-wrap;margin:10px 0;overflow-x:auto}
+.term b{color:#7ee0b4}
+.term .x{color:#ff9b9b}
+h3{margin:16px 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--accent)}
+ul{margin:6px 0;padding-left:20px}li{margin:5px 0;font-size:14.5px}
+.warn{background:#fffaf2;border-left:4px solid var(--amber);padding:9px 12px;border-radius:0 8px 8px 0;margin:10px 0;font-size:14px}
+.stop{background:#fdf3f3;border-left:4px solid var(--red);padding:9px 12px;border-radius:0 8px 8px 0;margin:10px 0;font-size:14px}
+.stop b{color:var(--red)}
+label.step{display:flex;gap:11px;align-items:flex-start;padding:11px;margin:7px 0;background:#f6f8f7;border:1px solid var(--line);border-radius:10px;cursor:pointer}
+label.step input{width:22px;height:22px;margin:1px 0 0;flex:0 0 auto;accent-color:var(--accent)}
+label.step span{flex:1;font-size:14.5px}
+label.step input:checked ~ span{color:var(--ink2);text-decoration:line-through}
+.note{font-size:13.5px;color:var(--ink2);margin:8px 0 0}
+.note.bn{background:#f0f4f2;border-radius:8px;padding:8px 10px;margin-top:6px}
+.pill{display:inline-block;font:700 10px var(--mono);padding:2px 7px;border-radius:20px;background:#e3f2ea;color:#1a6b4f;margin-left:6px}
+footer{max-width:820px;margin:20px auto;padding:0 14px;color:var(--ink2);font-size:12.5px;text-align:center}
+.reset{display:block;width:100%;margin:16px 0;padding:12px;background:#fff;border:1px solid var(--red);color:var(--red);border-radius:10px;font-weight:600;font-size:14px}
+.call{position:fixed;bottom:0;left:0;right:0;background:var(--green);color:#fff;text-align:center;padding:13px;font-weight:700;font-size:15px;text-decoration:none;box-shadow:0 -2px 10px rgba(0,0,0,.15);z-index:60}
+</style>
+</head>
+<body>
+<header>
+  <h1>KinBird — Install Guide 🦜</h1>
+  <p>Electrician wiring • tap a section • check as you go</p>
+  <div class="bar"><i id="bar"></i></div>
+  <div class="pct" id="pct">0% done</div>
+</header>
+
+<div class="wrap">
+
+<div class="rule0">
+  <b>RULE 0 — if anything is unclear, STOP and call Ayaan. Never guess a wire.</b>
+  <span class="bn">বুঝতে না পারলে থামুন, আমাকে ফোন দিন। আন্দাজে তার দিবেন না।</span>
+  <div class="note" style="margin-top:8px"><b>Apps:</b> Touch panels = Tuya/Smart Life · Sonoff (R4 + TH) = eWeLink · 2.4GHz WiFi only · WiFi NOT needed to wire today.</div>
+</div>
+
+<!-- ============ 1 ============ -->
+<section>
+  <div class="head"><div class="num">1</div><div class="t"><h2>Room 1 Lights <span class="pill">4-GANG</span></h2><small>7 lights · 3 circuits · 40W each</small></div><div class="chev">›</div></div>
+  <div class="body">
+    <div class="goal"><b>Goal:</b> control all Room 1 lights by wall-touch AND phone. Auto 07:00–19:30 later.</div>
+    <div style="background:#eef7f2;border-left:4px solid var(--accent);padding:9px 12px;border-radius:0 8px 8px 0;margin:10px 0;font-size:14px"><b>📍 WHERE TO PUT IT:</b> Mount the 4-Gang panel on the wall <b>beside the Room 1 door</b>, at normal switch height (~120&nbsp;cm), so you reach it as you walk in. Do NOT place it behind where a cage rack will stand.
+    <div class="note bn" style="margin-top:6px"><b>BN:</b> ৪-গ্যাং প্যানেলটি <b>রুম ১ এর দরজার পাশে</b>, স্বাভাবিক সুইচ উচ্চতায় (~১২০ সেমি) লাগান, যাতে ঢুকেই হাতের কাছে পান। খাঁচার পেছনে লাগাবেন না।</div></div>
+    <div class="term">DEVICE: WiFi 4-Gang Touch Panel
+Terminals:  <b>N in</b>   <b>L in</b>   <b>L1 out</b>  <b>L2 out</b>  <b>L3 out</b>  <b>L4 out</b>
+
+  Mains LIVE     -> <b>L in</b>
+  Mains NEUTRAL  -> <b>N in</b>   << PANEL DEAD WITHOUT NEUTRAL
+  Light circuit 1 -> <b>L1 out</b>
+  Light circuit 2 -> <b>L2 out</b>
+  Light circuit 3 -> <b>L3 out</b>
+  <span class="x">L4 out -> LEAVE EMPTY (spare)</span></div>
+    <h3>Keep in mind</h3>
+    <ul>
+      <li>Max 800W per gang — our load ~120W each. Safe.</li>
+      <li>The panel IS the switch — touch to toggle. Works without WiFi.</li>
+      <li>Panel body is THICK — use a <b>deep back-box</b> or it won't close.</li>
+    </ul>
+    <div class="stop"><b>NEUTRAL MUST be at this box.</b> If the board has no neutral, run one before wiring. This is the #1 blocker.</div>
+    <div class="note bn"><b>BN:</b> লাইভ L-in এ, নিউট্রাল N-in এ (নিউট্রাল লাগবেই), তিনটা লাইট লাইন L1 L2 L3 তে, L4 খালি। গভীর বক্স লাগবে।</div>
+    <h3>Steps</h3>
+    <label class="step"><input type="checkbox" data-k="1a"><span>Power OFF at the main</span></label>
+    <label class="step"><input type="checkbox" data-k="1b"><span>Confirm neutral is present in the box (run one if missing)</span></label>
+    <label class="step"><input type="checkbox" data-k="1c"><span>Fit a deep back-box</span></label>
+    <label class="step"><input type="checkbox" data-k="1d"><span>Wire L in, N in, and 3 light circuits to L1/L2/L3</span></label>
+    <label class="step"><input type="checkbox" data-k="1e"><span>Power ON → touch each button → all lights toggle</span></label>
+  </div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section>
+  <div class="head"><div class="num">2</div><div class="t"><h2>Room 2 Lights <span class="pill">2-GANG</span></h2><small>4 lights · 2 circuits</small></div><div class="chev">›</div></div>
+  <div class="body">
+    <div class="goal"><b>Goal:</b> control Room 2 lights by wall-touch AND phone. Mount the panel INSIDE Room 2.</div>
+    <div style="background:#eef7f2;border-left:4px solid var(--accent);padding:9px 12px;border-radius:0 8px 8px 0;margin:10px 0;font-size:14px"><b>📍 WHERE TO PUT IT:</b> Mount the 2-Gang panel <b>beside the Room 2 door</b>, ~120&nbsp;cm high, so Room 2 keeps its own wall switch.
+    <div class="note bn" style="margin-top:6px"><b>BN:</b> ২-গ্যাং প্যানেলটি <b>রুম ২ এর দরজার পাশে</b> ~১২০ সেমি উচ্চতায় লাগান, যাতে রুম ২ এর নিজের সুইচ থাকে।</div></div>
+    <div class="term">DEVICE: WiFi 2-Gang Touch Panel
+Terminals:  <b>N in</b>   <b>L in</b>   <b>L1 out</b>  <b>L2 out</b>
+
+  Mains LIVE     -> <b>L in</b>
+  Mains NEUTRAL  -> <b>N in</b>   << NEEDS NEUTRAL
+  Light circuit 1 -> <b>L1 out</b>
+  Light circuit 2 -> <b>L2 out</b></div>
+    <ul>
+      <li>Same rules as Room 1. Deep back-box.</li>
+      <li>Mount it inside Room 2 so that room keeps its own wall switch.</li>
+    </ul>
+    <div class="note bn"><b>BN:</b> রুম ১ এর মতোই, শুধু দুইটা লাইন (L1 L2)। নিউট্রাল লাগবে। প্যানেল রুম ২ এর ভিতরে লাগান।</div>
+    <label class="step"><input type="checkbox" data-k="2a"><span>Power OFF</span></label>
+    <label class="step"><input type="checkbox" data-k="2b"><span>Confirm neutral + deep box</span></label>
+    <label class="step"><input type="checkbox" data-k="2c"><span>Wire L in, N in, L1, L2</span></label>
+    <label class="step"><input type="checkbox" data-k="2d"><span>Power ON → test touch toggles both circuits</span></label>
+  </div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section>
+  <div class="head"><div class="num">3</div><div class="t"><h2>Jali (GFC) Fans ×3 <span class="pill">BASIC R4</span></h2><small>2 in Room 1 · 1 in Room 2</small></div><div class="chev">›</div></div>
+  <div class="body">
+    <div class="goal"><b>Goal:</b> air circulation on a timer. On/off only.</div>
+    <div style="background:#eef7f2;border-left:4px solid var(--accent);padding:9px 12px;border-radius:0 8px 8px 0;margin:10px 0;font-size:14px"><b>📍 WHERE TO PUT IT:</b> Each Basic R4 goes in a small surface box on the <b>WALL, high up near its own jali fan</b>. Never inside the ceiling void (too hot).
+    <div class="note bn" style="margin-top:6px"><b>BN:</b> প্রতিটা Basic R4 তার নিজের জালি ফ্যানের কাছে <b>দেয়ালে উঁচুতে</b> ছোট বক্সে লাগান। সিলিং ভয়েডের ভিতরে না (বেশি গরম)।</div></div>
+    <div class="term">DEVICE: Sonoff Basic R4  (one per fan)  10A / 2200W
+Terminals:  <b>L in</b>  <b>N in</b>  <b>L out</b>  <b>N out</b>  +  <b>S1  S2</b> (switch)
+
+  Mains LIVE     -> <b>L in</b>
+  Mains NEUTRAL  -> <b>N in</b>
+  Fan LIVE       -> <b>L out</b>
+  Fan NEUTRAL    -> <b>N out</b>
+  Old wall switch (2 wires) -> <b>S1</b> and <b>S2</b></div>
+    <div class="stop"><b>S1 / S2 are LOW VOLTAGE ONLY.</b> Never put mains, neutral or earth on S1/S2. If unsure, leave them empty — the fan still runs from the app.</div>
+    <div class="warn"><b>Mount the R4 in a surface box on the WALL. NEVER in the ceiling void</b> (void gets 50°C, device max 40°C).</div>
+    <div class="note bn"><b>BN:</b> In এ মেইন, Out এ ফ্যান, পুরানো সুইচের দুই তার S1/S2 তে। S1/S2 তে কখনো মেইন লাইন না। বক্স দেয়ালে, সিলিং এ না।</div>
+    <label class="step"><input type="checkbox" data-k="3a"><span>Power OFF</span></label>
+    <label class="step"><input type="checkbox" data-k="3b"><span>Fan 1 (Room 1): L/N in from mains, L/N out to fan</span></label>
+    <label class="step"><input type="checkbox" data-k="3c"><span>Fan 2 (Room 1): same</span></label>
+    <label class="step"><input type="checkbox" data-k="3d"><span>Fan 3 (Room 2): same</span></label>
+    <label class="step"><input type="checkbox" data-k="3e"><span>Wall switch wires to S1/S2 (low voltage only)</span></label>
+    <label class="step"><input type="checkbox" data-k="3f"><span>Power ON → each fan runs + manual switch works</span></label>
+  </div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section>
+  <div class="head"><div class="num">4</div><div class="t"><h2>Exhaust Fans ×2 <span class="pill">TH ELITE THR320D</span></h2><small>1 per room · 45W · blows OUT</small></div><div class="chev">›</div></div>
+  <div class="body">
+    <div class="goal"><b>Goal:</b> pull humid/stale air OUT on a timer + read temp &amp; humidity + log 6 months of data + phone alerts.</div>
+    <div style="background:#eef7f2;border-left:4px solid var(--accent);padding:9px 12px;border-radius:0 8px 8px 0;margin:10px 0;font-size:14px"><b>📍 WHERE TO PUT IT:</b> The <b>exhaust FAN goes in the window</b> (high, blowing out). The <b>TH Elite box goes on a SIDE WALL, mid-room, chest height (~130&nbsp;cm)</b> where you can read the LCD — NOT under the window, NOT beside the fan. Keep it near where the sensor must hang (cable is short).
+    <div class="note bn" style="margin-top:6px"><b>BN:</b> <b>এক্সহস্ট ফ্যান জানালায়</b> (উঁচুতে, বাইরের দিকে বাতাস)। <b>TH Elite বক্স পাশের দেয়ালে, রুমের মাঝামাঝি, বুক সমান উচ্চতায় (~১৩০ সেমি)</b> লাগান যাতে স্ক্রিন দেখা যায় — জানালার নিচে না, ফ্যানের পাশে না। সেন্সরের কাছে রাখুন (তার ছোট)।</div></div>
+    <div class="stop"><b>USE THE MAINS OUTPUT (L out / N out) FOR THE FAN. Leave the NO/NC/COM dry-contact EMPTY.</b> (Confirmed from SONOFF official docs.)</div>
+    <div class="term">DEVICE: Sonoff TH Elite <b>THR320D</b>  (+ THS01 sensor)  20A relay
+
+  Mains LIVE     -> <b>L in</b>
+  Mains NEUTRAL  -> <b>N in</b>
+  Exhaust fan LIVE    -> <b>L out</b>
+  Exhaust fan NEUTRAL -> <b>N out</b>
+  <span class="x">NO / NC / COM -> LEAVE EMPTY (dry contact, not used)</span>
+  THS01 sensor  -> plug into the <b>RJ9 "Sensor"</b> port</div>
+    <h3>Fan install</h3>
+    <ul>
+      <li>Fan blows <b>OUT</b>. Never reverse.</li>
+      <li>Backdraft louver + insect mesh on the OUTSIDE.</li>
+      <li>Vent to OUTDOORS — never into the ceiling void.</li>
+      <li>Room 1 fan goes in the window board.</li>
+    </ul>
+    <div class="warn"><b>Device max 40°C.</b> Mount the TH Elite on the WALL via its back bracket, mid-room at chest height. NOT in the void.</div>
+    <div class="note bn"><b>BN:</b> L in/N in এ মেইন, L out/N out এ এক্সহস্ট ফ্যান। কালো NO/NC/COM ব্লক ফ্যানের জন্য না, খালি রাখুন। সেন্সর RJ9 পোর্টে লাগান। ফ্যান বাইরের দিকে বাতাস ঠেলবে, লউভার + জাল বাইরে।</div>
+    <label class="step"><input type="checkbox" data-k="4a"><span>Power OFF</span></label>
+    <label class="step"><input type="checkbox" data-k="4b"><span>Room 1: L/N in from mains, L/N out to exhaust fan</span></label>
+    <label class="step"><input type="checkbox" data-k="4c"><span>Room 2: same</span></label>
+    <label class="step"><input type="checkbox" data-k="4d"><span>Plug THS01 sensor into each RJ9 "Sensor" port</span></label>
+    <label class="step"><input type="checkbox" data-k="4e"><span>Fan blows OUT + louver/mesh fitted outside</span></label>
+    <label class="step"><input type="checkbox" data-k="4f"><span>Power ON → LCD lights up, fan runs, screen shows temp+humidity</span></label>
+  </div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section>
+  <div class="head"><div class="num">5</div><div class="t"><h2>THS01 Sensor Placement ×2 <span class="pill">CRITICAL</span></h2><small>the number that protects the eggs</small></div><div class="chev">›</div></div>
+  <div class="body">
+    <div class="goal"><b>Goal:</b> measure REAL temp + humidity next to the eggs. Drives the auto fan + alerts.</div>
+    <h3>Where to hang it</h3>
+    <ul>
+      <li>Middle of the room, at <b>nest / upper-cage height</b>, open air.</li>
+      <li><b>AWAY</b> from the fan, the window, lights, and direct sun.</li>
+      <li>Vents point SIDEWAYS or DOWN, never up. Keep clear of dust/droppings.</li>
+    </ul>
+    <div class="warn"><b>Cable is short.</b> Mount the TH Elite near where the sensor must hang. If it can't reach, an RL560 RJ9 extension is needed — never stretch or splice the sensor cable.</div>
+    <div class="note bn"><b>BN:</b> সেন্সর রুমের মাঝে খাঁচার উচ্চতায় ঝুলবে, ছিদ্রের দিক নিচে, পরিষ্কার বাতাসে। তার ছোট, তাই TH Elite কাছে লাগান।</div>
+    <label class="step"><input type="checkbox" data-k="5a"><span>Room 1 sensor hung mid-room, cage height, away from fan/window</span></label>
+    <label class="step"><input type="checkbox" data-k="5b"><span>Room 2 sensor same</span></label>
+  </div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section>
+  <div class="head"><div class="num">6</div><div class="t"><h2>Passive Air Inlet <span class="pill">BOTH ROOMS</span></h2><small>so the exhaust doesn't starve</small></div><div class="chev">›</div></div>
+  <div class="body">
+    <div class="goal"><b>Goal:</b> let fresh air IN, or the exhaust fan whistles and moves nothing.</div>
+    <div style="background:#eef7f2;border-left:4px solid var(--accent);padding:9px 12px;border-radius:0 8px 8px 0;margin:10px 0;font-size:14px"><b>📍 WHERE TO PUT IT:</b> Cut the inlet <b>LOW on the wall OPPOSITE the window/exhaust</b> (near the door side), ~30&nbsp;cm above the floor. Diagonal to the exhaust = best sweep.
+    <div class="note bn" style="margin-top:6px"><b>BN:</b> <b>জানালা/এক্সহস্টের উল্টা দেয়ালে</b> (দরজার দিকে), মেঝে থেকে ~৩০ সেমি উপরে নিচু করে ইনলেট কাটুন। এক্সহস্টের কোণাকুণি হলে বাতাস সবচেয়ে ভালো ঘোরে।</div></div>
+    <ul>
+      <li>Cut a LOW louvered inlet, at least <b>20×20 cm</b>, on the wall OPPOSITE the exhaust, near floor level.</li>
+      <li>Add insect mesh.</li>
+    </ul>
+    <div class="note bn"><b>BN:</b> এক্সহস্টের উল্টা দেয়ালে নিচে ২০x২০ সেমি লউভার কাটুন, জাল দিন। এটা ছাড়া এক্সহস্ট ফ্যান বাতাস টানতে পারবে না।</div>
+    <label class="step"><input type="checkbox" data-k="6a"><span>Room 1 inlet cut + meshed (opposite the exhaust, low)</span></label>
+    <label class="step"><input type="checkbox" data-k="6b"><span>Room 2 inlet cut + meshed</span></label>
+  </div>
+</section>
+
+<!-- ============ 7 ============ -->
+<section>
+  <div class="head"><div class="num">7</div><div class="t"><h2>Critical Rules — All Devices</h2><small>check before you finish</small></div><div class="chev">›</div></div>
+  <div class="body">
+    <label class="step"><input type="checkbox" data-k="7a"><span>NEUTRAL present at BOTH touch-panel boxes</span></label>
+    <label class="step"><input type="checkbox" data-k="7b"><span>Every MANUAL control works (touch panels + fan wall switches)</span></label>
+    <label class="step"><input type="checkbox" data-k="7c"><span>Open ceiling-fan holes SEALED (silicone/foam around the rod)</span></label>
+    <label class="step"><input type="checkbox" data-k="7d"><span>Cages sit 1–2 inches OFF the wall</span></label>
+    <label class="step"><input type="checkbox" data-k="7e"><span>NO Sonoff device left in the ceiling void</span></label>
+    <label class="step"><input type="checkbox" data-k="7f"><span>Each device tested the moment it was wired (stop if one fails)</span></label>
+    <div class="note bn"><b>BN:</b> তার লাগানোর সময় মেইন বন্ধ। প্রতিটা ডিভাইস লাগিয়েই টেস্ট করুন। একটা ফেল করলে ওখানেই থামুন।</div>
+  </div>
+</section>
+
+<div class="warn" style="border-radius:12px;border-left-width:6px">
+  <b>Ayaan does these in the app LATER — NOT the electrician:</b>
+  <ul style="margin:6px 0 0">
+    <li>Power-loss default = OFF on every device</li>
+    <li>Lights: 07:00 ON / 19:30 OFF</li>
+    <li>Exhaust: 20 min ON / 40 OFF + 30°C override + 35°C / 80%RH alert</li>
+    <li>Jali: 06:00 ON / 20:00 OFF; winter ≤20°C → OFF</li>
+  </ul>
+</div>
+
+<button class="reset" onclick="if(confirm('Clear all checkmarks?')){localStorage.clear();location.reload()}">↺ Reset all progress</button>
+
+<footer>
+  KinBird Aviary · Install Guide · your progress is saved on this phone.<br>
+  TH Elite wiring confirmed from SONOFF official docs. Cut power during all wiring.
+</footer>
+</div>
+
+<a class="call" href="tel:+8801926355363">📞 Unsure? Call Ayaan</a>
+
+<script>
+// open first section by default
+document.querySelectorAll('section').forEach((s,i)=>{ if(i===0) s.classList.add('open'); });
+// collapse/expand
+document.querySelectorAll('.head').forEach(h=>{
+  h.addEventListener('click',()=>h.parentElement.classList.toggle('open'));
+});
+// progress + persistence
+const boxes=[...document.querySelectorAll('input[type=checkbox]')];
+function save(){ boxes.forEach(b=>localStorage.setItem('kb_'+b.dataset.k, b.checked?'1':'')); update(); }
+function load(){ boxes.forEach(b=>{ if(localStorage.getItem('kb_'+b.dataset.k)==='1') b.checked=true; }); update(); }
+function update(){
+  const done=boxes.filter(b=>b.checked).length, tot=boxes.length;
+  const pct=Math.round(done/tot*100);
+  document.getElementById('bar').style.width=pct+'%';
+  document.getElementById('pct').textContent=pct+'% done  ('+done+'/'+tot+')';
+}
+boxes.forEach(b=>b.addEventListener('change',save));
+load();
+</script>
+</body>
+</html>
