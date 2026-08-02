@@ -409,9 +409,11 @@ tr:last-child td{border:none}
     <div id="wxact"></div>
     <h4 class="ch" style="margin:30px 0 16px">3-DAY FORECAST</h4>
     <div class="fc" id="wxfc"></div>
-    <h4 class="ch" style="margin:30px 0 16px">BANGLADESH NETWORK</h4>
-    <p class="sd" style="margin-bottom:16px">How your region compares right now. Useful for spotting a heat or humidity front moving toward Dhaka.</p>
-    <div class="card sub"><div class="tw"><table id="wxbd"></table></div></div>
+    <h4 class="ch" style="margin:30px 0 16px">CLIMATE NETWORK</h4>
+    <p class="sd" style="margin-bottom:16px">Your region, the world's major lovebird breeding hubs, and the species' native range. Spot a humidity front moving toward Dhaka, and see what conditions successful breeders elsewhere actually work in.</p>
+    <div class="card sub"><div class="tw"><table id="wxbd"></table></div>
+      <div class="note" id="wxnote" style="margin-top:20px">Loading native range comparison...</div>
+    </div>
     <h4 class="ch" style="margin:30px 0 16px">MONTH OUTLOOK</h4>
     <div id="wxmon"></div>
   </div>
@@ -1337,9 +1339,16 @@ findKB=function(q){
  return core;};
 
 /* ================= WEATHER INTELLIGENCE ================= */
-var BDC=[["DHAKA",23.81,90.41],["CHITTAGONG",22.36,91.83],["SYLHET",24.90,91.87],
- ["RAJSHAHI",24.37,88.60],["KHULNA",22.85,89.57],["RANGPUR",25.75,89.24],
- ["BARISAL",22.70,90.37],["MYMENSINGH",24.75,90.40]];
+var BDC=[
+ ["DHAKA",23.81,90.41,"BD"],["CHITTAGONG",22.36,91.83,"BD"],["SYLHET",24.90,91.87,"BD"],
+ ["RAJSHAHI",24.37,88.60,"BD"],["KHULNA",22.85,89.57,"BD"],["RANGPUR",25.75,89.24,"BD"],
+ ["BARISAL",22.70,90.37,"BD"],["MYMENSINGH",24.75,90.40,"BD"],
+ ["KARACHI",24.86,67.01,"HUB"],["LAHORE",31.55,74.34,"HUB"],["DELHI",28.61,77.21,"HUB"],
+ ["JAKARTA",-6.21,106.85,"HUB"],["MANILA",14.60,120.98,"HUB"],["BANGKOK",13.76,100.50,"HUB"],
+ ["ARUSHA",-3.39,36.68,"NATIVE"]];
+var GRP={BD:["BANGLADESH — YOUR REGION","var(--cy)"],
+ HUB:["GLOBAL LOVEBIRD BREEDING HUBS","var(--vi)"],
+ NATIVE:["NATIVE RANGE — WHAT THE SPECIES EVOLVED FOR","var(--gr)"]};
 var WX=null,WXBD=null;
 var WCODE={0:"Clear",1:"Mostly clear",2:"Partly cloudy",3:"Overcast",45:"Fog",48:"Fog",
  51:"Light drizzle",53:"Drizzle",55:"Heavy drizzle",61:"Light rain",63:"Rain",65:"Heavy rain",
@@ -1458,21 +1467,41 @@ function wxc(l,v,d,c){return '<div class="wx"><div class="wl">'+l+'</div><div cl
 function drawBD(){
  var t=document.getElementById('wxbd');if(!t)return;
  if(!WXBD){t.innerHTML='<tr><td style="color:var(--dim2)">Loading network...</td></tr>';return;}
- var h='<tr><th>CITY</th><th>NOW</th><th>RH</th><th>TOMORROW MAX</th><th>RAIN</th><th>CONDITIONS</th></tr>';
- var dk=WXBD[0]&&WXBD[0].current?WXBD[0].current.temperature_2m:null;
+ var h='<tr><th>CITY</th><th>NOW</th><th>RH</th><th>TOMORROW MAX</th><th>RAIN</th><th>CONDITIONS</th><th>VS DHAKA</th></tr>';
+ var dT=null,dH=null;
+ if(WXBD[0]&&WXBD[0].current){dT=WXBD[0].current.temperature_2m;dH=WXBD[0].current.relative_humidity_2m;}
+ var lastG='';
  for(var i=0;i<BDC.length&&i<WXBD.length;i++){
   var w=WXBD[i];if(!w||!w.current)continue;
+  var g=BDC[i][3];
+  if(g!==lastG){lastG=g;
+   h+='<tr><td colspan="7" style="padding:18px 12px 8px;border:none;font-family:var(--mono);'+
+      'font-size:9.5px;letter-spacing:2.2px;color:'+GRP[g][1]+'">'+GRP[g][0]+'</td></tr>';}
   var isD=BDC[i][0]==='DHAKA';
   var tmr=w.daily&&w.daily.temperature_2m_max?w.daily.temperature_2m_max[1]:null;
   var pp=w.daily&&w.daily.precipitation_probability_max?w.daily.precipitation_probability_max[1]:null;
+  var cmp='—';
+  if(!isD&&dT!==null){
+   var dt=w.current.temperature_2m-dT,dh=w.current.relative_humidity_2m-dH;
+   cmp='<span style="color:'+(dt>0?'var(--am)':'var(--cy)')+'">'+(dt>0?'+':'')+dt.toFixed(1)+'°</span>'+
+       ' <span style="color:'+(dh>0?'var(--rd)':'var(--gr)')+'">'+(dh>0?'+':'')+dh.toFixed(0)+'%</span>';}
   h+='<tr'+(isD?' style="background:rgba(244,114,182,.07)"':'')+'>'+
-     '<td style="color:'+(isD?'var(--mg)':'var(--cy)')+'">'+BDC[i][0]+'</td>'+
+     '<td style="color:'+(isD?'var(--mg)':g==='NATIVE'?'var(--gr)':'var(--cy)')+'">'+BDC[i][0]+
+     (g==='NATIVE'?' 🇹🇿':'')+'</td>'+
      '<td>'+w.current.temperature_2m.toFixed(1)+'°C</td>'+
      '<td style="color:'+(w.current.relative_humidity_2m>=82?'var(--rd)':'var(--tx)')+'">'+w.current.relative_humidity_2m+'%</td>'+
      '<td>'+(tmr!==null?tmr.toFixed(0)+'°C':'—')+'</td>'+
      '<td>'+(pp!==null?pp+'%':'—')+'</td>'+
-     '<td style="color:var(--dim)">'+wname(w.current.weather_code)+'</td></tr>';}
- t.innerHTML=h;}
+     '<td style="color:var(--dim)">'+wname(w.current.weather_code)+'</td>'+
+     '<td>'+cmp+'</td></tr>';}
+ t.innerHTML=h;
+ var nt=document.getElementById('wxnote');
+ if(nt&&WXBD[14]&&WXBD[14].current){
+  var a=WXBD[14].current;
+  nt.innerHTML='<b style="color:var(--gr)">Arusha, Tanzania</b> is the native range of Fischer\'s lovebirds. '+
+   'Right now it is <b>'+a.temperature_2m.toFixed(1)+'°C at '+a.relative_humidity_2m+'% RH</b>. '+
+   'That is the climate this species evolved in, so it is the most honest benchmark you have. '+
+   'When your room sits far from it, you are asking the birds to work outside their design.';}}
 
 /* ================= PROACTIVE INTEL ================= */
 function dhakaDate(){
