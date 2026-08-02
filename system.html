@@ -1070,39 +1070,46 @@ function monthStart(mi){ // next occurrence of month index mi (0-11)
  if(t<n.getTime())t=Date.UTC(y+1,mi,1);
  return t;}
 function dleft(t){return Math.ceil((t-dDate().getTime())/86400000)}
-function cdCard(l,n,u,x,c,pc){
- return '<div class="cd"><div class="cl">'+l+'</div><div class="cn" style="color:'+c+
-  ';text-shadow:0 0 30px '+c+'55">'+n+'</div><div class="cu">'+u+'</div><div class="cx">'+x+'</div>'+
+/* epoch ms of Dhaka-midnight on the 1st of the next occurrence of month mi */
+function msTo(mi){var now=Date.now(),y=new Date(now+6*3600000).getUTCFullYear();
+ for(var k=0;k<3;k++){var t=Date.UTC(y+k,mi,1)-6*3600000;if(t>now)return t;}return 0;}
+function pad2(x){return x<10?'0'+x:''+x;}
+/* live countdown card: target = epoch ms, or null for a static LIVE card */
+function cdLive(l,target,x,c,pc){
+ if(target===null)return '<div class="cd"><div class="cl">'+l+'</div>'+
+  '<div class="cn" style="color:'+c+';text-shadow:0 0 30px '+c+'55">LIVE</div>'+
+  '<div class="cu">IN PROGRESS</div><div class="cx">'+x+'</div></div>';
+ return '<div class="cd" data-target="'+target+'"><div class="cl">'+l+'</div>'+
+  '<div class="cn cdd" style="color:'+c+';text-shadow:0 0 30px '+c+'55">--</div>'+
+  '<div class="cu cdt" style="color:'+c+';font-size:13px;letter-spacing:2px">--:--:--</div>'+
+  '<div class="cx">'+x+'</div>'+
   (pc!==undefined?'<div class="prg"><i style="width:'+pc+'%;background:'+c+'"></i></div>':'')+'</div>';}
 function drawCds(){
  var el=document.getElementById('cds');if(!el)return;
- var n=dDate(),h='';
- var sStart=monthStart(9);   // 1 Oct
- var sEnd=monthStart(3);     // 1 Apr
- var inSeason=(sEnd<sStart);
- // days into current month + days left
- var y=n.getUTCFullYear(),m=n.getUTCMonth();
- var mEnd=Date.UTC(m===11?y+1:y,(m+1)%12,1);
- var mLeft=Math.ceil((mEnd-n.getTime())/86400000);
- var mTot=Math.round((mEnd-Date.UTC(y,m,1))/86400000);
- var N=MONTHS[nowIdx];
+ var now=Date.now(),h='';
+ var sStart=msTo(9),sEnd=msTo(3),inSeason=(sEnd<sStart);
+ var nx=MONTHS[(nowIdx+1)%MONTHS.length],N=MONTHS[nowIdx];
+ var mNext=msTo((N.i+1)%12);
  if(inSeason){
-  var dEnd=dleft(sEnd);
-  var tot=Math.round((sEnd-monthStart(9)+31536000000)%31536000000/86400000)||182;
-  h+=cdCard('BREEDING SEASON','LIVE','IN PROGRESS',
-    'You are inside the window. Push output.','var(--gr)');
-  h+=cdCard('SEASON ENDS IN',dEnd,'DAYS','Pull all nest boxes by 1 April. Eggs laid after mid-March hatch into 34°C heat.','var(--rd)');
+  h+=cdLive('BREEDING SEASON',null,'You are inside the window. Push output.','var(--gr)');
+  h+=cdLive('SEASON ENDS IN',sEnd,'Pull all nest boxes by 1 April. Eggs laid after mid-March hatch into 34°C heat.','var(--rd)');
  }else{
-  var dStart=dleft(sStart);
-  h+=cdCard('SEASON STARTS IN',dStart,'DAYS','1 October — your STRIKE month. 33°C / 76% RH, proven 4/5 and 5/5 clutches.','var(--am)',
+  var dStart=Math.ceil((sStart-now)/86400000);
+  h+=cdLive('SEASON STARTS IN',sStart,'1 October — your STRIKE month. 33°C / 76% RH, proven 4/5 and 5/5 clutches.','var(--am)',
     Math.max(0,Math.min(100,(1-dStart/92)*100)));
-  h+=cdCard('LIGHT RAMP BEGINS',dleft(monthStart(8)),'DAYS','1 September — start +15 min per week, 12h toward 14h.','var(--vi)');
+  h+=cdLive('LIGHT RAMP BEGINS',msTo(8),'1 September — start +15 min per week, 12h toward 14h.','var(--vi)');
  }
- h+=cdCard('THIS MONTH',mLeft,'DAYS LEFT',N.n+' is '+N.phase+'. '+N.sub,'var(--cy)',
-   Math.round((mTot-mLeft)/mTot*100));
- var nx=MONTHS[(nowIdx+1)%MONTHS.length];
- h+=cdCard('NEXT: '+nx.n,dleft(monthStart(nx.i)),'DAYS','Becomes '+nx.phase+'. '+nx.light,nx.col);
- el.innerHTML=h;}
+ h+=cdLive('THIS MONTH ENDS',mNext,N.n+' is '+N.phase+'. '+N.sub,'var(--cy)');
+ h+=cdLive('NEXT: '+nx.n,msTo(nx.i),'Becomes '+nx.phase+'. '+nx.light,nx.col);
+ el.innerHTML=h;tickCds();}
+function tickCds(){
+ var cds=document.querySelectorAll('#cds .cd[data-target]');
+ var now=Date.now();
+ for(var i=0;i<cds.length;i++){var t=+cds[i].getAttribute('data-target'),rem=t-now;if(rem<0)rem=0;
+  var d=Math.floor(rem/86400000),hh=Math.floor(rem/3600000)%24,mm=Math.floor(rem/60000)%60,ss=Math.floor(rem/1000)%60;
+  var dd=cds[i].querySelector('.cdd'),tk=cds[i].querySelector('.cdt');
+  if(dd)dd.textContent=d;
+  if(tk)tk.textContent=pad2(hh)+':'+pad2(mm)+':'+pad2(ss)+(d===0?'':'  ('+d+'d)');}}
 
 function buildStrip(){var h='';
  for(var i=0;i<MONTHS.length;i++){var M=MONTHS[i];
@@ -2162,6 +2169,7 @@ setTimeout(drawBrief,3000);setTimeout(drawBrief,8000);
 runAgents();setTimeout(runAgents,3500);setTimeout(runAgents,9000);
 setInterval(runAgents,60000);
 setInterval(function(){drawAgents();},20000);
+setInterval(tickCds,1000);
 setInterval(function(){drawIntel();drawCds();},45000);
 setInterval(function(){var m=dhakaMonth();
  for(var i=0;i<MONTHS.length;i++)if(MONTHS[i].i===m&&nowIdx!==i){nowIdx=i;buildStrip();render();drawIntel();break;}},60000);
