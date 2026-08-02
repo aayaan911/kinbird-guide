@@ -232,6 +232,48 @@ ul.list li.done label{color:var(--dim2);text-decoration:line-through}
   font-family:var(--mono);font-size:11px;letter-spacing:2px;padding:12px 26px;border-radius:9px;cursor:pointer}
 .rbtn:hover{border-color:var(--rd);color:var(--rd)}
 
+/* WEATHER — brief, devices, care */
+.brief p{font-size:15.5px;line-height:1.85;margin-bottom:16px}
+.brief p:last-child{margin-bottom:0}
+.dev{border:1px solid var(--line);border-radius:11px;padding:20px 22px;margin-bottom:14px;
+  background:linear-gradient(150deg,rgba(12,22,34,.62),rgba(6,11,18,.55))}
+.devh{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  padding-bottom:14px;margin-bottom:6px;border-bottom:1px solid var(--line)}
+.devn{font-family:var(--mono);font-size:13px;color:var(--cy)}
+.devt{font-family:var(--dsp);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--dim2)}
+.devr{display:grid;grid-template-columns:112px 190px 1fr;gap:14px;padding:11px 0;
+  border-bottom:1px dashed rgba(34,211,238,.1);font-size:14px;align-items:baseline}
+.devr:last-of-type{border:none}
+@media(max-width:640px){.devr{grid-template-columns:1fr;gap:4px}}
+.devtime{font-family:var(--dsp);font-size:14px;font-weight:700;color:var(--tx)}
+.devset{font-family:var(--mono);font-size:13.5px}
+.devwhy{color:var(--dim);font-size:13.5px}
+.devnote{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);
+  font-size:13.5px;color:var(--dim);line-height:1.65}
+.care{border-left:3px solid var(--line);padding:0 0 22px 22px;position:relative;margin-left:8px}
+.care:last-child{padding-bottom:0}
+.care::before{content:"";position:absolute;left:-7px;top:6px;width:11px;height:11px;
+  border-radius:50%;background:var(--bg);border:2px solid var(--cy)}
+.careh{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap;margin-bottom:10px}
+.caret{font-family:var(--dsp);font-size:17px;font-weight:700}
+.carettl{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--dim)}
+.careul{list-style:none;margin:0}
+.careul li{position:relative;padding:8px 0 8px 18px;font-size:15px;line-height:1.7}
+.careul li::before{content:"";position:absolute;left:0;top:17px;width:6px;height:6px;
+  border-radius:50%;background:var(--dim2)}
+.carew{font-size:13px;color:var(--dim2);margin-top:8px;font-style:italic}
+.anom{padding:24px 26px;border-radius:12px;margin-bottom:16px;
+  background:linear-gradient(150deg,rgba(12,22,34,.72),rgba(6,11,18,.62));
+  border:1px solid rgba(34,211,238,.16)}
+.anomv{font-family:var(--dsp);font-size:52px;font-weight:900;line-height:1}
+.anoml{font-family:var(--mono);font-size:10px;letter-spacing:2.4px;color:var(--dim2);margin-bottom:12px}
+.anomt{font-size:15.5px;line-height:1.8;margin-top:16px}
+.vrow{display:flex;justify-content:space-between;gap:14px;padding:12px 0;
+  border-bottom:1px solid var(--line);font-size:14px}
+.vrow:last-child{border:none}
+.vrow .vv{font-family:var(--mono);color:var(--cy)}
+.vrow .vd{color:var(--dim);font-size:13.5px}
+
 /* WEATHER */
 .wxg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:8px}
 .wx{padding:18px;border-radius:11px;text-align:center;
@@ -405,7 +447,15 @@ tr:last-child td{border:none}
     <h3 class="sh">WEATHER INTELLIGENCE · DHAKA</h3>
     <p class="sd">Live conditions and a 3-day outlook, translated into exactly what to do with your fans, exhaust, lights, feeding and supplements. Updates every 15 minutes.</p>
     <div id="wxnow"></div>
-    <h4 class="ch" style="margin:30px 0 16px">ACTION ORDERS — NEXT 72 HOURS</h4>
+    <h4 class="ch" style="margin:32px 0 16px">TODAY'S BRIEF</h4>
+    <div class="card sub" id="wxbrief"></div>
+    <h4 class="ch" style="margin:32px 0 16px">DEVICE ORDERS — NEXT 24 HOURS</h4>
+    <div id="wxsched"></div>
+    <h4 class="ch" style="margin:32px 0 16px">CARE SCHEDULE — FOOD, WATER, SUPPLEMENTS</h4>
+    <div id="wxcare"></div>
+    <h4 class="ch" style="margin:32px 0 16px">SEASON ANOMALY — IS THIS YEAR DIFFERENT?</h4>
+    <div id="wxanom"></div>
+    <h4 class="ch" style="margin:32px 0 16px">GENERAL ORDERS — NEXT 72 HOURS</h4>
     <div id="wxact"></div>
     <h4 class="ch" style="margin:30px 0 16px">3-DAY FORECAST</h4>
     <div class="fc" id="wxfc"></div>
@@ -416,6 +466,10 @@ tr:last-child td{border:none}
     </div>
     <h4 class="ch" style="margin:30px 0 16px">MONTH OUTLOOK</h4>
     <div id="wxmon"></div>
+    <h4 class="ch" style="margin:32px 0 16px">SELF-LEARNING STATUS</h4>
+    <div id="wxlearn"></div>
+    <h4 class="ch" style="margin:32px 0 16px">SYSTEM VERSION</h4>
+    <div class="card sub" id="wxver"></div>
   </div>
 
   <!-- SEASON -->
@@ -1359,15 +1413,354 @@ function wname(c){return WCODE[c]||"Mixed"}
 function loadWX(){
  var u='https://api.open-meteo.com/v1/forecast?latitude=23.81&longitude=90.41'+
   '&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m,apparent_temperature'+
+  '&hourly=temperature_2m,relative_humidity_2m,precipitation_probability,precipitation,weather_code'+
   '&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,weather_code,relative_humidity_2m_max,relative_humidity_2m_min'+
   '&timezone=Asia%2FDhaka&forecast_days=4';
- fetch(u).then(function(r){return r.json()}).then(function(j){WX=j;drawWX();drawIntel();}).catch(function(){});
+ fetch(u).then(function(r){return r.json()}).then(function(j){WX=j;logWX();drawWX();drawIntel();}).catch(function(){});
  var la=[],lo=[];
  for(var i=0;i<BDC.length;i++){la.push(BDC[i][1]);lo.push(BDC[i][2]);}
  fetch('https://api.open-meteo.com/v1/forecast?latitude='+la.join(',')+'&longitude='+lo.join(',')+
   '&current=temperature_2m,relative_humidity_2m,weather_code&daily=temperature_2m_max,precipitation_probability_max&timezone=Asia%2FDhaka&forecast_days=2')
  .then(function(r){return r.json()}).then(function(j){WXBD=Array.isArray(j)?j:[j];drawBD();}).catch(function(){});
 }
+
+/* ================= TIMED DEVICE SCHEDULER =================
+   Uses Ayaan's real eWeLink device names. Indoor is modelled from outdoor:
+   a top-floor tin-roof room runs warmer by day and the birds add humidity.  */
+var ROOF_GAIN_DAY=2.0, ROOF_GAIN_NIGHT=0.5, BIRD_RH=4;
+function hrIdx(){ // index of the current Dhaka hour in the hourly array
+ if(!WX||!WX.hourly)return -1;
+ var now=new Date();
+ var hh=parseInt(new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',hour:'2-digit',hour12:false}).format(now),10);
+ var ds=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Dhaka',year:'numeric',month:'2-digit',day:'2-digit'}).format(now);
+ var want=ds+'T'+(hh<10?'0'+hh:hh)+':00';
+ var t=WX.hourly.time;
+ for(var i=0;i<t.length;i++)if(t[i]===want)return i;
+ return 0;}
+function hourNum(s){return parseInt(s.slice(11,13),10)}
+function fmtH(h){var ap=h>=12?'PM':'AM',x=h%12;if(x===0)x=12;return x+ap}
+function indoorT(o,h){return o+(h>=9&&h<=18?ROOF_GAIN_DAY:ROOF_GAIN_NIGHT)}
+
+/* Build per-hour device states for the next 24h */
+function schedule(){
+ if(!WX||!WX.hourly)return null;
+ var s=hrIdx();if(s<0)return null;
+ var H=WX.hourly,N=MONTHS[nowIdx],rows=[];
+ var end=Math.min(s+24,H.time.length);
+ for(var i=s;i<end;i++){
+  var h=hourNum(H.time[i]);
+  var to=H.temperature_2m[i], ti=indoorT(to,h);
+  var ro=H.relative_humidity_2m[i], ri=Math.min(99,ro+BIRD_RH);
+  var pp=H.precipitation_probability[i]||0;
+  // look ahead 2h for rain, so we can pre-empt the humidity spike
+  var soon=0;
+  for(var k=i;k<Math.min(i+3,end);k++)soon=Math.max(soon,H.precipitation_probability[k]||0);
+  var ex,exWhy;
+  if(ri>=88||soon>=70){ex='FULL';exWhy=ri>=88?'RH '+ri.toFixed(0)+'%':'rain within 2h';}
+  else if(ri>=80||ti>=32){ex='HIGH';exWhy=ri>=80?'RH '+ri.toFixed(0)+'%':'indoor '+ti.toFixed(0)+'°C';}
+  else if(ri<=64){ex='LOW';exWhy='dry air, protect egg weight';}
+  else {ex='NORM';exWhy='normal loop';}
+  var fan,fanWhy;
+  var day=(h>=6&&h<20);
+  if(ti<20){fan='OFF';fanWhy='below 20°C, no cold draught on nests';}
+  else if(!day){fan='OFF';fanWhy='night rest';}
+  else if(ti>=31){fan='ALL';fanWhy='indoor '+ti.toFixed(0)+'°C';}
+  else {fan='ON';fanWhy='normal circulation';}
+  rows.push({i:i,h:h,to:to,ti:ti,ro:ro,ri:ri,pp:pp,ex:ex,exWhy:exWhy,fan:fan,fanWhy:fanWhy});}
+ return rows;}
+
+/* Collapse consecutive hours with the same state into blocks */
+function blocks(rows,key){
+ var out=[],cur=null;
+ for(var i=0;i<rows.length;i++){
+  var v=rows[i][key];
+  if(!cur||cur.v!==v){if(cur)out.push(cur);cur={v:v,a:rows[i].h,b:rows[i].h,why:rows[i][key+'Why'],n:1};}
+  else{cur.b=rows[i].h;cur.n++;}}
+ if(cur)out.push(cur);
+ return out;}
+
+var EXTXT={FULL:['RUN CONTINUOUS','var(--rd)'],HIGH:['30 min ON / 30 min OFF','var(--am)'],
+ NORM:['20 min ON / 40 min OFF','var(--gr)'],LOW:['10 min ON / 50 min OFF','var(--cy)']};
+var FANTXT={ALL:['BOTH FANS ON','var(--am)'],ON:['ON','var(--gr)'],OFF:['OFF','var(--cy)']};
+
+function drawSched(){
+ var el=document.getElementById('wxsched');if(!el)return;
+ var rows=schedule();
+ if(!rows){el.innerHTML='<p class="hint">Waiting for hourly forecast...</p>';return;}
+ var eb=blocks(rows,'ex'),fb=blocks(rows,'fan'),N=MONTHS[nowIdx];
+ function tbl(title,dev,bl,map,note){
+  var h='<div class="dev"><div class="devh"><span class="devn">'+dev+'</span><span class="devt">'+title+'</span></div>';
+  for(var i=0;i<bl.length&&i<7;i++){var b=bl[i],m=map[b.v];
+   h+='<div class="devr"><span class="devtime">'+fmtH(b.a)+' – '+fmtH((b.b+1)%24)+'</span>'+
+      '<span class="devset" style="color:'+m[1]+'">'+m[0]+'</span>'+
+      '<span class="devwhy">'+b.why+'</span></div>';}
+  if(note)h+='<div class="devnote">'+note+'</div>';
+  return h+'</div>';}
+ var h='';
+ h+=tbl('EXHAUST FANS','R1 Exaust / THR320D  +  R2 Exaust / THR320D',eb,EXTXT,
+   'Set the loop timer in eWeLink to match each block. If you only change one thing today, change this.');
+ h+=tbl('CIRCULATION FANS','R1 Fan 1 · R1 Fan 2 · R2 Fan 1  (BASICR4)',fb,FANTXT,
+   'BOTH FANS ON means run R1 Fan 1 and R1 Fan 2 together. Never point a fan directly at a nest box.');
+ h+='<div class="dev"><div class="devh"><span class="devn">Room 1 &amp; Room 2 lights</span><span class="devt">PHOTOPERIOD</span></div>'+
+   '<div class="devr"><span class="devtime">'+N.light.replace(/[^0-9:–\-h ]/g,'').trim()+'</span>'+
+   '<span class="devset" style="color:var(--vi)">'+(N.light.match(/\d+h/)||['—'])[0]+'</span>'+
+   '<span class="devwhy">'+N.phase+' month setting</span></div>'+
+   '<div class="devnote">'+N.light+'. Consistency matters more than the exact hour. Never jump the schedule.</div></div>';
+ el.innerHTML=h;}
+
+/* ---- CARE SCHEDULE: food, water, supplements, timed to today's weather ---- */
+function drawCare(){
+ var el=document.getElementById('wxcare');if(!el)return;
+ var rows=schedule();
+ if(!rows){el.innerHTML='<p class="hint">Waiting for forecast...</p>';return;}
+ var N=MONTHS[nowIdx],hot=0,wet=0,peak=rows[0].ti,peakH=rows[0].h;
+ for(var i=0;i<rows.length;i++){
+  if(rows[i].ti>=32)hot++;
+  if(rows[i].ri>=85)wet++;
+  if(rows[i].ti>peak){peak=rows[i].ti;peakH=rows[i].h;}}
+ var isHot=peak>=32, isWet=wet>=4, breeding=(N.phase!=='CONDITION'&&N.phase!=='REST'&&N.phase!=='WIND DOWN');
+ var C=[];
+ function c(t,ttl,items,col,why){C.push({t:t,ttl:ttl,it:items,c:col,w:why})}
+
+ c('06:30','MORNING — WATER &amp; SEED',[
+   'Fresh water in <b>covered</b> drinkers, every cage. Never open bowls.'+(isWet?' Covered matters more today, spilled water is the fastest way to push RH higher.':''),
+   'Main seed mix topped up and blown clean of husk.',
+   'Cuttlebone present in every breeding cage. Replace any chewed to a stub.'
+  ],'var(--cy)','Birds feed hardest in the first two hours after lights on.');
+
+ c('07:00','SUPPLEMENTS — IN WATER',[
+   '<b>Liquid calcium + D3</b> in the drinking water.'+(breeding?' Non-negotiable while hens are laying.':' Keep running even out of season, you are building reserves for October.'),
+   '<b>Vitamin E + selenium</b> per label dose. Never dose E alone, selenium is required for absorption.',
+   'Change medicated or supplemented water by midday'+(isHot?' — at '+peak.toFixed(0)+'°C it spoils fast.':'.')
+  ],'var(--am)','Dose in the morning while birds drink most. Deficiency kills embryos at day 3-4.');
+
+ c('08:00','SOFT FOOD',[
+   breeding?'<b>Egg food daily</b> while chicks are in the nest. Protein drives growth rate.'
+           :'Egg food '+(N.phase==='IGNITION'?'3× weekly to signal abundance.':'sparingly — you are conditioning, not triggering laying.'),
+   'Sprouted seed, rinsed twice, no sour smell.',
+   '<b>Remove all soft food after '+(isWet?'1 hour':'2 hours')+'.</b>'+(isWet?' Shortened today: at '+
+     rows[0].ri.toFixed(0)+'% RH it sours quickly and adds moisture to the room.':'')
+  ],'var(--gr)',isWet?'High humidity today, so the removal window is tighter.':'Standard window.');
+
+ if(isHot)
+  c(fmtH(Math.max(11,peakH-2)),'HEAT WINDOW — EXTRA WATER',[
+    'Add a second water point per rack. Birds drink 2-3× more above 32°C.',
+    'No cage handling, no nest inspection, no catching birds until after '+fmtH(peakH+3)+'.',
+    'Check water again at '+fmtH(peakH)+' — it will be warm and may need replacing.'
+   ],'var(--rd)','Indoor peak '+peak.toFixed(0)+'°C around '+fmtH(peakH)+'.');
+
+ c('16:00','AFTERNOON CHECK',[
+   'Dry-clean droppings'+(isWet?' — <b>second clean today</b>, wet droppings are your biggest indoor moisture source.':'.')+' Never wet-mop.',
+   'Top up water. Remove any leftover wet food.',
+   'Weigh any egg due for its 3-day weigh-in and record it in the LOG.'
+  ],'var(--vi)',isWet?'Twice-daily cleaning today because of humidity.':'Standard.');
+
+ c('18:30','EVENING — LIGHTS OUT PREP',[
+   'Final water top-up before lights off.',
+   'Quick visual: every bird alert and standing. Any fluffed, still bird gets isolated tonight, not tomorrow.',
+   'Confirm lights and exhaust ran their schedule today.'
+  ],'var(--cy)',N.light);
+
+ var h='';
+ for(var k=0;k<C.length;k++){var x=C[k];
+  h+='<div class="care"><div class="careh"><span class="caret" style="color:'+x.c+'">'+x.t+
+     '</span><span class="carettl">'+x.ttl+'</span></div><ul class="careul">';
+  for(var j=0;j<x.it.length;j++)h+='<li>'+x.it[j]+'</li>';
+  h+='</ul><div class="carew">'+x.w+'</div></div>';}
+ el.innerHTML=h;}
+
+/* Today's narrative brief */
+function drawBrief(){
+ var el=document.getElementById('wxbrief');if(!el)return;
+ var rows=schedule();
+ if(!rows||!WX||!WX.current){el.innerHTML='<p class="hint">Building today\'s brief...</p>';return;}
+ var c=WX.current,N=MONTHS[nowIdx],p=[];
+ // rain window
+ var rs=null,re=null,mx=0;
+ for(var i=0;i<rows.length;i++){
+  if(rows[i].pp>=55){if(rs===null)rs=rows[i].h;re=rows[i].h;mx=Math.max(mx,rows[i].pp);}}
+ // humidity path
+ var rhNow=rows[0].ri,rhPeak=rows[0].ri,rhPeakH=rows[0].h,rhLow=rows[0].ri,rhLowH=rows[0].h;
+ var tPeak=rows[0].ti,tPeakH=rows[0].h;
+ for(i=0;i<rows.length;i++){
+  if(rows[i].ri>rhPeak){rhPeak=rows[i].ri;rhPeakH=rows[i].h;}
+  if(rows[i].ri<rhLow){rhLow=rows[i].ri;rhLowH=rows[i].h;}
+  if(rows[i].ti>tPeak){tPeak=rows[i].ti;tPeakH=rows[i].h;}}
+
+ p.push('Outside is <b>'+c.temperature_2m.toFixed(1)+'°C at '+c.relative_humidity_2m+'% RH</b> ('+
+  wname(c.weather_code).toLowerCase()+'). Your rooms will sit around <b>'+rows[0].ti.toFixed(1)+
+  '°C and '+rhNow.toFixed(0)+'% RH</b> once the roof gain and the birds\' own moisture are added.');
+
+ if(rs!==null)
+  p.push('<b style="color:var(--vi)">Rain expected '+fmtH(rs)+' to '+fmtH((re+1)%24)+'</b>, peaking at '+mx+
+   '% probability. Indoor humidity will climb behind it. <b>Start the exhaust an hour before, at '+fmtH((rs+23)%24)+
+   '</b>, rather than reacting after the room is already wet.');
+ else
+  p.push('No significant rain in the next 24 hours. Humidity should follow its normal daily curve.');
+
+ if(rhPeak>=88)
+  p.push('<b style="color:var(--rd)">Humidity peaks near '+rhPeak.toFixed(0)+'% around '+fmtH(rhPeakH)+
+   '.</b> That is well above the 50-60% incubation ideal. Dry-clean droppings twice today, pull wet food after one hour, and keep drinkers covered. If you have eggs under a hen, this is the window that causes full-term dead-in-shell.');
+ else if(rhLow<=62)
+  p.push('<b style="color:var(--am)">Humidity dips to '+rhLow.toFixed(0)+'% around '+fmtH(rhLowH)+
+   '.</b> Dry air pulls weight off eggs too fast. Cut exhaust runtime in that window and put a shallow water tray away from the cages.');
+ else
+  p.push('Humidity stays in a workable band, roughly '+rhLow.toFixed(0)+'-'+rhPeak.toFixed(0)+'%. No emergency action needed.');
+
+ if(tPeak>=33)
+  p.push('<b style="color:var(--rd)">Indoor peak around '+tPeak.toFixed(0)+'°C at '+fmtH(tPeakH)+
+   '.</b> Both exhausts continuous through that window, extra water points, and do not handle cages or open nest boxes in the afternoon.');
+ else if(tPeak<=20)
+  p.push('Cool day, indoor peak only '+tPeak.toFixed(0)+'°C. Circulation fans off, watch for chilled chicks at dawn.');
+
+ var feed=(N.phase==='CONDITION'||N.phase==='REST')
+  ? 'Conditioning: vitamin E + selenium, liquid calcium + D3, cuttlebone in every cage. No egg-food surplus, you are building bodies not triggering laying.'
+  : (N.phase==='IGNITION')
+  ? 'Abundance signal: soft food, sprouted seed and egg food three times this week. Keep calcium and D3 running daily.'
+  : 'Breeding diet: egg food daily while chicks are in the nest, sprouted seed, cuttlebone always, calcium + D3 non-negotiable while hens are laying.';
+ p.push('<b>Feed today:</b> '+feed+(rhPeak>=88?' Because humidity is high, take soft food out after one hour, not two, or it will sour and add moisture.':''));
+
+ var tr=eggTrend(),bad=tr.filter(function(x){return x.st==='TOO WET'||x.st==='TOO DRY'});
+ if(bad.length)p.push('<b style="color:var(--rd)">Override:</b> '+bad.length+
+  ' egg(s) are outside 13-16%. The eggs beat the forecast. Follow the Egg Lab verdict over anything above.');
+ else if(!tr.length)p.push('<b style="color:var(--am)">Blind spot:</b> no egg weights logged. Everything above is inferred from outdoor weather. One 0.01g scale turns this from a good guess into a measurement.');
+
+ el.innerHTML='<div class="brief">'+p.map(function(x){return '<p>'+x+'</p>'}).join('')+'</div>';}
+
+/* ---- self-learning: daily weather history + outcome correlation ---- */
+function logWX(){
+ if(!WX||!WX.current)return;
+ var k=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Dhaka',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+ DB.wx=DB.wx||[];
+ for(var i=0;i<DB.wx.length;i++)if(DB.wx[i].d===k)return; // one snapshot per day
+ var d=WX.daily;
+ DB.wx.push({d:k,t:WX.current.temperature_2m,h:WX.current.relative_humidity_2m,
+   mx:d?d.temperature_2m_max[0]:null,mn:d?d.temperature_2m_min[0]:null,
+   rn:d?d.precipitation_sum[0]:null});
+ if(DB.wx.length>800)DB.wx=DB.wx.slice(-800);
+ localStorage.setItem('kb_db',JSON.stringify(DB));}
+function drawLearn(){
+ var el=document.getElementById('wxlearn');if(!el)return;
+ var n=(DB.wx||[]).length,cl=DB.clutches.length;
+ var h='<div class="wxg">'+
+  wxc('DAYS RECORDED',n,'Your own Dhaka climate history, one snapshot per day','var(--cy)')+
+  wxc('CLUTCHES LOGGED',cl,cl?'Enough to start correlating outcomes with conditions':'Log clutches to unlock correlation','var(--mg)')+
+  wxc('KNOWLEDGE ENTRIES',30+DB.kb.length,'30 verified core + '+DB.kb.length+' you taught it','var(--vi)')+'</div>';
+ if(n>=14&&cl>=3){
+  var best=null,bt=-1;
+  for(var i=0;i<DB.clutches.length;i++){var c=DB.clutches[i];
+   if(!c.f)continue;var sc=(c.f-c.ds)/c.f;
+   if(sc>bt){bt=sc;best=c;}}
+  if(best){var m=null;
+   for(var j=0;j<DB.wx.length;j++)if(DB.wx[j].d===best.d)m=DB.wx[j];
+   if(m)h+='<div class="note" style="margin-top:18px"><b style="color:var(--gr)">PATTERN FOUND:</b> your best-performing logged clutch (pair '+
+    esc(best.p)+', '+((1-best.ds/best.f)*100).toFixed(0)+'% of fertile eggs survived) was recorded on a day at <b>'+
+    m.t.toFixed(1)+'°C / '+m.h+'% RH</b>. Keep logging and this becomes your own private breeding model, built from your birds, not a textbook.</div>';}
+ }else{
+  h+='<div class="note" style="margin-top:18px">The system snapshots Dhaka conditions once a day automatically. After about <b>14 days of weather</b> and <b>3 logged clutches</b> it starts correlating your outcomes with the conditions they happened in. That correlation is something no competitor can copy, because it is built from your birds in your room.</div>';}
+ el.innerHTML=h;}
+
+/* ================= SEASON ANOMALY (El Niño detector, measured locally) =================
+   Rather than quoting a global index, this measures Dhaka directly: the last 90 days
+   of actual recorded temperature against the same calendar window in 5 prior years.
+   Free archive API, no key. This is what an ENSO event actually looks like where you live. */
+var ANOM=null;
+function loadAnom(){
+ var cached=null;
+ try{cached=JSON.parse(localStorage.getItem('kb_anom')||'null')}catch(e){}
+ var today=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Dhaka',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+ if(cached&&cached.on===today){ANOM=cached;drawAnom();return;}
+ var end=new Date(today+'T00:00:00Z'); end.setUTCDate(end.getUTCDate()-6); // archive lags a few days
+ var start=new Date(end); start.setUTCDate(start.getUTCDate()-89);
+ function iso(d){return d.toISOString().slice(0,10)}
+ var yr=end.getUTCFullYear(), reqs=[];
+ for(var back=0;back<=5;back++){
+  var e=new Date(end),s=new Date(start);
+  e.setUTCFullYear(e.getUTCFullYear()-back); s.setUTCFullYear(s.getUTCFullYear()-back);
+  reqs.push({y:yr-back,u:'https://archive-api.open-meteo.com/v1/archive?latitude=23.81&longitude=90.41'+
+   '&start_date='+iso(s)+'&end_date='+iso(e)+
+   '&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=Asia%2FDhaka'});}
+ Promise.all(reqs.map(function(r){
+   return fetch(r.u).then(function(x){return x.json()}).then(function(j){
+     if(!j||!j.daily||!j.daily.temperature_2m_max)return null;
+     var a=j.daily.temperature_2m_max.filter(function(v){return v!==null});
+     var b=j.daily.temperature_2m_min.filter(function(v){return v!==null});
+     var p=(j.daily.precipitation_sum||[]).filter(function(v){return v!==null});
+     if(!a.length)return null;
+     function avg(z){return z.reduce(function(x,y){return x+y},0)/z.length}
+     return {y:r.y,mx:avg(a),mn:b.length?avg(b):null,rain:p.reduce(function(x,y){return x+y},0)};
+   }).catch(function(){return null});
+ })).then(function(res){
+   res=res.filter(Boolean);
+   if(res.length<2)return;
+   var cur=res[0],prior=res.slice(1);
+   if(!prior.length)return;
+   var pmx=prior.reduce(function(a,b){return a+b.mx},0)/prior.length;
+   var pmn=prior.reduce(function(a,b){return a+(b.mn||0)},0)/prior.length;
+   var pr=prior.reduce(function(a,b){return a+b.rain},0)/prior.length;
+   ANOM={on:today,cur:cur,prior:prior,dmx:cur.mx-pmx,dmn:(cur.mn||0)-pmn,
+     drain:cur.rain-pr,pmx:pmx,pmn:pmn,pr:pr,n:prior.length};
+   try{localStorage.setItem('kb_anom',JSON.stringify(ANOM))}catch(e){}
+   drawAnom();
+ }).catch(function(){});
+}
+function drawAnom(){
+ var el=document.getElementById('wxanom');if(!el)return;
+ if(!ANOM){el.innerHTML='<p class="hint">Measuring this year against the last 5 years of Dhaka records...</p>';return;}
+ var d=ANOM.dmx, col=d>=1?'var(--rd)':d>=0.4?'var(--am)':d<=-0.6?'var(--cy)':'var(--gr)';
+ var label=d>=1?'RUNNING HOT':d>=0.4?'SLIGHTLY WARM':d<=-0.6?'RUNNING COOL':'NORMAL YEAR';
+ var t;
+ if(d>=1)
+  t='The last 90 days in Dhaka averaged <b>'+ANOM.cur.mx.toFixed(1)+'°C</b> daily max against a '+ANOM.n+
+   '-year average of <b>'+ANOM.pmx.toFixed(1)+'°C</b>. That is a real warm anomaly, the local signature of an El Niño-type year. '+
+   '<b>What to do:</b> assume October runs 1-2°C hotter than the normals in the Season tab. Push the roof coating forward, do not rush nest boxes in early October, and be ready to delay the first clutch by 1-2 weeks if the heat holds. In a hot year the birds tell you when, not the calendar.';
+ else if(d>=0.4)
+  t='Running <b>'+d.toFixed(1)+'°C warmer</b> than the '+ANOM.n+'-year average for this window ('+
+   ANOM.cur.mx.toFixed(1)+'°C vs '+ANOM.pmx.toFixed(1)+'°C). Mild, not alarming. Watch it monthly. If the gap widens toward +1°C, treat October as a late-start season.';
+ else if(d<=-0.6)
+  t='Running <b>'+Math.abs(d).toFixed(1)+'°C cooler</b> than the '+ANOM.n+'-year average ('+
+   ANOM.cur.mx.toFixed(1)+'°C vs '+ANOM.pmx.toFixed(1)+'°C). A La Niña-type cool year favours you. '+
+   '<b>What to do:</b> your season may open <b>earlier</b>. Bring the light ramp forward a week and have nest boxes ready by late September. Cool years are when a prepared breeder gets an extra clutch that competitors miss.';
+ else
+  t='This year is tracking <b>normal</b>: '+ANOM.cur.mx.toFixed(1)+'°C against a '+ANOM.n+'-year average of '+
+   ANOM.pmx.toFixed(1)+'°C, a difference of just '+d.toFixed(1)+'°C. Plan the season exactly as the Season tab lays it out.';
+ var rn=ANOM.drain;
+ if(Math.abs(rn)>80)
+  t+='<br><br>Rainfall over the same window is <b>'+(rn>0?'+':'')+rn.toFixed(0)+' mm</b> against average'+
+   (rn>0?'. A wetter run means higher indoor humidity and a stronger case for keeping exhaust runtime up through September.'
+        :'. A drier run means watch for eggs losing weight too fast once you start incubating.');
+ var yrs='';
+ for(var i=0;i<ANOM.prior.length;i++)yrs+='<div class="vrow"><span>'+ANOM.prior[i].y+
+  '</span><span class="vv">'+ANOM.prior[i].mx.toFixed(1)+'°C</span></div>';
+ el.innerHTML='<div class="anom"><div class="anoml">90-DAY ANOMALY VS '+ANOM.n+'-YEAR AVERAGE</div>'+
+  '<div class="anomv" style="color:'+col+';text-shadow:0 0 34px '+col+'55">'+(d>0?'+':'')+d.toFixed(1)+'°C</div>'+
+  '<div style="font-family:var(--dsp);font-size:13px;font-weight:700;letter-spacing:2px;color:'+col+';margin-top:10px">'+label+'</div>'+
+  '<div class="anomt">'+t+'</div></div>'+
+  '<div class="card sub"><h4 class="ch">SAME 90-DAY WINDOW, YEAR BY YEAR</h4>'+
+  '<div class="vrow"><span style="color:var(--mg)">'+ANOM.cur.y+' (this year)</span><span class="vv" style="color:'+col+'">'+
+  ANOM.cur.mx.toFixed(1)+'°C</span></div>'+yrs+
+  '<p class="hint">Measured from Dhaka station records, not a global index. Refreshes once a day.</p></div>';}
+
+/* ================= VERSION CONTROL ================= */
+var VERSION='2.3.0';
+var CHANGELOG=[
+ ['2.3.0','Timed device orders using real eWeLink names, care schedule for food/water/supplements, local El Niño anomaly detector, self-learning weather log, version control'],
+ ['2.2.0','Weather intelligence engine: live Dhaka conditions, 3-day forecast, action orders, 15-city climate network including global lovebird hubs and the Tanzanian native range'],
+ ['2.1.0','Season countdowns, per-month counters, alien-tech visual layer, proactive intel strip'],
+ ['2.0.0','Data log (pairs, clutches, egg weights, room readings), TEACH tab, Cloudflare Worker for sync and grounded AI'],
+ ['1.2.0','Satellite globe with live day/night terminator, city lights, zoom, live city temperatures'],
+ ['1.1.0','Egg weight loss analyser, daily ops checklist, task tracker'],
+ ['1.0.0','First build: season map, verified climate normals, science core']];
+function drawVer(){
+ var el=document.getElementById('wxver');if(!el)return;
+ var h='<div class="vrow"><span>Running version</span><span class="vv" style="font-size:17px">v'+VERSION+'</span></div>'+
+  '<div class="vrow"><span>Knowledge entries</span><span class="vv">'+(30+DB.kb.length)+'</span></div>'+
+  '<div class="vrow"><span>Weather days recorded</span><span class="vv">'+((DB.wx||[]).length)+'</span></div>'+
+  '<h4 class="ch" style="margin:24px 0 14px">CHANGE HISTORY</h4>';
+ for(var i=0;i<CHANGELOG.length;i++)
+  h+='<div class="vrow"><span class="vv" style="flex:0 0 66px">v'+CHANGELOG[i][0]+'</span><span class="vd">'+CHANGELOG[i][1]+'</span></div>';
+ h+='<p class="hint">Every version is a commit in the <b>kinbird-guide</b> GitHub repo. To roll back, open the repo, click History on system.html, pick any earlier commit and download that version. Your logged data is never touched by a rollback, because it lives in browser storage and Cloudflare, not in the HTML.</p>';
+ el.innerHTML=h;}
 
 /* ---- the advisor: turns forecast into orders ---- */
 function orders(){
@@ -1460,7 +1853,8 @@ function drawWX(){
   wxc(M.n+' NORMAL',M.max+'° / '+M.min+'°',M.rh+'% RH · '+M.rain+' mm expected this month','var(--cy)')+
   wxc('PHASE',M.phase,M.sub,M.col)+
   wxc(nx.n+' AHEAD',nx.max+'° / '+nx.min+'°',nx.rh+'% RH · becomes '+nx.phase,nx.col)+
-  '</div>';}
+  '</div>';
+ drawBrief();drawSched();drawCare();drawLearn();drawVer();}
 function wxc(l,v,d,c){return '<div class="wx"><div class="wl">'+l+'</div><div class="wv" style="color:'+c+
  '">'+v+'</div><div class="wd">'+d+'</div></div>'}
 
@@ -1555,6 +1949,7 @@ function drawIntel(){
 loadDB();drawCloud();if(CLOUD)cloudPull();
 buildStrip();render();buildChk();loadTasks();drawTasks();drawLog();drawIntel();drawCds();
 loadWX();setInterval(loadWX,900000);
+loadAnom();drawAnom();drawVer();drawLearn();
 setInterval(function(){drawIntel();drawCds();},45000);
 setInterval(function(){var m=dhakaMonth();
  for(var i=0;i<MONTHS.length;i++)if(MONTHS[i].i===m&&nowIdx!==i){nowIdx=i;buildStrip();render();drawIntel();break;}},60000);
