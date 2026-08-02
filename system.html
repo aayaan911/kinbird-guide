@@ -426,10 +426,12 @@ tr:last-child td{border:none}
     <button class="tab" onclick="tab(6,this)">DAILY</button>
     <button class="tab" onclick="tab(7,this)">TEACH</button>
     <button class="tab" onclick="tab(8,this)">SCIENCE</button>
+    <button class="tab" onclick="tab(9,this)">RESEARCH</button>
   </div>
 
   <!-- BRAIN -->
   <div class="pane on">
+    <div id="brief"></div>
     <h3 class="sh">ASK THE AVIARY BRAIN</h3>
     <p class="sd">Every answer comes from the verified knowledge base with its source. It works offline and never invents a number.</p>
     <div class="card chat">
@@ -648,7 +650,15 @@ tr:last-child td{border:none}
         <div class="src">Foreca / World Weather &amp; Climate, 1990–2020</div></div>
     </div>
   </div>
-  <div class="foot">KINBIRD AVIARY · BUILT ON VERIFIED DATA · v2.0</div>
+
+  <!-- RESEARCH -->
+  <div class="pane">
+    <h3 class="sh">RESEARCH LIBRARY &amp; CITATIONS</h3>
+    <p class="sd">The sources this OS is built on. Every claim in the BRAIN and SCIENCE tabs traces back to one of these. Verify anything yourself. This list grows each weekly update.</p>
+    <div id="reslib"></div>
+  </div>
+
+  <div class="foot">KINBIRD AVIARY · BUILT ON VERIFIED DATA · v2.1</div>
 </div>
 
 <script>
@@ -1980,9 +1990,98 @@ function drawIntel(){
  el.innerHTML=h;}
 
 loadDB();drawCloud();if(CLOUD)cloudPull();
-buildStrip();render();buildChk();loadTasks();drawTasks();drawLog();drawIntel();drawCds();
+/* ================= EL NINO / CLIMATE WATCH ================= */
+var ENSO={state:"STRONG EL NINO",prob:"97-100% through winter 2026-27",
+ effect:"El Nino suppresses rainfall in Bangladesh. This Oct-Mar is likely DRIER than the normals shown in SEASON.",
+ action:"Drier air means eggs lose weight FASTER. Expect to RAISE humidity, not lower it: cut exhaust runtime, add shallow water trays away from cages, watch egg weight loss closely in Dec-Mar. Your usual high-humidity problem may invert this season.",
+ src:"WMO / IRI Columbia / NOAA CPC, updated 2026"};
+KB.push({k:"el nino la nina enso climate drought rainfall dry winter 2026 2027 prediction",
+ t:"El Nino watch 2026-27",
+ a:"A <b>strong El Nino</b> is locked in through the 2026-27 winter (97-100% probability). For Bangladesh it <b>suppresses rainfall</b>, so your Oct-Mar breeding window will likely run <b>drier than normal</b>.<br><br><b>What it flips:</b> your usual enemy is high humidity. This season the bigger risk becomes eggs losing weight <b>too fast</b> in dry air, which shrink-wraps chicks. Be ready to RAISE humidity: cut exhaust runtime, add water trays, and watch egg weight loss closely from December. Adjust from the Egg Lab, not from feel.",
+ s:"WMO / IRI Columbia / NOAA CPC"});
+
+/* ================= DAILY BRIEFING ================= */
+function briefDate(){return new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date()).toUpperCase();}
+function generateBrief(){
+ var N=MONTHS[nowIdx],lines=[];
+ // weather line
+ if(WX&&WX.current){var c=WX.current,d=WX.daily;
+  lines.push({i:'WX',c:'var(--cy)',t:'CONDITIONS',
+   d:'Dhaka '+c.temperature_2m.toFixed(1)+'°C, '+c.relative_humidity_2m+'% RH, '+wname(c.weather_code)+
+     '. Next 3 days peak '+Math.max(d.temperature_2m_max[0],d.temperature_2m_max[1]||0,d.temperature_2m_max[2]||0).toFixed(0)+
+     '°C, rain up to '+Math.max(d.precipitation_probability_max[0]||0,d.precipitation_probability_max[1]||0,d.precipitation_probability_max[2]||0)+'%.'});
+  var o=orders();if(o.length){var top=o[0];for(var z=0;z<o.length;z++)if(o[z].c==='var(--rd)'){top=o[z];break;}
+   lines.push({i:'DO',c:top.c,t:top.t.replace(/&amp;/g,'&').replace(/ —.*/,''),d:top.d});}
+ } else lines.push({i:'WX',c:'var(--dim)',t:'CONDITIONS','d':'Fetching live Dhaka weather...'});
+ // phase
+ lines.push({i:'PH',c:N.col,t:N.phase+' — '+N.n,d:N.dir.replace(/<[^>]+>/g,'')});
+ // el nino
+ lines.push({i:'EN',c:'var(--am)',t:'CLIMATE WATCH — '+ENSO.state,d:ENSO.effect+' '+ENSO.action});
+ // eggs
+ var tr=eggTrend(),bad=tr.filter(function(x){return x.st==='TOO WET'||x.st==='TOO DRY'});
+ if(bad.length)lines.push({i:'EG',c:'var(--rd)',t:'EGGS OFF TARGET',d:bad.length+' egg(s) drifting outside 13-16%. Open the LOG tab now.'});
+ else if(tr.length)lines.push({i:'EG',c:'var(--gr)',t:'EGGS ON TARGET',d:'All tracked eggs inside 13-16%. Hold everything.'});
+ else lines.push({i:'EG',c:'var(--am)',t:'NO EGG DATA',d:'You are logging zero egg weights. This is the one measurement that fixes dead-in-shell. Start with the next clutch.'});
+ // next task
+ var open=TK.filter(function(x){return !x.d});
+ if(open.length)lines.push({i:'TK',c:'var(--mg)',t:'PRIORITY TASK',d:open[0].t});
+ return lines;}
+function drawBrief(){
+ var el=document.getElementById('brief');if(!el)return;
+ var L=generateBrief(),N=MONTHS[nowIdx];
+ var h='<div class="card sub" style="margin-bottom:26px">'+
+  '<div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:6px">'+
+  '<h4 class="ch" style="margin:0;color:var(--gr)">DAILY BRIEFING</h4>'+
+  '<span style="font-family:var(--mono);font-size:10px;letter-spacing:1.5px;color:var(--dim)">'+briefDate()+'</span></div>'+
+  '<p class="sd" style="margin:0 0 18px">Auto-generated from live weather, your season phase, the El Nino outlook and your logged data. Refreshes on load and every 15 minutes.</p>';
+ for(var i=0;i<L.length;i++)
+  h+='<div class="ord" style="margin-bottom:10px"><div class="oi" style="background:'+L[i].c+'22;color:'+L[i].c+
+     ';border:1px solid '+L[i].c+'55">'+L[i].i+'</div><div><div class="ot" style="color:'+L[i].c+'">'+L[i].t+
+     '</div><div class="od">'+L[i].d+'</div></div></div>';
+ h+='</div>';
+ el.innerHTML=h;}
+
+/* ================= RESEARCH LIBRARY ================= */
+var RES=[
+ {g:"PEER-REVIEWED & INSTITUTIONAL",c:"var(--cy)",items:[
+  ["Hagen Avicultural Research Institute — Artificial Incubation of Bird Eggs","Egg weight loss 13-16%, humidity science, the core of your Egg Lab.","https://hari.ca/avian-care/artificial-incubation-applied-to-bird-eggs/"],
+  ["Merck Veterinary Manual — Vitamin Deficiencies in Poultry","Vitamin E + selenium, embryo mortality day 3-4, male fertility.","https://www.merckvetmanual.com/poultry/nutrition-and-management-poultry/vitamin-deficiencies-in-poultry"],
+  ["HARI — Ventilation Systems for Indoor Breeding Facilities","Air exchange, ammonia, low-in high-out airflow.","https://hari.ca/avian-care/ventilation-systems-for-indoor-breeding-facilities/"],
+  ["ScienceDirect — Cool roof thermal performance review","Reflective coating cuts roof surface 12-17°C, indoor 1-2.4°C.","https://www.sciencedirect.com/science/article/pii/S2666123321000209"],
+  ["Effects of Roof Treatment on Thermal Performance, Dhaka (ResearchGate)","Double-roof air gap ~2.7°C in Dhaka specifically.","https://www.researchgate.net/publication/310160564_Effects_of_Roof_Treatment_on_Thermal_Performance_of_Residential_Buildings_in_Dhaka"]]},
+ {g:"BREEDER & CLINICAL REFERENCES",c:"var(--vi)",items:[
+  ["Lafeber Pet Birds — Lovebird Breeding & Incubation","Clutches per year, rest periods, calcium depletion.","https://lafeber.com/pet-birds/questions/lovebird-breeding/"],
+  ["Uneek Poultry — Incubation Science: reading a failed hatch","Full-term dead-in-shell diagnosis, humidity vs weight loss.","https://www.uneekpoultry.com.au/blogs/incubation-science-series/when-things-go-wrong-how-to-read-the-signs-after-a-failed-hatch"],
+  ["eWeLink Forum — Si7021 & TH Elite accuracy thread","Field evidence your sensor reads ~4°C high. Basis of the -3°C offset.","https://forum.ewelink.cc/t/si7021-th-elite-at-least-7deg-f-out/3004"]]},
+ {g:"BOOKS — BUILD THIS SHELF",c:"var(--am)",items:[
+  ["The New Incubation Book — A.F. Anderson Brown & G.E.S. Robbins","The scientific reference on incubation, fertility, hatchability, problem-solving charts.","https://avianpublications.com/shop/the-new-incubation-book/"],
+  ["Parrot Incubation Procedures — Rick Jordan","Methodical guide to incubation, hatching and problem hatches.","https://vetbooks.ir/parrot-incubation-procedures-a-methodical-guide-to-incubation-hatching-and-problem-hatches-for-the-aviculturist/"],
+  ["A Guide to Incubation & Handraising Parrots — Phil Digney","Egg through incubation, hatching, brooding, development.","https://www.amazon.com/Guide-Incubation-Handraising-Parrots-Digney/dp/095871021X"],
+  ["Psittaculture — comprehensive parrot breeding management","44 chapters: husbandry, incubation, mutations, hand-rearing.","https://avianpublications.com/shop/psittaculture/"],
+  ["Hand-Rearing Parrots and Other Birds — Rosemary Low","The standard on chick hand-rearing.","https://avianpublications.com/product-category/incubation-hatching-sexing-handfeeding-books/"]]},
+ {g:"CLIMATE & LIVE DATA FEEDS",c:"var(--gr)",items:[
+  ["Open-Meteo API","Powers your live weather and 15-min updates. Free, no key.","https://open-meteo.com"],
+  ["World Weather & Climate — Dhaka normals (Foreca 1990-2020)","Source of the SEASON month table.","https://weather-and-climate.com/average-monthly-Rainfall-Temperature-Sunshine,Dhaka,Bangladesh"],
+  ["WMO El Nino / La Nina Updates","Official ENSO status driving the Climate Watch.","https://wmo.int/resources/publication-series/el-ninola-nina-updates"],
+  ["IRI Columbia — ENSO Forecast","Season-by-season El Nino probabilities.","https://iri.columbia.edu/our-expertise/climate/forecasts/enso/current/"]]}];
+function drawResearch(){
+ var el=document.getElementById('reslib');if(!el)return;var h='';
+ for(var i=0;i<RES.length;i++){var G=RES[i];
+  h+='<h4 class="ch" style="color:'+G.c+';margin:26px 0 14px">'+G.g+'</h4><div class="card sub">';
+  for(var j=0;j<G.items.length;j++){var it=G.items[j];
+   h+='<div style="padding:15px 0;border-bottom:1px solid var(--line)">'+
+      '<a href="'+it[2]+'" target="_blank" rel="noopener" style="color:'+G.c+';font-family:var(--dsp);font-weight:700;'+
+      'font-size:14px;letter-spacing:.4px;text-decoration:none">'+it[0]+' &#8599;</a>'+
+      '<div style="font-size:14px;color:var(--dim);margin-top:6px;line-height:1.6">'+it[1]+'</div></div>';}
+  h=h.replace(/<div style="padding:15px 0;border-bottom:1px solid var\(--line\)">(?![\s\S]*<div style="padding:15px 0)/,'<div style="padding:15px 0">');
+  h+='</div>';}
+ el.innerHTML=h;}
+
+buildStrip();render();buildChk();loadTasks();drawTasks();drawLog();drawIntel();drawCds();drawBrief();drawResearch();
 loadWX();setInterval(loadWX,900000);
 loadAnom();drawAnom();drawVer();drawLearn();
+setInterval(drawBrief,900000);
+setTimeout(drawBrief,3000);setTimeout(drawBrief,8000);
 setInterval(function(){drawIntel();drawCds();},45000);
 setInterval(function(){var m=dhakaMonth();
  for(var i=0;i<MONTHS.length;i++)if(MONTHS[i].i===m&&nowIdx!==i){nowIdx=i;buildStrip();render();drawIntel();break;}},60000);
