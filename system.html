@@ -6,7 +6,7 @@
 <title>KINBIRD OS — Aviary Command System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#03050a; --panel:#080e16; --panel2:#0b131d; --line:#16273a; --line2:#1f3550;
@@ -379,12 +379,77 @@ tr:last-child td{border:none}
   padding-top:15px;border-top:1px solid var(--line);line-height:1.6}
 .foot{text-align:center;font-family:var(--mono);font-size:10px;letter-spacing:2px;
   color:var(--dim2);padding:46px 0 0}
+/* ============ REDESIGN v3 — LEFT RAIL + COMMAND DASHBOARD ============ */
+:root{--blk:'Anton',Impact,sans-serif;--rail:74px}
+.brand,h3.sh,h4.ch,.phase,.gcard .v,.cn,.met .v,.big,.wv,.iv{font-family:var(--blk)!important;letter-spacing:1px!important;font-weight:400!important}
+.brand{font-size:15px;letter-spacing:2px!important}
+/* shell */
+.shell{display:flex;min-height:100vh;position:relative;z-index:2}
+.rail{position:fixed;left:0;top:0;bottom:0;width:var(--rail);z-index:60;
+  background:linear-gradient(180deg,rgba(9,15,24,.96),rgba(5,9,16,.96));
+  border-right:1px solid var(--line);backdrop-filter:blur(14px);
+  display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:6px;overflow-y:auto}
+.rail::-webkit-scrollbar{display:none}
+.rlogo{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(150deg,var(--cy),var(--vi));color:#03050a;font-family:var(--blk);font-size:20px;margin-bottom:14px;
+  box-shadow:0 0 22px rgba(34,211,238,.5)}
+.railbtn{width:52px;height:50px;border:none;background:none;cursor:pointer;border-radius:12px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  color:var(--dim2);transition:.15s;position:relative}
+.railbtn svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.8}
+.railbtn .rl{font-family:var(--mono);font-size:7px;letter-spacing:.5px}
+.railbtn:hover{color:var(--tx);background:rgba(34,211,238,.07)}
+.railbtn.on{color:var(--cy);background:rgba(34,211,238,.12)}
+.railbtn.on::before{content:"";position:absolute;left:-16px;top:11px;bottom:11px;width:3px;border-radius:3px;background:var(--cy);box-shadow:0 0 12px var(--cy)}
+.content{flex:1;margin-left:var(--rail);min-width:0}
+.top{position:sticky}
+.topin{max-width:1180px}
+.wrap{max-width:1180px}
+.tabs{display:none!important}
+@media(max-width:640px){
+ :root{--rail:0px}
+ .rail{flex-direction:row;left:0;right:0;top:auto;bottom:0;width:auto;height:60px;padding:0 8px;
+   border-right:none;border-top:1px solid var(--line);gap:2px;justify-content:space-around}
+ .rlogo{display:none}
+ .railbtn{width:auto;flex:1;height:100%;border-radius:0}
+ .railbtn.on::before{left:20%;right:20%;top:0;bottom:auto;width:auto;height:3px}
+ .content{margin-left:0;padding-bottom:64px}
+ .railbtn .rl{display:none}
+}
+/* TODAY dashboard */
+.tdcards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:22px}
+@media(max-width:820px){.tdcards{grid-template-columns:1fr}}
+.gcard{position:relative;border-radius:16px;padding:22px 24px;overflow:hidden;min-height:140px;
+  color:#fff;box-shadow:0 16px 40px -18px rgba(0,0,0,.8)}
+.gcard.blue{background:linear-gradient(135deg,#1f7fd6,#2fb3f6)}
+.gcard.fire{background:linear-gradient(135deg,#f26b2a,#f7b733)}
+.gcard.viol{background:linear-gradient(135deg,#7a3ff2,#c04bf7)}
+.gcard .ic{position:absolute;right:20px;top:20px;width:34px;height:34px;opacity:.9}
+.gcard .ic svg{width:34px;height:34px;stroke:#fff;fill:none;stroke-width:1.6}
+.gcard .lab{font-family:var(--mono);font-size:10px;letter-spacing:2px;opacity:.9}
+.gcard .v{font-size:40px;line-height:1.05;margin:8px 0 2px}
+.gcard .sub{font-size:13.5px;opacity:.95;line-height:1.5}
+.gcard .prog{height:5px;background:rgba(255,255,255,.28);border-radius:4px;margin-top:14px;overflow:hidden}
+.gcard .prog i{display:block;height:100%;background:#fff;border-radius:4px}
+.fxwrap{background:linear-gradient(150deg,rgba(12,22,34,.8),rgba(6,11,18,.7));
+  border:1px solid var(--line);border-radius:16px;padding:20px 22px 12px;margin-bottom:22px}
+.fxhead{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px}
+.fxlegend{display:flex;gap:16px;font-family:var(--mono);font-size:11px;color:var(--dim)}
+.fxlegend span::before{content:"";display:inline-block;width:10px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.fxlegend .lt::before{background:#2fb3f6;box-shadow:0 0 8px #2fb3f6}
+.fxlegend .lh::before{background:#c04bf7;box-shadow:0 0 8px #c04bf7}
+#fxchart{display:block;width:100%;height:230px}
+.tdcols{display:grid;grid-template-columns:1fr 340px;gap:20px}
+@media(max-width:900px){.tdcols{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <canvas id="stars"></canvas>
 <div class="sweep"></div>
 
+<div class="shell">
+<nav class="rail" id="rail"></nav>
+<div class="content">
 <div class="top"><div class="topin">
   <div>
     <div class="brand">KINBIRD <span>OS</span></div>
@@ -689,8 +754,25 @@ tr:last-child td{border:none}
     <div id="reslib"></div>
   </div>
 
-  <div class="foot">KINBIRD AVIARY · BUILT ON VERIFIED DATA · v2.1</div>
+  <!-- TODAY (command dashboard) -->
+  <div class="pane" id="pane-today">
+    <h3 class="sh">TODAY · <span id="td_date">—</span></h3>
+    <p class="sd">Live command view. What to do for your birds right now, computed from Dhaka weather updated every 15 minutes.</p>
+    <div class="tdcards" id="td_cards"></div>
+    <div class="fxwrap">
+      <div class="fxhead"><h4 class="ch" style="margin:0">3-DAY FORECAST · DHAKA</h4>
+        <div class="fxlegend"><span class="lt">TEMP °C</span><span class="lh">HUMIDITY %</span></div></div>
+      <canvas id="fxchart"></canvas>
+    </div>
+    <div class="tdcols">
+      <div><h4 class="ch" style="margin:0 0 14px">DEVICE &amp; CARE ORDERS</h4><div id="td_orders"></div></div>
+      <div><h4 class="ch" style="margin:0 0 14px">TODAY'S CHECKLIST</h4><div class="card sub" id="td_chk"></div></div>
+    </div>
+  </div>
+
+  <div class="foot">KINBIRD AVIARY · BUILT ON VERIFIED DATA · v3.0</div>
 </div>
+</div></div>
 
 <script>
 var D2R=Math.PI/180;
@@ -1058,6 +1140,100 @@ loadTemps();setInterval(loadTemps,600000);
 function tab(i,b){var t=document.querySelectorAll('.tab'),p=document.querySelectorAll('.pane');
  for(var k=0;k<t.length;k++){t[k].className='tab';p[k].className='pane';}
  b.className='tab on';p[i].className='pane on';}
+
+/* ===== LEFT RAIL NAVIGATION ===== */
+var TODAY_IDX=10;
+var SVGI={
+ today:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>',
+ cloud:'<path d="M7 18a4 4 0 010-8 5 5 0 019.5-1A3.5 3.5 0 0118 18z"/>',
+ egg:'<path d="M12 3c3.5 0 6 5 6 9a6 6 0 01-12 0c0-4 2.5-9 6-9z"/>',
+ log:'<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2"/><circle cx="4.5" cy="12" r="1.2"/><circle cx="4.5" cy="18" r="1.2"/>',
+ cal:'<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 9h16M8 3v4M16 3v4"/>',
+ brain:'<path d="M5 5h14v10H9l-4 4z"/>',
+ task:'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 12l3 3 5-6"/>',
+ sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/>',
+ flask:'<path d="M9 3h6M10 3v6l-5 9a2 2 0 002 3h10a2 2 0 002-3l-5-9V3"/>',
+ book:'<path d="M5 4h11a2 2 0 012 2v14H7a2 2 0 01-2-2z"/><path d="M5 17h13"/>',
+ teach:'<circle cx="12" cy="8" r="3"/><path d="M5 20a7 7 0 0114 0"/><path d="M12 12v1"/>',
+ bolt:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>'};
+function ICO(n){return '<svg viewBox="0 0 24 24">'+(SVGI[n]||'')+'</svg>';}
+var RAIL=[
+ ['TODAY',10,'today'],['WEATHER',1,'cloud'],['EGGS',3,'egg'],['LOG',4,'log'],
+ ['SEASON',2,'cal'],['BRAIN',0,'brain'],['TASKS',5,'task'],['DAILY',6,'sun'],
+ ['SCIENCE',8,'flask'],['RESEARCH',9,'book'],['TEACH',7,'teach']];
+function buildRail(){
+ var el=document.getElementById('rail');if(!el)return;
+ var h='<div class="rlogo">K</div>';
+ for(var i=0;i<RAIL.length;i++)
+  h+='<button class="railbtn'+(RAIL[i][1]===TODAY_IDX?' on':'')+'" data-i="'+RAIL[i][1]+'" onclick="go('+RAIL[i][1]+',this)">'+
+     ICO(RAIL[i][2])+'<span class="rl">'+RAIL[i][0]+'</span></button>';
+ el.innerHTML=h;}
+function go(i,el){
+ var p=document.querySelectorAll('.pane');for(var k=0;k<p.length;k++)p[k].className='pane';
+ if(p[i])p[i].className='pane on';
+ var r=document.querySelectorAll('.railbtn');for(var k2=0;k2<r.length;k2++)r[k2].className='railbtn'+(+r[k2].getAttribute('data-i')===i?' on':'');
+ if(i===TODAY_IDX)renderToday();
+ window.scrollTo(0,0);}
+
+/* ===== TODAY DASHBOARD ===== */
+function chkMini(){
+ var done=0,items=[];
+ for(var i=0;i<DAILY.length;i++){if(localStorage.getItem(dayKey()+'d'+i)==='1')done++;else items.push(DAILY[i]);}
+ var h='<div style="font-family:var(--blk);font-size:34px;color:var(--cy);line-height:1">'+done+' / '+DAILY.length+'</div>'+
+  '<div class="hint" style="margin:4px 0 14px">daily tasks done</div>';
+ if(!items.length)h+='<div style="color:var(--gr);font-size:14px">All done for today.</div>';
+ for(var j=0;j<Math.min(items.length,5);j++)
+  h+='<div style="font-size:13.5px;color:var(--dim);padding:8px 0;border-top:1px solid var(--line);line-height:1.5">□ '+items[j]+'</div>';
+ return h;}
+function renderToday(){
+ var el=document.getElementById('td_cards');if(!el)return;
+ var dd=document.getElementById('td_date');if(dd)dd.textContent=(typeof briefDate==='function'?briefDate():'');
+ var N=MONTHS[nowIdx],c=(WX&&WX.current)?WX.current:null;
+ var c1=c?('<div class="v">'+c.temperature_2m.toFixed(1)+'°</div><div class="sub">'+c.relative_humidity_2m+'% RH · '+wname(c.weather_code)+' · feels '+(c.apparent_temperature!=null?c.apparent_temperature.toFixed(0):'—')+'°</div>')
+   :'<div class="v">--</div><div class="sub">Fetching live weather...</div>';
+ var o=(typeof orders==='function')?orders():[],top=o.length?o[0]:null;
+ for(var z=0;z<o.length;z++)if(o[z].c==='var(--rd)'){top=o[z];break;}
+ var c2=top?('<div class="v" style="font-size:23px;line-height:1.15">'+top.t.replace(/&amp;/g,'&')+'</div><div class="sub">'+top.d.slice(0,88)+'</div>')
+   :'<div class="v" style="font-size:23px">HOLD</div><div class="sub">No urgent action right now.</div>';
+ var now=Date.now(),sStart=msTo(9),sEnd=msTo(3),inSeason=(sEnd<sStart),days,lab,pc=null;
+ if(inSeason){days=Math.ceil((sEnd-now)/86400000);lab='days to season end';}
+ else{days=Math.ceil((sStart-now)/86400000);lab='days to October';pc=Math.max(0,Math.min(100,(1-days/92)*100));}
+ var c3='<div class="v">'+days+'</div><div class="sub">'+N.phase+' · '+N.n+' — '+lab+'.</div>'+(pc!=null?'<div class="prog"><i style="width:'+pc+'%"></i></div>':'');
+ el.innerHTML=
+  '<div class="gcard blue"><div class="ic">'+ICO('cloud')+'</div><div class="lab">CONDITIONS NOW</div>'+c1+'</div>'+
+  '<div class="gcard fire"><div class="ic">'+ICO('bolt')+'</div><div class="lab">TODAY\'S TOP ORDER</div>'+c2+'</div>'+
+  '<div class="gcard viol"><div class="ic">'+ICO('cal')+'</div><div class="lab">SEASON</div>'+c3+'</div>';
+ var oh='';for(var i=0;i<o.length;i++)
+  oh+='<div class="ord"><div class="oi" style="background:'+o[i].c+'22;color:'+o[i].c+';border:1px solid '+o[i].c+'55">'+o[i].i+
+      '</div><div><div class="ot" style="color:'+o[i].c+'">'+o[i].t+'</div><div class="od">'+o[i].d+'</div></div></div>';
+ var oe=document.getElementById('td_orders');if(oe)oe.innerHTML=oh||'<p class="hint">Waiting for forecast.</p>';
+ var ce=document.getElementById('td_chk');if(ce)ce.innerHTML=chkMini();
+ drawFx();}
+function drawFx(){
+ var cv=document.getElementById('fxchart');if(!cv||!WX||!WX.hourly)return;
+ var dpr=Math.min(devicePixelRatio||1,2),w=cv.clientWidth||620,h=230;
+ cv.width=w*dpr;cv.height=h*dpr;var x=cv.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,w,h);
+ var T=WX.hourly.temperature_2m.slice(0,72),H=WX.hourly.relative_humidity_2m.slice(0,72),tm=WX.hourly.time.slice(0,72),n=T.length;
+ if(n<2)return;
+ var pL=30,pR=34,pT=14,pB=22,gw=w-pL-pR,gh=h-pT-pB;
+ var tmin=Math.min.apply(null,T)-1,tmax=Math.max.apply(null,T)+1;
+ function xp(i){return pL+gw*i/(n-1);}
+ function yT(v){return pT+gh*(1-(v-tmin)/(tmax-tmin));}
+ function yH(v){return pT+gh*(1-v/100);}
+ x.strokeStyle='rgba(255,255,255,.06)';x.lineWidth=1;
+ for(var g=0;g<=3;g++){var yy=pT+gh*g/3;x.beginPath();x.moveTo(pL,yy);x.lineTo(w-pR,yy);x.stroke();}
+ x.fillStyle='rgba(125,147,168,.75)';x.font='10px Share Tech Mono,monospace';x.textAlign='left';
+ for(var i=0;i<n;i++){var d=new Date(tm[i]);if(d.getHours()===0){x.strokeStyle='rgba(255,255,255,.08)';x.beginPath();x.moveTo(xp(i),pT);x.lineTo(xp(i),pT+gh);x.stroke();
+   x.fillText(d.toLocaleDateString('en-GB',{weekday:'short'}).toUpperCase(),xp(i)+4,h-8);}}
+ x.fillStyle='rgba(47,179,246,.85)';x.fillText(tmax.toFixed(0)+'°',2,pT+6);x.fillText(tmin.toFixed(0)+'°',2,pT+gh);
+ x.textAlign='right';x.fillStyle='rgba(192,75,247,.85)';x.fillText('100%',w-4,pT+6);x.fillText('0%',w-4,pT+gh);x.textAlign='left';
+ function line(arr,yf,col,fill){x.beginPath();for(var i=0;i<n;i++){var px=xp(i),py=yf(arr[i]);if(i===0)x.moveTo(px,py);else x.lineTo(px,py);}
+  x.strokeStyle=col;x.lineWidth=2.2;x.shadowColor=col;x.shadowBlur=12;x.stroke();x.shadowBlur=0;
+  if(fill){x.lineTo(xp(n-1),pT+gh);x.lineTo(xp(0),pT+gh);x.closePath();var gr=x.createLinearGradient(0,pT,0,pT+gh);gr.addColorStop(0,fill);gr.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=gr;x.fill();}}
+ line(H,yH,'#c04bf7','rgba(192,75,247,.13)');
+ line(T,yT,'#2fb3f6','rgba(47,179,246,.15)');
+ x.fillStyle='#2fb3f6';x.beginPath();x.arc(xp(0),yT(T[0]),3.5,0,6.29);x.fill();
+ x.fillStyle='#c04bf7';x.beginPath();x.arc(xp(0),yH(H[0]),3.5,0,6.29);x.fill();}
 
 /* ===== SEASON ===== */
 var sel=0,nowIdx=0;
@@ -1493,7 +1669,7 @@ function loadWX(){
   '&hourly=temperature_2m,relative_humidity_2m,precipitation_probability,precipitation,weather_code'+
   '&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,weather_code,relative_humidity_2m_max,relative_humidity_2m_min'+
   '&timezone=Asia%2FDhaka&forecast_days=4';
- fetch(u).then(function(r){return r.json()}).then(function(j){WX=j;logWX();drawWX();drawIntel();}).catch(function(){});
+ fetch(u).then(function(r){return r.json()}).then(function(j){WX=j;logWX();drawWX();drawIntel();renderToday();}).catch(function(){});
  var la=[],lo=[];
  for(var i=0;i<BDC.length;i++){la.push(BDC[i][1]);lo.push(BDC[i][2]);}
  fetch('https://api.open-meteo.com/v1/forecast?latitude='+la.join(',')+'&longitude='+lo.join(',')+
@@ -2170,6 +2346,10 @@ runAgents();setTimeout(runAgents,3500);setTimeout(runAgents,9000);
 setInterval(runAgents,60000);
 setInterval(function(){drawAgents();},20000);
 setInterval(tickCds,1000);
+buildRail();go(TODAY_IDX,null);
+setTimeout(renderToday,3200);setTimeout(renderToday,9000);
+setInterval(renderToday,900000);
+addEventListener('resize',function(){if(document.getElementById('pane-today').className.indexOf('on')>-1)drawFx();});
 setInterval(function(){drawIntel();drawCds();},45000);
 setInterval(function(){var m=dhakaMonth();
  for(var i=0;i<MONTHS.length;i++)if(MONTHS[i].i===m&&nowIdx!==i){nowIdx=i;buildStrip();render();drawIntel();break;}},60000);
