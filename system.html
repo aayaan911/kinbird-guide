@@ -232,6 +232,20 @@ ul.list li.done label{color:var(--dim2);text-decoration:line-through}
   font-family:var(--mono);font-size:11px;letter-spacing:2px;padding:12px 26px;border-radius:9px;cursor:pointer}
 .rbtn:hover{border-color:var(--rd);color:var(--rd)}
 
+/* COUNTDOWNS */
+.cds{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px;margin-bottom:26px}
+.cd{position:relative;padding:20px;border-radius:11px;overflow:hidden;text-align:center;
+  background:linear-gradient(150deg,rgba(12,22,34,.75),rgba(6,11,18,.65));
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(34,211,238,.15)}
+.cd .cl{font-family:var(--mono);font-size:9px;letter-spacing:2.2px;color:var(--dim2);margin-bottom:12px}
+.cd .cn{font-family:var(--dsp);font-size:44px;font-weight:900;line-height:.95;
+  font-variant-numeric:tabular-nums}
+.cd .cu{font-family:var(--mono);font-size:9.5px;letter-spacing:2.4px;color:var(--dim);margin-top:8px}
+.cd .cx{font-size:13px;color:var(--dim);margin-top:12px;line-height:1.55}
+.cd .prg{height:4px;background:rgba(0,0,0,.5);border-radius:3px;margin-top:14px;overflow:hidden}
+.cd .prg i{display:block;height:100%;border-radius:3px}
+.mo .cdn{font-family:var(--mono);font-size:8.5px;letter-spacing:1px;color:var(--vi);margin-top:5px}
+
 /* LOG + TEACH */
 .subtabs{display:flex;gap:6px;margin-bottom:20px;overflow-x:auto}
 .stb{font-family:var(--mono);font-size:11px;letter-spacing:1.6px;color:var(--dim);
@@ -361,6 +375,7 @@ tr:last-child td{border:none}
   <div class="pane">
     <h3 class="sh">SEASON MAP · AUG 2026 → MAY 2027</h3>
     <p class="sd">Tap a month for its climate, light setting and action list. Figures are Dhaka 1990–2020 normals.</p>
+    <div class="cds" id="cds"></div>
     <div class="strip" id="strip"></div>
     <div class="two">
       <div class="card sub"><h4 class="ch" id="dtitle">CLIMATE</h4><div id="dclimate"></div></div>
@@ -876,11 +891,55 @@ function tab(i,b){var t=document.querySelectorAll('.tab'),p=document.querySelect
 /* ===== SEASON ===== */
 var sel=0,nowIdx=0;
 (function(){var m=dhakaMonth();for(var i=0;i<MONTHS.length;i++)if(MONTHS[i].i===m){nowIdx=i;sel=i;break;}})();
+/* ---- countdown engine ---- */
+function dDate(){var p=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Dhaka',
+ year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());return new Date(p+'T00:00:00Z');}
+function monthStart(mi){ // next occurrence of month index mi (0-11)
+ var n=dDate(),y=n.getUTCFullYear(),t=Date.UTC(y,mi,1);
+ if(t<n.getTime())t=Date.UTC(y+1,mi,1);
+ return t;}
+function dleft(t){return Math.ceil((t-dDate().getTime())/86400000)}
+function cdCard(l,n,u,x,c,pc){
+ return '<div class="cd"><div class="cl">'+l+'</div><div class="cn" style="color:'+c+
+  ';text-shadow:0 0 30px '+c+'55">'+n+'</div><div class="cu">'+u+'</div><div class="cx">'+x+'</div>'+
+  (pc!==undefined?'<div class="prg"><i style="width:'+pc+'%;background:'+c+'"></i></div>':'')+'</div>';}
+function drawCds(){
+ var el=document.getElementById('cds');if(!el)return;
+ var n=dDate(),h='';
+ var sStart=monthStart(9);   // 1 Oct
+ var sEnd=monthStart(3);     // 1 Apr
+ var inSeason=(sEnd<sStart);
+ // days into current month + days left
+ var y=n.getUTCFullYear(),m=n.getUTCMonth();
+ var mEnd=Date.UTC(m===11?y+1:y,(m+1)%12,1);
+ var mLeft=Math.ceil((mEnd-n.getTime())/86400000);
+ var mTot=Math.round((mEnd-Date.UTC(y,m,1))/86400000);
+ var N=MONTHS[nowIdx];
+ if(inSeason){
+  var dEnd=dleft(sEnd);
+  var tot=Math.round((sEnd-monthStart(9)+31536000000)%31536000000/86400000)||182;
+  h+=cdCard('BREEDING SEASON','LIVE','IN PROGRESS',
+    'You are inside the window. Push output.','var(--gr)');
+  h+=cdCard('SEASON ENDS IN',dEnd,'DAYS','Pull all nest boxes by 1 April. Eggs laid after mid-March hatch into 34°C heat.','var(--rd)');
+ }else{
+  var dStart=dleft(sStart);
+  h+=cdCard('SEASON STARTS IN',dStart,'DAYS','1 October — your STRIKE month. 33°C / 76% RH, proven 4/5 and 5/5 clutches.','var(--am)',
+    Math.max(0,Math.min(100,(1-dStart/92)*100)));
+  h+=cdCard('LIGHT RAMP BEGINS',dleft(monthStart(8)),'DAYS','1 September — start +15 min per week, 12h toward 14h.','var(--vi)');
+ }
+ h+=cdCard('THIS MONTH',mLeft,'DAYS LEFT',N.n+' is '+N.phase+'. '+N.sub,'var(--cy)',
+   Math.round((mTot-mLeft)/mTot*100));
+ var nx=MONTHS[(nowIdx+1)%MONTHS.length];
+ h+=cdCard('NEXT: '+nx.n,dleft(monthStart(nx.i)),'DAYS','Becomes '+nx.phase+'. '+nx.light,nx.col);
+ el.innerHTML=h;}
+
 function buildStrip(){var h='';
  for(var i=0;i<MONTHS.length;i++){var M=MONTHS[i];
+  var dl=(i===nowIdx)?null:dleft(monthStart(M.i));
   h+='<div class="mo'+(i===sel?' on':'')+(i===nowIdx?' now':'')+'" onclick="pick('+i+')">'+
   '<div class="mn">'+M.n+'</div><div class="mt2">'+M.max+'° · '+M.rh+'%</div>'+
-  '<div class="dot" style="background:'+M.col+'"></div></div>';}
+  '<div class="dot" style="background:'+M.col+'"></div>'+
+  (dl!==null?'<div class="cdn">in '+dl+'d</div>':'')+'</div>';}
  document.getElementById('strip').innerHTML=h;}
 function pick(i){sel=i;buildStrip();render();}
 function row(k,v){return '<div class="row"><span class="k">'+k+'</span><span class="v">'+v+'</span></div>'}
@@ -1275,8 +1334,8 @@ function drawIntel(){
  el.innerHTML=h;}
 
 loadDB();drawCloud();if(CLOUD)cloudPull();
-buildStrip();render();buildChk();loadTasks();drawTasks();drawLog();drawIntel();
-setInterval(drawIntel,45000);
+buildStrip();render();buildChk();loadTasks();drawTasks();drawLog();drawIntel();drawCds();
+setInterval(function(){drawIntel();drawCds();},45000);
 setInterval(function(){var m=dhakaMonth();
  for(var i=0;i<MONTHS.length;i++)if(MONTHS[i].i===m&&nowIdx!==i){nowIdx=i;buildStrip();render();drawIntel();break;}},60000);
 </script>
