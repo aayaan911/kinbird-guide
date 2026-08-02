@@ -2,175 +2,243 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>KINBIRD OS — Aviary Command System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#05070d; --bg2:#0a0f1a; --panel:rgba(10,18,32,.72);
-  --cy:#00e5ff; --mg:#ff2d92; --gr:#39ff88; --am:#ffb300; --rd:#ff4d5e;
-  --tx:#cfe9f5; --dim:#6f8ba3; --line:rgba(0,229,255,.18);
-  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --bg:#03050a; --panel:#080e16; --panel2:#0b131d; --line:#16273a; --line2:#1f3550;
+  --cy:#22d3ee; --mg:#f472b6; --gr:#4ade80; --am:#fbbf24; --rd:#f87171; --vi:#a78bfa;
+  --tx:#dfeaf2; --dim:#7f96ab; --dim2:#4c6076;
+  --dsp:'Orbitron',ui-monospace,monospace;
+  --ui:'Rajdhani',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --mono:'Share Tech Mono',ui-monospace,Menlo,monospace;
+  --r:12px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{background:var(--bg);color:var(--tx);font-family:var(--mono);overflow-x:hidden}
-body{min-height:100vh;position:relative}
-#stars{position:fixed;inset:0;z-index:0}
-.scan{position:fixed;inset:0;z-index:2;pointer-events:none;
-  background:repeating-linear-gradient(0deg,rgba(0,229,255,.03) 0 1px,transparent 1px 3px)}
-.wrap{position:relative;z-index:3;max-width:1400px;margin:0 auto;padding:16px 16px 60px}
+body{background:var(--bg);color:var(--tx);font-family:var(--ui);
+  font-size:16px;line-height:1.65;min-height:100vh;position:relative;
+  -webkit-font-smoothing:antialiased}
+#stars{position:fixed;inset:0;z-index:0;opacity:.55}
+.wrap{position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:0 26px 90px}
+@media(max-width:600px){.wrap{padding:0 14px 60px}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}
 
-/* header */
-header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
-  border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(8px);
-  padding:12px 16px;border-radius:4px;margin-bottom:14px;
-  box-shadow:0 0 24px rgba(0,229,255,.08), inset 0 0 40px rgba(0,229,255,.03)}
-.logo{font-size:19px;font-weight:800;letter-spacing:3px;color:var(--cy);
-  text-shadow:0 0 12px rgba(0,229,255,.6)}
-.logo span{color:var(--mg);text-shadow:0 0 12px rgba(255,45,146,.6)}
-.hsub{font-size:10px;color:var(--dim);letter-spacing:2px;margin-top:2px}
-.spacer{flex:1}
-.clock{font-size:22px;font-weight:700;color:var(--gr);text-shadow:0 0 10px rgba(57,255,136,.5)}
-.cdate{font-size:10px;color:var(--dim);letter-spacing:1.5px;text-align:right}
+/* TOP */
+.top{position:sticky;top:0;z-index:50;background:rgba(3,5,10,.93);
+  backdrop-filter:blur(16px);border-bottom:1px solid var(--line);margin-bottom:30px}
+.topin{max-width:1280px;margin:0 auto;padding:15px 26px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+@media(max-width:600px){.topin{padding:13px 14px}}
+.brand{font-family:var(--dsp);font-size:19px;font-weight:900;letter-spacing:3px;color:var(--cy);
+  text-shadow:0 0 22px rgba(34,211,238,.45)}
+.brand span{color:var(--mg);text-shadow:0 0 22px rgba(244,114,182,.45)}
+.bsub{font-family:var(--mono);font-size:10px;letter-spacing:2.4px;color:var(--dim2);margin-top:3px}
+.grow{flex:1}
+.tclock{font-family:var(--dsp);font-size:27px;font-weight:700;color:var(--gr);
+  line-height:1;font-variant-numeric:tabular-nums;text-shadow:0 0 18px rgba(74,222,128,.4)}
+.tmeta{font-family:var(--mono);font-size:10px;letter-spacing:1.8px;color:var(--dim);margin-top:5px;text-align:right}
 
-/* hero */
-.hero{display:grid;grid-template-columns:300px 1fr;gap:14px;margin-bottom:14px}
-@media(max-width:840px){.hero{grid-template-columns:1fr}}
-.globebox{border:1px solid var(--line);background:var(--panel);border-radius:4px;
-  padding:10px;position:relative;overflow:hidden;min-height:290px;
-  box-shadow:0 0 24px rgba(0,229,255,.08)}
-#globe{display:block;margin:0 auto}
-.gcap{position:absolute;bottom:8px;left:0;right:0;text-align:center;
-  font-size:9px;letter-spacing:2px;color:var(--dim)}
+/* HERO */
+.hero{display:grid;grid-template-columns:minmax(360px,1.05fr) 1fr;gap:22px;margin-bottom:30px}
+@media(max-width:940px){.hero{grid-template-columns:1fr}}
+.gwrap{position:relative;overflow:hidden;min-height:470px;
+  background:radial-gradient(circle at 50% 42%,#08151f 0%,#03050a 74%)}
+#globe{display:block;width:100%;height:470px;cursor:grab;touch-action:none}
+#globe:active{cursor:grabbing}
+.gtop{position:absolute;top:14px;left:15px;right:15px;display:flex;
+  justify-content:space-between;gap:10px;pointer-events:none;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:10px;letter-spacing:1.6px;color:var(--dim);
+  background:rgba(3,5,10,.78);border:1px solid var(--line);padding:6px 10px;border-radius:6px}
+.gctl{position:absolute;right:14px;bottom:14px;display:flex;flex-direction:column;gap:8px}
+.gb{width:38px;height:38px;border-radius:9px;background:rgba(8,14,22,.92);
+  border:1px solid var(--line);color:var(--cy);font-family:var(--mono);font-size:17px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
+.gb:hover{border-color:var(--cy);background:rgba(34,211,238,.15)}
+.ghint{position:absolute;left:16px;bottom:16px;font-family:var(--mono);font-size:9.5px;
+  letter-spacing:1.5px;color:var(--dim2)}
+.dpanel{padding:30px 32px;display:flex;flex-direction:column}
+@media(max-width:600px){.dpanel{padding:22px 18px}}
+.kick{font-family:var(--mono);font-size:10px;letter-spacing:3.4px;color:var(--dim);margin-bottom:14px}
+.phase{font-family:var(--dsp);font-size:clamp(28px,4.6vw,42px);font-weight:900;
+  letter-spacing:2px;line-height:1;margin-bottom:12px}
+.psub{font-size:16px;color:var(--dim);margin-bottom:22px;font-weight:500}
+.dir{background:var(--panel2);border-left:3px solid var(--gr);border-radius:0 9px 9px 0;
+  padding:18px 22px;font-size:16px;line-height:1.75;margin-bottom:26px}
+.mets{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:11px;margin-top:auto}
+.met{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:13px 8px;text-align:center}
+.met .v{font-family:var(--dsp);font-size:22px;font-weight:700;color:var(--cy);line-height:1}
+.met .k{font-family:var(--mono);font-size:8.5px;letter-spacing:1.4px;color:var(--dim2);margin-top:7px}
 
-.statusbox{border:1px solid var(--line);background:var(--panel);border-radius:4px;padding:16px;
-  box-shadow:0 0 24px rgba(0,229,255,.08);display:flex;flex-direction:column}
-.slabel{font-size:9px;letter-spacing:3px;color:var(--dim);margin-bottom:8px}
-.phase{font-size:34px;font-weight:800;letter-spacing:1px;line-height:1.05;margin-bottom:4px}
-.phasesub{font-size:12px;color:var(--dim);margin-bottom:14px}
-.directive{border-left:3px solid var(--gr);background:rgba(57,255,136,.06);
-  padding:10px 14px;font-size:14px;line-height:1.55;margin-bottom:12px}
-.directive b{color:var(--gr)}
-.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:8px;margin-top:auto}
-.met{border:1px solid var(--line);padding:8px;text-align:center;border-radius:3px;
-  background:rgba(0,229,255,.03)}
-.met .v{font-size:19px;font-weight:800;color:var(--cy)}
-.met .k{font-size:8px;letter-spacing:1.5px;color:var(--dim);margin-top:2px}
+/* TABS */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:28px;overflow-x:auto}
+.tab{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:2px;color:var(--dim);
+  background:none;border:none;border-bottom:2px solid transparent;padding:15px 20px;
+  cursor:pointer;white-space:nowrap;transition:.15s}
+.tab:hover{color:var(--tx)}
+.tab.on{color:var(--cy);border-bottom-color:var(--cy);text-shadow:0 0 14px rgba(34,211,238,.5)}
+.pane{display:none}.pane.on{display:block;animation:f .25s ease}
+@keyframes f{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+h3.sh{font-family:var(--dsp);font-size:14px;font-weight:700;letter-spacing:2.6px;color:var(--cy);margin-bottom:7px}
+p.sd{font-size:15px;color:var(--dim);margin-bottom:26px}
 
-/* section */
-.sec{border:1px solid var(--line);background:var(--panel);border-radius:4px;
-  padding:16px;margin-bottom:14px;box-shadow:0 0 20px rgba(0,229,255,.06)}
-.stit{font-size:11px;letter-spacing:3px;color:var(--cy);margin-bottom:12px;
-  display:flex;align-items:center;gap:8px}
-.stit::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+/* CHAT */
+.chat{display:flex;flex-direction:column;height:min(560px,68vh)}
+.msgs{flex:1;overflow-y:auto;padding:24px 26px;display:flex;flex-direction:column;gap:18px}
+@media(max-width:600px){.msgs{padding:18px 15px}}
+.msg{max-width:88%;padding:15px 19px;border-radius:13px;font-size:15.5px;line-height:1.75}
+.msg.me{align-self:flex-end;background:rgba(34,211,238,.13);border:1px solid rgba(34,211,238,.3)}
+.msg.ai{align-self:flex-start;background:var(--panel2);border:1px solid var(--line)}
+.msg .mt{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:1.6px;
+  color:var(--mg);margin-bottom:9px}
+.msg .sc{font-family:var(--mono);font-size:10.5px;color:var(--dim2);margin-top:13px;
+  padding-top:11px;border-top:1px solid var(--line)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;padding:0 26px 16px}
+@media(max-width:600px){.chips{padding:0 15px 14px}}
+.cp{font-family:var(--mono);font-size:11px;letter-spacing:.8px;color:var(--cy);
+  background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.28);
+  padding:8px 13px;border-radius:20px;cursor:pointer;transition:.15s}
+.cp:hover{background:rgba(34,211,238,.2)}
+.cbar{display:flex;gap:11px;padding:18px 26px;border-top:1px solid var(--line)}
+@media(max-width:600px){.cbar{padding:14px 15px}}
+.cbar input{flex:1;background:#04080f;border:1px solid var(--line);color:var(--tx);
+  font-family:var(--ui);font-size:16px;padding:14px 17px;border-radius:10px;outline:none}
+.cbar input:focus{border-color:var(--cy)}
+.cbar button{background:var(--cy);color:#03050a;border:none;font-family:var(--dsp);
+  font-weight:700;font-size:13px;letter-spacing:1.6px;padding:0 24px;border-radius:10px;cursor:pointer}
 
-/* timeline */
-.tl{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px}
-.mo{flex:0 0 96px;border:1px solid var(--line);border-radius:3px;padding:10px 8px;
-  cursor:pointer;text-align:center;transition:.18s;background:rgba(0,229,255,.02)}
-.mo:hover{border-color:var(--cy);background:rgba(0,229,255,.08)}
-.mo.on{border-color:var(--mg);background:rgba(255,45,146,.1);
-  box-shadow:0 0 16px rgba(255,45,146,.3)}
-.mo.now{border-color:var(--gr)}
-.mo .mn{font-size:13px;font-weight:800;letter-spacing:1px}
-.mo .mt{font-size:10px;color:var(--dim);margin-top:3px}
-.mo .bar{height:3px;border-radius:2px;margin-top:7px}
-
-/* detail */
-.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media(max-width:760px){.dgrid{grid-template-columns:1fr}}
-.dcard{border:1px solid var(--line);border-radius:3px;padding:14px;background:rgba(0,229,255,.02)}
-.dcard h4{font-size:10px;letter-spacing:2px;color:var(--am);margin-bottom:10px;font-weight:700}
-.row{display:flex;justify-content:space-between;padding:6px 0;
-  border-bottom:1px dashed rgba(0,229,255,.1);font-size:12px}
-.row:last-child{border:none}
+/* SEASON */
+.strip{display:grid;grid-template-columns:repeat(10,1fr);gap:8px;margin-bottom:26px}
+@media(max-width:840px){.strip{grid-template-columns:repeat(5,1fr)}}
+@media(max-width:460px){.strip{grid-template-columns:repeat(3,1fr)}}
+.mo{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 6px;
+  cursor:pointer;text-align:center;transition:.15s}
+.mo:hover{border-color:var(--dim);transform:translateY(-2px)}
+.mo.on{border-color:var(--cy);background:rgba(34,211,238,.09)}
+.mo .mn{font-family:var(--dsp);font-size:13px;font-weight:700;letter-spacing:1px}
+.mo .mt2{font-family:var(--mono);font-size:10px;color:var(--dim2);margin-top:5px}
+.mo .dot{width:7px;height:7px;border-radius:50%;margin:9px auto 0}
+.mo.now::after{content:"NOW";display:block;font-family:var(--mono);font-size:8px;
+  letter-spacing:1.5px;color:var(--gr);margin-top:5px}
+.two{display:grid;grid-template-columns:330px 1fr;gap:20px}
+@media(max-width:840px){.two{grid-template-columns:1fr}}
+.sub{padding:26px 28px}
+@media(max-width:600px){.sub{padding:20px 16px}}
+h4.ch{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2.4px;
+  color:var(--am);margin-bottom:18px}
+.row{display:flex;justify-content:space-between;gap:14px;padding:12px 0;
+  border-bottom:1px solid var(--line);font-size:15px}
+.row:last-child{border:none;padding-bottom:0}
 .row .k{color:var(--dim)}
-.row .v{color:var(--tx);font-weight:700}
+.row .v{font-family:var(--mono);text-align:right}
 ul.acts{list-style:none}
-ul.acts li{padding:7px 0 7px 18px;position:relative;font-size:12.5px;line-height:1.5;
-  border-bottom:1px dashed rgba(0,229,255,.1)}
-ul.acts li:last-child{border:none}
-ul.acts li::before{content:"▸";position:absolute;left:0;color:var(--cy)}
-.tag{display:inline-block;font-size:8px;letter-spacing:1.5px;padding:2px 7px;
-  border-radius:2px;margin-left:6px;vertical-align:middle}
-.t-go{background:rgba(57,255,136,.15);color:var(--gr);border:1px solid rgba(57,255,136,.4)}
-.t-hold{background:rgba(255,179,0,.15);color:var(--am);border:1px solid rgba(255,179,0,.4)}
-.t-stop{background:rgba(255,77,94,.15);color:var(--rd);border:1px solid rgba(255,77,94,.4)}
+ul.acts li{padding:14px 0 14px 24px;position:relative;font-size:15.5px;line-height:1.7;
+  border-bottom:1px solid var(--line)}
+ul.acts li:last-child{border:none;padding-bottom:0}
+ul.acts li::before{content:"";position:absolute;left:2px;top:23px;width:7px;height:7px;
+  border-radius:50%;background:var(--cy)}
 
-/* calculator */
-.calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px}
-.fld label{display:block;font-size:9px;letter-spacing:1.5px;color:var(--dim);margin-bottom:5px}
-.fld input{width:100%;background:#040810;border:1px solid var(--line);color:var(--cy);
-  font-family:var(--mono);font-size:17px;padding:9px 10px;border-radius:3px;outline:none}
-.fld input:focus{border-color:var(--cy);box-shadow:0 0 12px rgba(0,229,255,.25)}
-#eggout{border:1px solid var(--line);border-radius:3px;padding:16px;background:rgba(0,229,255,.03)}
-.verdict{font-size:20px;font-weight:800;margin-bottom:8px;letter-spacing:1px}
-.vsub{font-size:13px;line-height:1.6;color:var(--tx)}
-.gauge{height:10px;background:#040810;border:1px solid var(--line);border-radius:5px;
-  margin:14px 0 8px;position:relative;overflow:hidden}
-.gauge .zone{position:absolute;top:0;bottom:0;background:rgba(57,255,136,.25)}
-.gauge .pin{position:absolute;top:-3px;bottom:-3px;width:3px;background:var(--mg);
-  box-shadow:0 0 10px var(--mg)}
-.glbl{display:flex;justify-content:space-between;font-size:9px;color:var(--dim)}
+/* EGG */
+.eg{display:grid;grid-template-columns:1fr 1.3fr;gap:20px}
+@media(max-width:840px){.eg{grid-template-columns:1fr}}
+.fld{margin-bottom:20px}.fld:last-child{margin-bottom:0}
+.fld label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:1.8px;
+  color:var(--dim);margin-bottom:9px}
+.fld input{width:100%;background:#04080f;border:1px solid var(--line);color:var(--cy);
+  font-family:var(--dsp);font-size:24px;font-weight:700;padding:14px 16px;border-radius:9px;outline:none}
+.fld input:focus{border-color:var(--cy)}
+.verdict{font-family:var(--dsp);font-size:19px;font-weight:700;letter-spacing:1px;
+  margin-bottom:15px;line-height:1.35}
+.vtext{font-size:15.5px;line-height:1.8}
+.gauge{height:13px;background:#04080f;border:1px solid var(--line);border-radius:7px;
+  margin:26px 0 10px;position:relative}
+.gauge .zone{position:absolute;top:0;bottom:0;background:rgba(74,222,128,.3);
+  border-left:1px solid var(--gr);border-right:1px solid var(--gr)}
+.gauge .pin{position:absolute;top:-5px;bottom:-5px;width:3px;background:var(--mg);border-radius:2px}
+.glbl{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--dim2)}
+.note{background:var(--panel2);border-left:3px solid var(--am);border-radius:0 9px 9px 0;
+  padding:19px 23px;font-size:15.5px;line-height:1.8;margin-top:22px}
 
-/* checklist */
-.chk{list-style:none}
-.chk li{display:flex;gap:10px;align-items:flex-start;padding:9px 0;
-  border-bottom:1px dashed rgba(0,229,255,.1)}
-.chk li:last-child{border:none}
-.chk input{appearance:none;-webkit-appearance:none;flex:0 0 20px;height:20px;margin-top:1px;
-  border:1px solid var(--cy);border-radius:3px;background:#040810;cursor:pointer;position:relative}
-.chk input:checked{background:var(--cy);box-shadow:0 0 12px rgba(0,229,255,.5)}
-.chk input:checked::after{content:"";position:absolute;left:6px;top:2px;width:5px;height:10px;
-  border:solid #05070d;border-width:0 2px 2px 0;transform:rotate(45deg)}
-.chk label{flex:1;font-size:12.5px;line-height:1.5;cursor:pointer}
-.chk li.done label{color:var(--dim);text-decoration:line-through}
-.prog{height:4px;background:#040810;border-radius:2px;overflow:hidden;margin-bottom:12px}
-.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cy),var(--gr));
-  transition:width .3s;box-shadow:0 0 10px var(--cy)}
+/* TASKS + DAILY */
+.addbar{display:flex;gap:11px;margin-bottom:24px}
+.addbar input{flex:1;background:#04080f;border:1px solid var(--line);color:var(--tx);
+  font-family:var(--ui);font-size:16px;padding:14px 17px;border-radius:10px;outline:none}
+.addbar input:focus{border-color:var(--cy)}
+.addbar button{background:var(--gr);color:#03050a;border:none;font-family:var(--dsp);
+  font-weight:700;font-size:13px;letter-spacing:1.4px;padding:0 24px;border-radius:10px;cursor:pointer}
+ul.list{list-style:none}
+ul.list li{display:flex;gap:16px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--line)}
+ul.list li:last-child{border:none}
+ul.list input[type=checkbox]{appearance:none;-webkit-appearance:none;flex:0 0 23px;height:23px;
+  margin-top:2px;border:1.5px solid var(--dim2);border-radius:6px;background:#04080f;
+  cursor:pointer;position:relative;transition:.15s}
+ul.list input:checked{background:var(--cy);border-color:var(--cy)}
+ul.list input:checked::after{content:"";position:absolute;left:7px;top:3px;width:6px;height:11px;
+  border:solid #03050a;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+ul.list label{flex:1;font-size:16px;line-height:1.65;cursor:pointer}
+ul.list li.done label{color:var(--dim2);text-decoration:line-through}
+.del{background:none;border:none;color:var(--dim2);font-size:19px;cursor:pointer;padding:0 6px;line-height:1}
+.del:hover{color:var(--rd)}
+.pbar{height:5px;background:#04080f;border-radius:3px;overflow:hidden;margin-bottom:9px}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cy),var(--gr));transition:width .35s}
+.pct{font-family:var(--mono);font-size:11px;letter-spacing:1.6px;color:var(--dim);margin-bottom:22px}
+.rbtn{display:block;margin:28px auto 0;background:none;border:1px solid var(--line);color:var(--dim);
+  font-family:var(--mono);font-size:11px;letter-spacing:2px;padding:12px 26px;border-radius:9px;cursor:pointer}
+.rbtn:hover{border-color:var(--rd);color:var(--rd)}
 
-/* science */
-.sci{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
-.scard{border:1px solid var(--line);border-radius:3px;padding:14px;background:rgba(255,45,146,.03)}
-.scard h5{font-size:10px;letter-spacing:2px;color:var(--mg);margin-bottom:8px}
-.scard p{font-size:12px;line-height:1.6;color:var(--tx)}
-.scard .num{font-size:26px;font-weight:800;color:var(--cy);display:block;margin-bottom:4px}
-.src{font-size:9px;color:var(--dim);margin-top:8px;line-height:1.5}
-.foot{text-align:center;font-size:9px;color:var(--dim);letter-spacing:2px;padding:20px 0}
-.warn{border-left:3px solid var(--am);background:rgba(255,179,0,.06);padding:10px 14px;
-  font-size:12px;line-height:1.6;margin-top:12px}
-.warn b{color:var(--am)}
+/* SCIENCE */
+.sci{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.scard{padding:28px}
+.scard h5{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2.2px;
+  color:var(--mg);margin-bottom:16px}
+.scard .big{font-family:var(--dsp);font-size:34px;font-weight:900;color:var(--cy);
+  display:block;line-height:1;margin-bottom:15px;text-shadow:0 0 22px rgba(34,211,238,.35)}
+.scard p{font-size:15.5px;line-height:1.8}
+.scard .src{font-family:var(--mono);font-size:11px;color:var(--dim2);margin-top:17px;
+  padding-top:15px;border-top:1px solid var(--line);line-height:1.6}
+.foot{text-align:center;font-family:var(--mono);font-size:10px;letter-spacing:2px;
+  color:var(--dim2);padding:46px 0 0}
 </style>
 </head>
 <body>
 <canvas id="stars"></canvas>
-<div class="scan"></div>
+
+<div class="top"><div class="topin">
+  <div>
+    <div class="brand">KINBIRD <span>OS</span></div>
+    <div class="bsub">AVIARY COMMAND · DHAKA 23.8°N 90.4°E</div>
+  </div>
+  <div class="grow"></div>
+  <div>
+    <div class="tclock" id="clock">--:--:--</div>
+    <div class="tmeta" id="cdate">DHAKA · BST UTC+6</div>
+  </div>
+</div></div>
 
 <div class="wrap">
-  <header>
-    <div>
-      <div class="logo">KINBIRD <span>OS</span></div>
-      <div class="hsub">AVIARY COMMAND SYSTEM · DHAKA 23.8°N</div>
-    </div>
-    <div class="spacer"></div>
-    <div>
-      <div class="clock" id="clock">--:--:--</div>
-      <div class="cdate" id="cdate">---</div>
-    </div>
-  </header>
-
   <div class="hero">
-    <div class="globebox">
-      <canvas id="globe" width="270" height="250"></canvas>
-      <div class="gcap" id="gcap">ORBITAL PHASE · TRACKING</div>
+    <div class="card gwrap">
+      <canvas id="globe"></canvas>
+      <div class="gtop">
+        <div class="chip" id="gchip">EARTH · LIVE TERMINATOR</div>
+        <div class="chip" id="gsun">—</div>
+      </div>
+      <div class="gctl">
+        <button class="gb" onclick="zoomBy(1.3)">+</button>
+        <button class="gb" onclick="zoomBy(.77)">−</button>
+        <button class="gb" onclick="resetView()" style="font-size:13px">⟲</button>
+      </div>
+      <div class="ghint">DRAG TO ROTATE · SCROLL TO ZOOM · ZOOM IN FOR CITY TEMPS</div>
     </div>
-    <div class="statusbox">
-      <div class="slabel">CURRENT DIRECTIVE</div>
+    <div class="card dpanel">
+      <div class="kick">CURRENT DIRECTIVE</div>
       <div class="phase" id="phase">—</div>
-      <div class="phasesub" id="phasesub">—</div>
-      <div class="directive" id="directive">—</div>
-      <div class="metrics">
-        <div class="met"><div class="v" id="m1">—</div><div class="k">OUT MAX °C</div></div>
-        <div class="met"><div class="v" id="m2">—</div><div class="k">OUT MIN °C</div></div>
+      <div class="psub" id="phasesub">—</div>
+      <div class="dir" id="directive">—</div>
+      <div class="mets">
+        <div class="met"><div class="v" id="m1">—</div><div class="k">DAY MAX °C</div></div>
+        <div class="met"><div class="v" id="m2">—</div><div class="k">NIGHT MIN °C</div></div>
         <div class="met"><div class="v" id="m3">—</div><div class="k">HUMIDITY %</div></div>
         <div class="met"><div class="v" id="m4">—</div><div class="k">LIGHT HRS</div></div>
         <div class="met"><div class="v" id="m5">—</div><div class="k">RAIN MM</div></div>
@@ -178,431 +246,572 @@ ul.acts li::before{content:"▸";position:absolute;left:0;color:var(--cy)}
     </div>
   </div>
 
-  <div class="sec">
-    <div class="stit">SEASON MAP · AUG 2026 → MAY 2027</div>
-    <div class="tl" id="tl"></div>
-    <div class="dgrid" style="margin-top:14px">
-      <div class="dcard">
-        <h4 id="dtitle">CLIMATE FORECAST</h4>
-        <div id="dclimate"></div>
+  <div class="tabs">
+    <button class="tab on" onclick="tab(0,this)">BRAIN</button>
+    <button class="tab" onclick="tab(1,this)">SEASON</button>
+    <button class="tab" onclick="tab(2,this)">EGG LAB</button>
+    <button class="tab" onclick="tab(3,this)">TASKS</button>
+    <button class="tab" onclick="tab(4,this)">DAILY</button>
+    <button class="tab" onclick="tab(5,this)">SCIENCE</button>
+  </div>
+
+  <!-- BRAIN -->
+  <div class="pane on">
+    <h3 class="sh">ASK THE AVIARY BRAIN</h3>
+    <p class="sd">Every answer comes from the verified knowledge base with its source. It works offline and never invents a number.</p>
+    <div class="card chat">
+      <div class="msgs" id="msgs"></div>
+      <div class="chips" id="chips"></div>
+      <div class="cbar">
+        <input id="q" placeholder="Ask anything about your aviary..." onkeydown="if(event.key==='Enter')ask()">
+        <button onclick="ask()">SEND</button>
       </div>
-      <div class="dcard">
-        <h4>ACTIONS THIS MONTH</h4>
-        <ul class="acts" id="dacts"></ul>
+    </div>
+  </div>
+
+  <!-- SEASON -->
+  <div class="pane">
+    <h3 class="sh">SEASON MAP · AUG 2026 → MAY 2027</h3>
+    <p class="sd">Tap a month for its climate, light setting and action list. Figures are Dhaka 1990–2020 normals.</p>
+    <div class="strip" id="strip"></div>
+    <div class="two">
+      <div class="card sub"><h4 class="ch" id="dtitle">CLIMATE</h4><div id="dclimate"></div></div>
+      <div class="card sub"><h4 class="ch">ACTIONS THIS MONTH</h4><ul class="acts" id="dacts"></ul></div>
+    </div>
+  </div>
+
+  <!-- EGG -->
+  <div class="pane">
+    <h3 class="sh">EGG WEIGHT LOSS ANALYSER</h3>
+    <p class="sd">The only true measure of whether your humidity is right. A wall sensor reads the room; the egg reads the truth.</p>
+    <div class="eg">
+      <div class="card sub"><h4 class="ch">MEASUREMENTS</h4>
+        <div class="fld"><label>FRESH WEIGHT ON LAY DAY (g)</label><input id="w0" type="number" step="0.01" placeholder="2.20"></div>
+        <div class="fld"><label>WEIGHT TODAY (g)</label><input id="wn" type="number" step="0.01" placeholder="2.05"></div>
+        <div class="fld"><label>DAY OF INCUBATION</label><input id="dy" type="number" step="1" placeholder="10"></div>
+      </div>
+      <div class="card sub" id="eggout"><h4 class="ch">ANALYSIS</h4>
+        <div class="verdict" style="color:var(--dim)">AWAITING INPUT</div>
+        <div class="vtext">Weigh each egg on lay day, then every 3 days. Enter the numbers and this tells you exactly which direction to move your humidity.</div>
       </div>
     </div>
+    <div class="note"><b style="color:var(--am)">TARGET:</b> lovebird eggs must lose <b>13–16% of fresh weight</b> by day 21 (internal pip), about 0.69% per day. Too fast means the air is too dry — raise humidity. Too slow means too wet — lower it. Inadequate weight loss drowns fully formed chicks at internal pip, exactly the dead-in-shell you are fighting.</div>
   </div>
 
-  <div class="sec">
-    <div class="stit">EGG WEIGHT LOSS ANALYSER · THE HATCH PREDICTOR</div>
-    <div class="calc">
-      <div class="fld"><label>FRESH WEIGHT (g)</label><input id="w0" type="number" step="0.01" placeholder="2.20"></div>
-      <div class="fld"><label>TODAY WEIGHT (g)</label><input id="wn" type="number" step="0.01" placeholder="2.05"></div>
-      <div class="fld"><label>DAY OF INCUBATION</label><input id="dy" type="number" step="1" placeholder="10"></div>
-    </div>
-    <div id="eggout">
-      <div class="verdict" style="color:var(--dim)">AWAITING INPUT</div>
-      <div class="vsub">Weigh the egg the day it is laid, then every 3 days. This tells you if your humidity is right for THESE eggs, in THIS room. It is the only true measurement. A wall sensor guesses; the egg does not.</div>
-    </div>
-    <div class="warn"><b>TARGET:</b> lovebird eggs must lose <b>13-16% of fresh weight</b> by day 21 (internal pip), about 0.69%/day. Losing too fast = air too dry, RAISE humidity. Too slow = air too wet, LOWER humidity. Inadequate weight loss drowns fully-formed chicks at internal pip, the exact dead-in-shell you are fighting.</div>
-  </div>
-
-  <div class="sec">
-    <div class="stit">DAILY OPERATIONS · TAP AS YOU GO</div>
-    <div class="prog"><i id="pfill"></i></div>
-    <ul class="chk" id="chk"></ul>
-    <div style="text-align:center;margin-top:12px">
-      <button onclick="resetChk()" style="background:none;border:1px solid var(--line);color:var(--dim);
-        font-family:var(--mono);font-size:10px;letter-spacing:2px;padding:7px 16px;border-radius:3px;cursor:pointer">
-        RESET DAY</button>
+  <!-- TASKS -->
+  <div class="pane">
+    <h3 class="sh">AVIARY TASK TRACKER</h3>
+    <p class="sd">Your running task list. Saves on this device and persists until you clear it.</p>
+    <div class="card sub">
+      <div class="addbar">
+        <input id="nt" placeholder="Add a task..." onkeydown="if(event.key==='Enter')addTask()">
+        <button onclick="addTask()">ADD</button>
+      </div>
+      <div class="pbar"><i id="tfill"></i></div>
+      <div class="pct" id="ttext">0 / 0 DONE</div>
+      <ul class="list" id="tasks"></ul>
     </div>
   </div>
 
-  <div class="sec">
-    <div class="stit">SCIENCE CORE · VERIFIED PARAMETERS</div>
+  <!-- DAILY -->
+  <div class="pane">
+    <h3 class="sh">DAILY OPERATIONS</h3>
+    <p class="sd">Resets automatically each day at Dhaka midnight. Progress saves on this device.</p>
+    <div class="card sub">
+      <div class="pbar"><i id="pfill"></i></div>
+      <div class="pct" id="ptext">0 / 0 COMPLETE</div>
+      <ul class="list" id="chk"></ul>
+      <button class="rbtn" onclick="resetChk()">RESET TODAY</button>
+    </div>
+  </div>
+
+  <!-- SCIENCE -->
+  <div class="pane">
+    <h3 class="sh">SCIENCE CORE</h3>
+    <p class="sd">Every figure below is verified against a cited source. No guesses.</p>
     <div class="sci">
-      <div class="scard">
-        <h5>PHOTOPERIOD = YOUR WEAPON</h5>
-        <span class="num">14-16h</span>
-        <p>Increasing day length is the strongest breeding trigger in birds. 12h = maintenance. <b>14-16h = breeding stimulation.</b> 8-10h = shuts hormones down. You control this with smart lights. Competitors on natural light cannot.</p>
-        <div class="src">Photoperiod control of avian reproduction, Chewy / Animal Start</div>
-      </div>
-      <div class="scard">
-        <h5>EGG WEIGHT LOSS</h5>
-        <span class="num">13-16%</span>
-        <p>Loss from lay to internal pip. The single ground-truth measure of whether humidity is correct. Too little loss = chick drowns at internal pip. Too much = shrink-wrapped membrane.</p>
-        <div class="src">Hagen Avicultural Research Institute (HARI)</div>
-      </div>
-      <div class="scard">
-        <h5>FULL-TERM DEAD-IN-SHELL</h5>
-        <span class="num">HUMIDITY</span>
-        <p>Late-stage deaths are most often humidity-related, usually <b>too high</b>. Fully formed embryos can drown in the shell at internal pip due to inadequate egg weight loss. Fix the water, not the heat.</p>
-        <div class="src">Uneek Poultry incubation science; HARI</div>
-      </div>
-      <div class="scard">
-        <h5>VITAMIN E + SELENIUM</h5>
-        <span class="num">DAY 3-4</span>
-        <p>Deficiency kills embryos early (day 3-4) via defective blood vessel formation, and drops male fertility. Selenium is required for vitamin E absorption. Dose both, never E alone.</p>
-        <div class="src">Merck Veterinary Manual; Wikifarmer poultry nutrition</div>
-      </div>
-      <div class="scard">
-        <h5>HEN CALCIUM / REST</h5>
-        <span class="num">2-3 mo</span>
-        <p>Hens need 2-3 months between clutches to rebuild calcium. Back-to-back cycling causes depletion, egg-binding, and rising dead-in-shell. Rotate cohorts instead: the aviary produces all year, no single hen burns out.</p>
-        <div class="src">Lafeber Pet Birds, lovebird breeding</div>
-      </div>
-      <div class="scard">
-        <h5>THE OCTOBER PROOF</h5>
-        <span class="num">33°C / 76%</span>
-        <p>Dhaka October averages 33°C max and 76% RH. That is your best breeding month on record (4/5, 5/5 clutches). Conclusion: lovebirds breed excellently at 75% humidity. Humidity is not your blocker.</p>
-        <div class="src">Foreca / World Weather &amp; Climate 1990-2020 normals</div>
-      </div>
+      <div class="card scard"><h5>PHOTOPERIOD — YOUR WEAPON</h5><span class="big">14–16h</span>
+        <p>Increasing day length is the strongest breeding trigger in birds. 12h is maintenance, <b>14–16h stimulates breeding</b>, 8–10h shuts hormones down. You control this with smart lights. Competitors on natural daylight cannot.</p>
+        <div class="src">Avian photoperiod control literature</div></div>
+      <div class="card scard"><h5>EGG WEIGHT LOSS</h5><span class="big">13–16%</span>
+        <p>Loss from lay day to internal pip. The ground truth for correct humidity. Too little and the chick drowns at internal pip; too much and the membrane shrink-wraps it.</p>
+        <div class="src">Hagen Avicultural Research Institute (HARI)</div></div>
+      <div class="card scard"><h5>FULL-TERM DEAD-IN-SHELL</h5><span class="big">HUMIDITY</span>
+        <p>Late-stage deaths are most often humidity related, and usually <b>too high</b>. Fully formed embryos drown inside the shell at internal pip when weight loss was inadequate. Fix the water, not the heat.</p>
+        <div class="src">Uneek Poultry incubation science; HARI</div></div>
+      <div class="card scard"><h5>VITAMIN E + SELENIUM</h5><span class="big">DAY 3–4</span>
+        <p>Deficiency kills embryos early, around day 3–4, through defective blood vessel formation, and sharply reduces male fertility. Selenium is required for vitamin E absorption — never dose E alone.</p>
+        <div class="src">Merck Veterinary Manual; Wikifarmer</div></div>
+      <div class="card scard"><h5>HEN CALCIUM &amp; REST</h5><span class="big">2–3 mo</span>
+        <p>Hens need two to three months between clutches to rebuild calcium. Back-to-back cycling causes depletion, egg binding and rising dead-in-shell. Rotate cohorts: the aviary produces all year while no hen burns out.</p>
+        <div class="src">Lafeber Pet Birds — lovebird breeding</div></div>
+      <div class="card scard"><h5>THE OCTOBER PROOF</h5><span class="big">33°C / 76%</span>
+        <p>Dhaka's October normals are 33°C max and 76% RH — and that is your best breeding month on record. Conclusion: lovebirds breed excellently at 75% humidity. Humidity is not your blocker.</p>
+        <div class="src">Foreca / World Weather &amp; Climate, 1990–2020</div></div>
     </div>
   </div>
-
-  <div class="foot">KINBIRD AVIARY · BUILT ON VERIFIED DATA · REFRESH FOR LIVE STATUS</div>
+  <div class="foot">KINBIRD AVIARY · BUILT ON VERIFIED DATA · v2.0</div>
 </div>
 
 <script>
-/* ---------- DATA ---------- */
+var D2R=Math.PI/180;
+/* ===== MONTHS ===== */
 var MONTHS=[
- {i:7,n:"AUG",y:2026,max:32,min:26,rh:83,rain:340,sun:150,est:1,
-  phase:"CONDITION",col:"#ffb300",
-  sub:"Monsoon peak. No nest boxes. Build hen bodies.",
-  dir:"Do NOT breed. This month you build the machine: condition bodies, load calcium and vitamin E, finish the roof coating. Every taka spent now returns in October.",
-  light:"12h (07:00-19:00) maintenance, do NOT stimulate",
-  acts:[
-   "NO nest boxes. Any hen laying now is burning calcium you need in October.",
-   "Start supplements NOW: vitamin E + selenium, liquid calcium + D3, cuttlebone always available.",
-   "Roof: white reflective coating (Berger CoolRoofs, 4-5 L). Biggest heat lever, one-time job.",
-   "Dry-clean droppings daily. Never wet-mop. Covered drinkers only.",
-   "Worm + treat for mites. Do it now, not during breeding.",
-   "Split pairs into Cohort A and Cohort B for rotation.",
-   "Buy: 0.01g digital scale, 2 cameras, egg record book."]},
- {i:8,n:"SEP",y:2026,max:32,min:26,rh:80,rain:250,sun:170,est:1,
-  phase:"IGNITION",col:"#ff2d92",
-  sub:"Rain easing. Start the light ramp. Cohort A only.",
-  dir:"Begin the photoperiod ramp: add 15 minutes of light per week, 12h toward 14h. This is your unfair advantage. You trigger spring artificially while competitors wait for nature.",
-  light:"RAMP 12h → 13h (+15 min/week)",
-  acts:[
-   "Photoperiod ramp begins: +15 min per week. Target 14h by mid-October.",
-   "Add soft food, sprouted seed, egg food 3x weekly to signal abundance.",
-   "Cohort A gets nest boxes at month end. Cohort B stays in flight.",
-   "UVB lamp 3-4h/day (glass blocks natural UVB; without it D3 fails and calcium does not absorb).",
-   "Confirm all pairs are true pairs, DNA or vent-check. No wasted cage.",
-   "Cameras live. Baseline the nests before eggs arrive."]},
- {i:9,n:"OCT",y:2026,max:33,min:24,rh:76,rain:148,sun:229,est:0,
-  phase:"STRIKE",col:"#39ff88",
-  sub:"Your proven month. 4/5 and 5/5 clutches last year.",
-  dir:"Full attack with Cohort A. Weigh every egg on the day it is laid, then every 3 days. Your October climate is already proven: 33°C and 76% RH produced your best results.",
-  light:"14h HOLD (06:00-20:00) full breeding stimulation",
-  acts:[
-   "Cohort A breeding. Nest boxes in, pairs settled.",
-   "WEIGH EVERY EGG on lay day. Record. Re-weigh every 3 days.",
-   "Target 13-16% weight loss by day 21. Adjust exhaust runtime, not panic.",
-   "Egg food daily once chicks hatch. Protein drives growth rate.",
-   "Nest inspection via camera only. Minimise physical disturbance.",
-   "Log every clutch: fertile, dead-in-shell, hatched, fledged. Data beats memory."]},
- {i:10,n:"NOV",y:2026,max:30,min:19,rh:74,rain:20,sun:240,est:1,
-  phase:"PEAK",col:"#39ff88",
-  sub:"Dry season begins. Night drops to 19°C. Best air of the year.",
-  dir:"The best month on the calendar. Dry, cool nights, low disease pressure. Push maximum output. Cohort B joins as Cohort A finishes clutch one.",
-  light:"14h HOLD (06:00-20:00)",
-  acts:[
-   "Cohort B nest boxes IN. Both cohorts now producing.",
-   "Nights hit 19°C: watch chilled chicks in low cages. Move nests up a tier.",
-   "Jali fans OFF when room drops below 20°C. No cold draught on nests.",
-   "Humidity now naturally lower. Re-check egg weight loss, you may need LESS ventilation.",
-   "Peak weaning: prepare weaning cages and soft food stations.",
-   "Photograph every baby for sales. Best light of the year."]},
- {i:11,n:"DEC",y:2026,max:27,min:15,rh:73,rain:12,sun:245,est:0,
-  phase:"PEAK",col:"#39ff88",
-  sub:"Coldest nights, 15°C. Driest month. Maximum quality.",
-  dir:"Prime production continues, but nights are cold. Protect chicks from the 15°C floor. This is when quality separates you from volume breeders.",
-  light:"14h HOLD (06:00-20:00) — critical, natural day is only ~10.5h now",
-  acts:[
-   "CRITICAL: natural daylight is ~10.5h. Without your 14h lights, birds shut down. Competitors stall here; you do not.",
-   "Nights 15°C: nest box bedding deeper. Consider a low-wattage ceramic heat source (no light) if chicks chill.",
-   "Exhaust runtime DOWN. Dry air now risks too-fast egg weight loss.",
-   "Cohort A rest cycle begins if they have completed 2 clutches.",
-   "Sell weaned babies now: festive demand, best prices.",
-   "Mid-season audit: fertility %, DIS %, fledge % per pair. Cull underperformers from the breeding roster."]},
- {i:0,n:"JAN",y:2027,max:26,min:13,rh:72,rain:7,sun:230,est:0,
-  phase:"PEAK",col:"#39ff88",
-  sub:"Coldest month, 13°C nights. Driest, 7mm rain.",
-  dir:"Coldest nights of the year. Chick mortality risk from cold, not heat. Your foil and sealed ceiling now work in reverse, keeping warmth in.",
-  light:"14h HOLD (06:00-20:00)",
-  acts:[
-   "13°C nights: seal draughts, keep exhaust to minimum overnight cycles.",
-   "Watch for chilled chicks at dawn (4-6 AM is the coldest window).",
-   "Highest quality feather development of the year. Photograph and grade stock.",
-   "Cohort B second clutch. Cohort A resting.",
-   "Restock supplements before spring price rises.",
-   "Review COI on all pairings before next season's matches."]},
- {i:1,n:"FEB",y:2027,max:29,min:16,rh:65,rain:25,sun:235,est:1,
-  phase:"PUSH",col:"#39ff88",
-  sub:"Warming, drying fast. RH heading toward 61%.",
-  dir:"Ideal window: warm days, cool nights, driest air of the year approaching. Watch that humidity does not drop TOO low now, eggs can lose weight too fast.",
-  light:"14h HOLD (06:00-20:00)",
-  acts:[
-   "Humidity falling toward 61%: eggs may lose weight TOO FAST. Check the analyser.",
-   "If loss >16%: reduce exhaust runtime, add a shallow water tray away from cages.",
-   "Final full clutches of the season start now. After this, heat closes the window.",
-   "Cohort A returns for a final round if rested 2+ months.",
-   "Begin marketing next season's stock while quality is visible."]},
- {i:2,n:"MAR",y:2027,max:32,min:20,rh:61,rain:60,sun:265,est:0,
-  phase:"FINAL ROUND",col:"#ffb300",
-  sub:"Driest air of the year (61%). Heat climbing fast.",
-  dir:"Last clean month. Air is at its driest, so humidity now works against you in the opposite direction. Close all clutches by month end.",
-  light:"BEGIN TAPER 14h → 13h at month end",
-  acts:[
-   "DRIEST month (61% RH): highest risk of shrink-wrapped chicks. Monitor egg weight loss closely.",
-   "If loss >16%, raise humidity: water trays, reduce exhaust, damp (not wet) floor corners.",
-   "No NEW clutches after mid-March. Eggs laid now hatch into April heat.",
-   "Start the AC decision: if you want summer breeding, buy in March before peak prices.",
-   "Begin light taper at month end to signal season close."]},
- {i:3,n:"APR",y:2027,max:34,min:24,rh:67,rain:150,sun:238,est:0,
-  phase:"WIND DOWN",col:"#ff4d5e",
-  sub:"HOTTEST month, 34°C. Season closes.",
-  dir:"Hottest month of the Dhaka year. Pull nest boxes, drop the lights, rest the hens. Fighting this month without AC costs more than it earns.",
-  light:"TAPER 13h → 11h (shuts hormones down)",
-  acts:[
-   "PULL ALL NEST BOXES. Any hen still laying is burning reserves in 34°C heat.",
-   "Light taper to 11h: actively shuts down reproductive hormones and prevents chronic laying.",
-   "Exhaust to maximum runtime. Roof coating pays off this month.",
-   "Wean and sell all remaining babies before peak heat stress.",
-   "Full aviary deep clean, disinfect, repair, repaint.",
-   "Season audit: total babies, DIS %, cost per baby, revenue per pair."]},
- {i:4,n:"MAY",y:2027,max:33,min:25,rh:75,rain:260,sun:220,est:1,
-  phase:"REST",col:"#ff4d5e",
-  sub:"Hot and wet returning. Full rest.",
-  dir:"Complete rest. Hens rebuild calcium, you rebuild the operation. This month determines how strong next October is.",
-  light:"10-11h (rest, no stimulation)",
-  acts:[
-   "Full rest. No nest boxes. Lights at 10-11h.",
-   "Heavy calcium and protein rebuild for all hens.",
-   "Maintenance: seal, paint, service fans, replace worn perches.",
-   "Plan next season's pairings using this season's data.",
-   "If buying AC or dehumidifier for summer breeding, install now before monsoon."]}
+{i:7,n:"AUG",y:2026,max:32,min:26,rh:83,rain:340,sun:150,est:1,phase:"CONDITION",col:"#fbbf24",
+ sub:"Monsoon peak. No nest boxes. Build hen bodies.",
+ dir:"Do <b>not</b> breed. This month you build the machine: condition bodies, load calcium and vitamin E, finish the roof coating. Every taka spent now returns in October.",
+ light:"12h (07:00–19:00) maintenance",
+ acts:["No nest boxes. Any hen laying now burns calcium you need in October.","Start supplements today: vitamin E + selenium, liquid calcium + D3, cuttlebone always available.","Roof: white reflective coating (Berger CoolRoofs, 4–5 L). Biggest heat lever, one-time job.","Dry-clean droppings daily. Never wet-mop. Covered drinkers only.","Worm and treat for mites now, not during breeding.","Split pairs into Cohort A and Cohort B for rotation.","Buy: 0.01g digital scale, UVB lamp, 2 cameras, egg record book."]},
+{i:8,n:"SEP",y:2026,max:32,min:26,rh:80,rain:250,sun:170,est:1,phase:"IGNITION",col:"#f472b6",
+ sub:"Rain easing. Start the light ramp. Cohort A only.",
+ dir:"Begin the photoperiod ramp: add 15 minutes of light per week, 12h toward 14h. This is your unfair advantage — you trigger spring artificially while competitors wait for nature.",
+ light:"RAMP 12h → 13h (+15 min/week)",
+ acts:["Photoperiod ramp begins: +15 minutes per week. Target 14h by mid-October.","Add soft food, sprouted seed and egg food three times weekly to signal abundance.","Cohort A gets nest boxes at month end. Cohort B stays in the flight.","UVB lamp 3–4h daily. Glass blocks natural UVB; without it D3 fails and calcium will not absorb.","Confirm every pair is a true pair by DNA or vent check.","Cameras live. Baseline the nests before eggs arrive."]},
+{i:9,n:"OCT",y:2026,max:33,min:24,rh:76,rain:148,sun:229,est:0,phase:"STRIKE",col:"#4ade80",
+ sub:"Your proven month. 4/5 and 5/5 clutches last year.",
+ dir:"Full attack with Cohort A. Weigh every egg on lay day, then every three days. Your October climate is already proven: 33°C and 76% RH produced your best results on record.",
+ light:"14h HOLD (06:00–20:00) full stimulation",
+ acts:["Cohort A breeding. Nest boxes in, pairs settled.","Weigh every egg on lay day. Record it. Re-weigh every three days.","Target 13–16% weight loss by day 21. Adjust exhaust runtime, do not panic.","Egg food daily once chicks hatch. Protein drives growth rate.","Nest inspection by camera only.","Log every clutch: fertile, dead-in-shell, hatched, fledged."]},
+{i:10,n:"NOV",y:2026,max:30,min:19,rh:74,rain:20,sun:240,est:1,phase:"PEAK",col:"#4ade80",
+ sub:"Dry season begins. Nights drop to 19°C. Best air of the year.",
+ dir:"The best month on the calendar: dry, cool nights, low disease pressure. Push maximum output. Cohort B joins as Cohort A finishes its first clutch.",
+ light:"14h HOLD (06:00–20:00)",
+ acts:["Cohort B nest boxes in. Both cohorts producing.","Nights hit 19°C — watch chilled chicks in low cages. Move nests up a tier.","Jali fans off below 20°C. No cold draught on nests.","Humidity naturally lower. Re-check egg weight loss; you may need less ventilation.","Peak weaning: prepare weaning cages and soft food stations.","Photograph every baby for sale. Best natural light of the year."]},
+{i:11,n:"DEC",y:2026,max:27,min:15,rh:73,rain:12,sun:245,est:0,phase:"PEAK",col:"#4ade80",
+ sub:"Coldest nights, 15°C. Driest month. Maximum quality.",
+ dir:"Prime production continues, but nights are cold. Protect chicks from the 15°C floor. This is where quality separates you from volume breeders.",
+ light:"14h HOLD — critical, natural day is only ~10.5h",
+ acts:["Critical: natural daylight is ~10.5h. Without your 14h program birds shut down. Competitors stall here; you do not.","Nights at 15°C: deepen nest box bedding. Consider a low-wattage ceramic heat source (no light).","Reduce exhaust runtime. Dry air risks too-fast egg weight loss.","Cohort A rest cycle begins after two clutches.","Sell weaned babies now — festive demand, best prices.","Mid-season audit: fertility %, dead-in-shell %, fledge % per pair."]},
+{i:0,n:"JAN",y:2027,max:26,min:13,rh:72,rain:7,sun:230,est:0,phase:"PEAK",col:"#4ade80",
+ sub:"Coldest month, 13°C nights. Driest, 7mm rain.",
+ dir:"Coldest nights of the year. Chick mortality risk now comes from cold, not heat. Your foil and sealed ceiling work in reverse here, holding warmth in.",
+ light:"14h HOLD (06:00–20:00)",
+ acts:["13°C nights: seal draughts, minimum overnight exhaust cycles.","Watch 4–6 AM, the coldest window, for chilled chicks.","Highest quality feather development of the year. Photograph and grade stock.","Cohort B second clutch. Cohort A resting.","Restock supplements before spring price rises.","Review COI on all pairings before next season's matches."]},
+{i:1,n:"FEB",y:2027,max:29,min:16,rh:65,rain:25,sun:235,est:1,phase:"PUSH",col:"#4ade80",
+ sub:"Warming and drying fast. RH heading toward 61%.",
+ dir:"Ideal window: warm days, cool nights, driest air approaching. Now watch that humidity does not fall too low — eggs can start losing weight too fast.",
+ light:"14h HOLD (06:00–20:00)",
+ acts:["Humidity falling toward 61%: eggs may lose weight too fast. Check the Egg Lab.","If loss exceeds 16%, reduce exhaust and add a shallow water tray away from cages.","Final full clutches of the season start now.","Cohort A returns for a final round if rested two months or more.","Begin marketing next season's stock while quality is visible."]},
+{i:2,n:"MAR",y:2027,max:32,min:20,rh:61,rain:60,sun:265,est:0,phase:"FINAL ROUND",col:"#fbbf24",
+ sub:"Driest air of the year (61%). Heat climbing fast.",
+ dir:"Last clean month. The air is at its driest, so humidity now works against you in the opposite direction. Close all clutches by month end.",
+ light:"TAPER 14h → 13h at month end",
+ acts:["Driest month at 61% RH: highest risk of shrink-wrapped chicks. Monitor egg weight loss closely.","If loss exceeds 16%, raise humidity: water trays, less exhaust, damp floor corners.","No new clutches after mid-March. Eggs laid now hatch into April heat.","Decide on AC now if you want summer breeding.","Begin the light taper at month end."]},
+{i:3,n:"APR",y:2027,max:34,min:24,rh:67,rain:150,sun:238,est:0,phase:"WIND DOWN",col:"#f87171",
+ sub:"Hottest month, 34°C. Season closes.",
+ dir:"The hottest month of the Dhaka year. Pull nest boxes, drop the lights, rest the hens. Fighting this month without AC costs more than it earns.",
+ light:"TAPER 13h → 11h (shuts hormones down)",
+ acts:["Pull all nest boxes. Any hen still laying burns reserves in 34°C heat.","Light taper to 11h shuts down reproductive hormones.","Exhaust to maximum runtime. The roof coating pays for itself this month.","Wean and sell all remaining babies before peak heat stress.","Full aviary deep clean, disinfect, repair, repaint.","Season audit: total babies, dead-in-shell %, cost per baby, revenue per pair."]},
+{i:4,n:"MAY",y:2027,max:33,min:25,rh:75,rain:260,sun:220,est:1,phase:"REST",col:"#f87171",
+ sub:"Hot and wet returning. Full rest.",
+ dir:"Complete rest. Hens rebuild calcium while you rebuild the operation. What you do this month determines how strong next October will be.",
+ light:"10–11h (rest, no stimulation)",
+ acts:["Full rest. No nest boxes. Lights at 10–11h.","Heavy calcium and protein rebuild for all hens.","Maintenance: seal, paint, service fans, replace worn perches.","Plan next season's pairings from this season's data.","If buying AC or a dehumidifier, install now before the monsoon."]}];
+
+var DAILY=["Check every bird is alert and standing. Any fluffed, still bird — isolate immediately.",
+"Fresh water in covered drinkers. Never open bowls during breeding.",
+"Dry-clean droppings. Never wet-mop the floor — it spikes humidity.",
+"Check the app: temperature and humidity in range. The −3°C sensor offset is applied.",
+"Remove wet or sprouted food after two hours.",
+"Cuttlebone present in every breeding cage.",
+"Nest check by camera only. Physical check at most once every three days.",
+"Weigh any egg due for its three-day weigh-in and record it.",
+"Confirm the lights ran on schedule and the exhaust cycled.",
+"Log anything unusual: a bird off feed, a cracked egg, an aggressive male."];
+
+var SEED=["Buy and install UVB lamp (3–4h daily) — glass blocks UVB, without it D3 fails and calcium will not absorb",
+"Buy 0.01g digital scale for egg weighing",
+"Roof: white reflective coating, Berger CoolRoofs 4–5 L",
+"Order 2× SONOFF GK-200MP2-B cameras + 2× 64GB microSD",
+"Start vitamin E + selenium supplement",
+"Start liquid calcium + D3",
+"Split pairs into Cohort A and Cohort B",
+"Salt-test the THS01 humidity reading (saturated salt = 75.3% RH)",
+"Cut passive air inlet in both rooms (20×20cm, low, opposite exhaust)",
+"Seal open ceiling-fan holes with silicone/foam"];
+
+/* ===== KNOWLEDGE BASE ===== */
+var KB=[
+{k:"humidity temperature more important which matters most priority",t:"Humidity or temperature — which matters more?",
+ a:"Both, but at different stages. <b>Temperature drives breeding activity and fertility</b>; <b>humidity drives hatch success</b>.<br><br>Across a Dhaka year humidity moves only 61–83%, while night temperature swings 13–27°C. Temperature is the bigger variable and it is what separates your good season from your bad one.<br><br>But your dead-in-shell problem is a humidity problem: full-term chicks that fail to hatch are most often a humidity fault, usually too high.",s:"Dhaka normals; Uneek Poultry incubation science"},
+{k:"october proof best month evidence room conditions fine panic 33 76",t:"Your October proof",
+ a:"Dhaka October normals are <b>33°C max and 76% RH</b>. That is your best breeding month on record — 4/5 and 5/5 clutches.<br><br>Your room now sits near 30.6°C and 75.8%. <b>You are already in better-than-October conditions.</b> Lovebirds clearly breed excellently at 75% humidity. Humidity is not your blocker.",s:"Foreca / World Weather & Climate 1990–2020"},
+{k:"egg weight loss scale weigh percent 13 16 measure hatch predictor",t:"Egg weight loss — the ground truth",
+ a:"An egg loses water through its shell during incubation. It must lose <b>13–16% of fresh weight by day 21</b> (internal pip), about <b>0.69% per day</b>.<br><br>Weigh each egg on lay day, then every 3 days, on a 0.01g scale.<br><br>• Too slow = air too wet → chick drowns at internal pip<br>• Too fast = air too dry → membrane shrink-wraps the chick<br><br>This reflects YOUR eggs in YOUR room. A wall sensor only guesses.",s:"Hagen Avicultural Research Institute"},
+{k:"dead in shell full term chick fully formed fails hatch pip cause fix",t:"Full-term dead-in-shell",
+ a:"When a chick is fully formed but never hatches, the cause is most often <b>humidity, usually too high</b>. Inadequate egg weight loss leaves too much fluid and the chick drowns at internal pip.<br><br>Other causes: malposition, late contamination, weak chicks from calcium or vitamin deficiency.<br><br><b>Fix order:</b> 1) measure egg weight loss, 2) correct humidity from that number, 3) confirm calcium + D3 + UVB, 4) confirm vitamin E + selenium.",s:"Uneek Poultry; HARI"},
+{k:"photoperiod light hours daylight trigger breeding lamp timer 14 schedule",t:"Photoperiod — your unfair advantage",
+ a:"Increasing day length is the strongest breeding trigger in birds.<br><br>• <b>10–12h</b> = maintenance<br>• <b>14–16h</b> = active breeding stimulation<br>• <b>8–10h</b> = shuts hormones down<br><br>Ramp <b>+15 minutes per week</b>, never jump. In December Dhaka gets only ~10.5h natural daylight, so competitors' birds slow. On 14h, yours do not. This is how you out-produce bigger aviaries with fewer pairs.",s:"Avian photoperiod literature"},
+{k:"lower humidity reduce too high wet 80 bring down",t:"How to lower humidity",
+ a:"Room humidity = outdoor humidity + what the birds add. Ventilation removes the bird-added excess but never goes below outdoor. Free fixes first:<br><br>1. <b>Dry-clean droppings daily. Never wet-mop.</b><br>2. <b>Covered drinkers only.</b> No open bowls or baths during breeding.<br>3. Remove wet or sprouted food after 2 hours.<br>4. Cages 1–2 inches off the wall.<br>5. Keep jali fans moving — still air creates damp pockets.<br><br>Only a dehumidifier (~৳20–25k) or AC goes below outdoor.",s:"Avian Supplies; verified BD pricing"},
+{k:"raise humidity increase too dry low shrink wrap march",t:"How to raise humidity",
+ a:"If egg weight loss exceeds 16%, the air is too dry and the membrane will shrink-wrap the chick.<br><br>• Cut exhaust runtime<br>• Add a shallow water tray away from cages<br>• Keep draughts off the nest box<br>• Damp (not wet) floor corners<br><br>This is a February–March risk in Dhaka, when RH falls to 61%.",s:"HARI; Dhaka normals"},
+{k:"vitamin e selenium supplement dose fertility embryo",t:"Vitamin E + selenium",
+ a:"Deficiency kills embryos <b>early, around day 3–4</b>, through defective blood vessel formation, and sharply reduces male fertility.<br><br><b>Selenium is required for vitamin E absorption — never dose E alone.</b> Vitamin E oxidises in stored feed, so keep feed fresh.<br><br>Start well before the season, not after eggs appear.",s:"Merck Veterinary Manual; Wikifarmer"},
+{k:"calcium d3 uvb lamp cuttlebone shell egg binding need why",t:"Calcium, D3 and UVB",
+ a:"Calcium cannot be absorbed without vitamin D3, and D3 needs UVB. <b>Glass blocks UVB</b>, so an indoor room has none — you must supply a UVB lamp <b>3–4 hours daily</b>.<br><br>Also: cuttlebone in every breeding cage, liquid calcium + D3 during the season.<br><br>Without it: thin shells, egg binding, weak chicks that cannot pip, hens that crash after two clutches. Do not overdose either — shells too hard also block hatching.",s:"Lafeber; avian nutrition literature"},
+{k:"rest period between clutches how many per year cohort rotation burnout hen",t:"Rest periods and cohort rotation",
+ a:"Hens need <b>2–3 months between clutches</b> to rebuild calcium. Standard is ~2 clutches per hen per year; tropics allow slightly more, never back-to-back.<br><br>A 21-day rest is not a rest. It causes calcium depletion, egg binding and rising dead-in-shell.<br><br><b>The fix is cohort rotation:</b> Cohort A breeds while B rests, then swap. The aviary produces all year while no hen burns out.",s:"Lafeber Pet Birds"},
+{k:"when breed best month season start timing calendar",t:"When to breed",
+ a:"Your window is <b>October to March</b>, peaking <b>November to February</b>.<br><br>• Aug: condition only, no nest boxes<br>• Sep: light ramp, Cohort A prep<br>• <b>Oct: strike</b> — your proven month<br>• Nov–Feb: peak, dry and cool nights<br>• Mar: final round, watch dry air<br>• Apr–May: pull boxes, full rest<br><br>April is hottest at 34°C. Breeding through it without AC costs more than it earns.",s:"Dhaka normals; your production record"},
+{k:"air conditioner ac dehumidifier buy worth summer cost price",t:"AC or dehumidifier — worth it?",
+ a:"Only these two can take a room below outdoor conditions. Fans and foil never can.<br><br>• <b>Dehumidifier</b> (Gree/Chigo 20L): ~৳20,000–25,000. Humidity only, adds slight heat. Needs a sealed room — run 5 min/hour exhaust bursts.<br>• <b>1.5-ton inverter AC</b>: ~৳60,000–75,000. Heat and humidity together. Correct size for Room 1.<br><br>Buy only if you intend to breed June–September when competitors are shut.",s:"Verified Bangladesh retail listings"},
+{k:"roof coating paint white reflective heat tin cool berger litre",t:"Roof coating",
+ a:"A bare dark tin roof makes a top-floor room 3–6°C <b>hotter than outside</b>. A white reflective coating claws that back.<br><br>Verified: roof surface drops <b>12–17°C</b>, indoor <b>1–2.4°C</b>. Every +1% reflectance ≈ −1°F surface temp.<br><br><b>Product:</b> Berger CoolRoofs (also waterproofs, stops rust). <b>Quantity:</b> 4–5 litres for ~180 sq ft, two coats, brightest white.<br><br>It cannot go below outdoor temperature — nothing but AC does.",s:"ScienceDirect cool-roof review; Berger BD"},
+{k:"sensor calibration wrong reading 3 degrees offset sonoff ths01 accurate trust",t:"Sensor calibration",
+ a:"Your THS01 reads about <b>3°C high</b>. Two independent signals confirmed it: owner reports of ~4°C error on TH Elite units, and your own HTC-2 showing a matching gap.<br><br>A <b>−3.0°C offset is applied</b> in eWeLink, so trust the app number.<br><br>Humidity offset is left at 0 because the error direction varies unit to unit. Salt-test it (saturated salt = 75.3% RH) before trusting it for a clutch.",s:"eWeLink forum; your own cross-check"},
+{k:"exhaust fan settings timer loop how long run schedule minutes",t:"Exhaust fan settings",
+ a:"Baseline: <b>20 min on / 40 min off</b>, 06:00–20:00, with a 30°C override to continuous and an alert at 35°C or 80% RH.<br><br>Adjust from egg weight loss, not feel:<br>• Loss too slow (wet) → <b>increase</b> runtime<br>• Loss too fast (dry) → <b>reduce</b> runtime<br><br>In December–January cut runtime back. Never run AC and exhaust together.",s:"Operational; HARI targets"},
+{k:"night temperature cold chicks winter december january 13 risk",t:"Cold nights (Dec–Jan)",
+ a:"December nights fall to 15°C and January to <b>13°C</b>. The risk flips from heat to cold.<br><br>• Deepen nest box bedding<br>• Move nests up a tier — cold pools at floor level<br>• Jali fans off below 20°C<br>• Minimum overnight exhaust cycles<br>• Watch 4–6 AM, the coldest window<br>• A low-wattage ceramic heat source (no light) if chicks chill",s:"Dhaka climate normals"},
+{k:"camera which buy sonoff price how many night vision nest watch",t:"Cameras",
+ a:"Recommended: <b>2× SONOFF GK-200MP2-B</b>, one per room, ~৳2,400 each plus a 64GB microSD each.<br><br>Pan/tilt 360°, 1080p, and the key feature — <b>IR night vision</b>, so you watch nests in complete darkness with zero disturbance. Less disturbance directly reduces abandoned clutches.<br><br>Mount high in a corner facing the rack. A third only if a room has racks on two facing walls.",s:"bdshop / SONOFF listings"},
+{k:"scale digital weigh why need gram buy jewellery",t:"Why you need a 0.01g scale",
+ a:"Your wall sensor measures the <b>room</b>. It cannot tell you what happens <b>inside the egg</b>. The scale can.<br><br>A ~৳1,500 jewellery scale closes the loop a ৳2,500 sensor cannot: it tells you whether humidity is right for these specific eggs, and exactly which way to adjust.<br><br>Highest-return purchase in the aviary for hatch rate.",s:"HARI method"},
+{k:"nest box when put in remove placement",t:"Nest boxes",
+ a:"Put boxes in only when a cohort is on the roster and conditions are right — late September for Cohort A, November for Cohort B.<br><br><b>Pull all boxes in April.</b> Any hen still laying into 34°C heat burns reserves you need next October.<br><br>Upper tiers in winter (warmer, away from floor cold). Inspect by camera; physical checks at most every three days.",s:"Operational"},
+{k:"incubation days how long eggs hatch lovebird 23 clutch size",t:"Incubation timeline",
+ a:"Fischer's lovebird eggs hatch in about <b>23 days</b> (range 21–25). Clutch is typically 4–6 eggs, laid every other day, so hatching is staggered.<br><br>Weigh from lay day. Target 13–16% loss by <b>day 21</b>, internal pip. After that, leave the nest alone.<br><br>Because laying is staggered, each egg needs its own record.",s:"Lafeber; incubation references"},
+{k:"ammonia ventilation air quality smell disease hygiene mould fungus",t:"Air quality and hygiene",
+ a:"Ventilation is not only about heat. Trapped air builds ammonia from droppings and encourages fungus in damp corners.<br><br>• Fresh air low, exhaust high — hence the inlet near the floor opposite the exhaust<br>• Never seal the room fully, even in AC mode: keep 5 min/hour exchange<br>• Damp under-cage corners grow bacteria fast<br>• If you can smell ammonia, ventilation is already inadequate",s:"HARI ventilation guidance"},
+{k:"inbreeding coi related pairs genetics pairing avoid",t:"Pairing and inbreeding",
+ a:"Track coefficient of inbreeding before pairing. Related pairings raise early embryo death and dead-in-shell, which masquerades as an environment problem.<br><br>Review pairings in January before next season's matches. Keep written pedigree records.<br><br>If dead-in-shell stays high after humidity is proven correct by egg weights, look at genetics next.",s:"Avicultural genetics practice"},
+{k:"record keeping data log track fertility measure kpi audit",t:"What to record",
+ a:"Per pair, per clutch: eggs laid, fertile, dead-in-shell, hatched, fledged, plus egg weights.<br><br>That gives the only four numbers that matter:<br>• <b>Fertility %</b> — male/condition problem<br>• <b>Dead-in-shell %</b> — humidity/nutrition problem<br>• <b>Fledge %</b> — parenting/feeding problem<br>• <b>Babies per pair per season</b> — true ROI<br><br>Audit in December and cut underperformers.",s:"Operational"},
+{k:"august what do now this month plan current",t:"August plan",
+ a:"August is <b>CONDITION</b> month. Monsoon peak, 83% RH. Do not breed.<br><br>1. No nest boxes<br>2. Start vitamin E + selenium and calcium + D3 today<br>3. Roof coating (Berger CoolRoofs, 4–5 L)<br>4. Dry-clean droppings daily, covered drinkers<br>5. Worm and mite treatment now<br>6. Split pairs into Cohort A and B<br>7. Buy: 0.01g scale, UVB lamp, 2 cameras, record book",s:"Season plan"},
+{k:"september ramp start light prepare",t:"September plan",
+ a:"September is <b>IGNITION</b>. Rain easing, the light ramp begins.<br><br>• Photoperiod +15 min per week, 12h → 14h by mid-October<br>• Soft food, sprouted seed, egg food 3× weekly<br>• Cohort A gets nest boxes at month end<br>• UVB lamp 3–4h daily<br>• Confirm true pairs by DNA or vent check<br>• Cameras live before eggs arrive",s:"Season plan"},
+{k:"monsoon rain wet season june july problem",t:"Monsoon months",
+ a:"June is wettest (378mm, 15 rainy days) and humidity peaks at 83%. The hardest window in Dhaka.<br><br>You cannot ventilate below 83% outdoor humidity — only a dehumidifier or AC can. That is why June–August is condition and rest mode, not production.<br><br>Use it for supplements, maintenance, roof work and cohort planning.",s:"Dhaka normals"},
+{k:"weaning baby chick food handfeed sell age price market",t:"Weaning and selling",
+ a:"Prepare weaning cages and soft food stations before the peak. Egg food daily once chicks hatch — protein drives growth rate.<br><br>Sell weaned babies in December when festive demand peaks. Photograph in November, the best natural light of the year.<br><br>Quality over volume: ~10 elite pairs can out-earn a 30-pair competitor on revenue and margin.",s:"Operational; market timing"},
+{k:"fan foil cool below outside temperature reduce physics why not",t:"Why fans cannot cool the room",
+ a:"A fan moves air; it does not remove heat from the building. <b>No fan, exhaust, foil or roof coating can take a room below outdoor temperature.</b> Only a refrigeration cycle — an AC — can.<br><br>What they do achieve: removing the extra heat your roof adds and the humidity your birds add, bringing you back down <i>to</i> outdoor conditions instead of well above them. Real and worth doing, but not cooling.",s:"Thermodynamics; cool-roof studies"},
+{k:"foil insulation silver side up direction ceiling install",t:"Foil insulation",
+ a:"Radiant barrier foil must face the heat source with an air gap. <b>Silver side faces UP toward the tin</b>, laid on the false ceiling, never pressed flat against metal.<br><br>From below you should see the white foam side, not silver.<br><br>Never lay bare foil directly on hot tin — pressed to metal it conducts rather than reflects and degrades fast.",s:"Radiant barrier specification"},
+{k:"uvb lamp which buy hours distance why",t:"UVB lamp",
+ a:"Essential and still on your task list. <b>Glass blocks UVB</b>, so an indoor bird room has zero. Without UVB, birds cannot make vitamin D3; without D3, calcium is not absorbed no matter how much you supply.<br><br>Result of skipping it: thin shells, egg binding, weak chicks that cannot pip, and rising dead-in-shell.<br><br><b>Use:</b> avian 5.0 UVB tube, <b>3–4 hours daily</b>, roughly 30–45cm from perch height, unobstructed by glass or plastic. Replace every 6–12 months — output fades long before the lamp dies.",s:"Avian nutrition; D3 synthesis literature"}];
+
+/* ===== CITIES (name, lon, lat) ===== */
+var CITY=[["DHAKA",90.4,23.81],["CHITTAGONG",91.83,22.36],["SYLHET",91.87,24.9],["KHULNA",89.57,22.85],["RAJSHAHI",88.6,24.37],
+["KOLKATA",88.36,22.57],["DELHI",77.21,28.61],["MUMBAI",72.88,19.08],["CHENNAI",80.27,13.08],["BENGALURU",77.59,12.97],
+["KATHMANDU",85.32,27.71],["COLOMBO",79.86,6.93],["KARACHI",67.01,24.86],["LAHORE",74.34,31.55],["KABUL",69.17,34.53],
+["BANGKOK",100.5,13.76],["SINGAPORE",103.82,1.35],["KUALA LUMPUR",101.69,3.14],["JAKARTA",106.85,-6.21],["MANILA",120.98,14.6],
+["HANOI",105.83,21.03],["HONG KONG",114.17,22.32],["SHANGHAI",121.47,31.23],["BEIJING",116.41,39.9],["SEOUL",126.98,37.57],
+["TOKYO",139.69,35.69],["DUBAI",55.27,25.2],["RIYADH",46.72,24.71],["TEHRAN",51.39,35.69],["ISTANBUL",28.98,41.01],
+["MOSCOW",37.62,55.75],["CAIRO",31.24,30.04],["NAIROBI",36.82,-1.29],["LAGOS",3.38,6.52],["JOHANNESBURG",28.05,-26.2],
+["LONDON",-0.13,51.51],["PARIS",2.35,48.86],["BERLIN",13.4,52.52],["NEW YORK",-74.01,40.71],["LOS ANGELES",-118.24,34.05],
+["MEXICO CITY",-99.13,19.43],["SAO PAULO",-46.63,-23.55],["BUENOS AIRES",-58.38,-34.6],["SYDNEY",151.21,-33.87],["PERTH",115.86,-31.95]];
+var TEMP={};
+
+/* ===== LAND ===== */
+var LAND=[
+[[-5.9,35.8],[-1,35.5],[3,36.8],[10,37.2],[11,33.8],[15,32.4],[19,30.5],[22,32.9],[25,31.6],[29,31.2],[32,31.2],[34,28],[35,23],[37,18],[39,15],[43,12.7],[45,10.5],[48,11.5],[51,11.5],[51,7],[51,4],[48,2],[45,0],[44,-1],[41,-6],[40,-11],[39,-14],[36,-17],[35,-21],[33,-24],[32,-26],[31,-30],[29,-32],[27,-33.5],[23,-34.4],[20,-34.8],[18,-32],[16,-29],[15,-27],[14,-24],[13,-22],[12,-17],[13,-13],[12,-9],[12,-6],[10,-3],[9,-1],[9.5,4],[7,4],[5,5.5],[3,6.5],[0,5.5],[-3,5],[-5,5],[-7.5,4.3],[-10,6],[-13,8],[-15,10],[-16,12],[-17,15],[-16,18],[-16,21],[-14,23],[-13,25],[-11,27],[-10,29],[-9,31],[-8,33]],
+[[34,28],[35,29],[38,31],[42,30],[45,30],[48,30],[50,27],[52,26],[55,25],[57,22],[55,20],[52,17],[48,14],[45,13],[43,13],[43,15],[43,17],[41,19],[40,21],[38,24],[36,26]],
+[[-9.5,43.8],[-9,41],[-9,38.7],[-7.5,37],[-6.2,36.2],[-4,36.7],[-2,36.7],[0,39],[1,41],[3,42],[5,43],[7,43.5],[10,44],[12,44],[13,45.5],[15,44],[16,43],[18,43],[19,42],[20,41],[21,40],[23,38],[24,40],[26,38.5],[26,40.5],[28,41],[29,41],[28,43],[30,46],[32,46],[34,45],[36,45],[38,45],[40,44],[39,46],[38,47],[36,46],[35,46],[33,48],[31,50],[31,52],[29,54],[28,55],[26,56],[25,57],[24,59],[25,60],[27,60],[28,61],[29,62],[28,64],[27,65],[24,66],[22,66],[21,64],[19,63],[18,63],[17,66],[18,68],[20,69],[22,70],[25,71],[28,71],[26,70],[22,70],[19,70],[17,69],[15,67],[14,66],[12,64],[11,63],[9,63],[7,63],[6,62],[5,60],[6,59],[7,58],[9,58],[10,58],[11,57],[12,56],[11,55],[10,54],[12,54],[13,54],[16,54],[19,54],[21,56],[20,56],[19,55],[16,54],[14,54],[11,54],[9,54],[8,53],[7,53],[6,53],[5,52],[4,52],[3,51],[2,51],[1,50],[0,49],[-1,49],[-2,48],[-4,48],[-4,47],[-2,47],[-1,46],[-1,45],[-1,44]],
+[[-5,50],[-4,50],[-3,51],[0,51],[1,51],[2,52],[2,53],[0,54],[-1,54],[-1,55],[-2,56],[-2,57],[-3,58],[-4,58],[-5,58.6],[-6,58],[-6,57],[-5,56],[-6,56],[-6,55],[-5,55],[-5,54],[-4,53],[-4,52],[-5,51]],
+[[26,40],[28,41],[30,40],[33,37],[36,36],[36,35],[35,33],[35,32],[34,31],[37,31],[40,31],[43,30],[46,30],[48,30],[50,29],[50,27],[54,26],[57,25],[59,25],[62,25],[64,25],[67,24],[68,23],[70,21],[72,20],[73,18],[73,16],[74,14],[75,12],[76,10],[77,8],[78,8],[79,10],[80,10],[80,13],[81,15],[82,17],[84,19],[86,20],[87,21],[89,21.7],[90,21.8],[91,22],[91.8,22.3],[92,21],[93,19],[94,18],[95,16],[97,16],[98,13],[98,10],[99,10],[100,7],[102,5],[103,3],[104,1.5],[104,4],[104,6],[105,9],[106,10],[109,11],[109,13],[108,16],[106,18],[107,20],[108,21],[110,21],[111,21],[113,22],[115,23],[117,23],[119,25],[120,26],[121,28],[122,30],[121,32],[121,33],[120,34],[121,37],[122,37],[124,40],[126,38],[128,36],[129,35],[129,37],[129,38],[128,41],[128,42],[131,43],[133,45],[135,48],[137,50],[141,49],[141,46],[141,51],[143,54],[141,55],[137,55],[135,57],[137,58],[139,59],[142,59],[145,59],[150,59],[153,58],[155,57],[159,61],[162,60],[163,62],[161,61],[160,62],[162,64],[163,65],[168,65],[170,66],[174,65],[177,65],[180,66],[180,69],[176,70],[172,70],[165,70],[160,70],[156,71],[152,72],[147,73],[143,73],[139,73],[135,73],[130,73],[128,73],[120,74],[113,74],[110,76],[105,77],[102,77],[100,77],[96,77],[92,76],[86,74],[80,74],[76,73],[73,73],[69,73],[66,72],[62,71],[58,70],[55,69],[53,70],[52,70],[50,69],[48,68],[45,67],[42,66],[39,66],[36,66],[34,67],[33,68],[33,70],[32,70],[30,70],[28,70],[29,68],[30,66],[32,64],[33,62],[35,60],[36,58],[38,57],[40,55],[43,54],[45,52],[47,50],[48,48],[47,46],[46,44],[45,44],[44,43],[42,43],[40,43],[39,42],[38,41],[36,41],[35,42],[33,42],[30,41]],
+[[-168,65.5],[-166,68],[-163,69],[-160,70],[-156,71],[-150,70],[-145,70],[-140,70],[-135,69],[-130,70],[-128,70],[-124,70],[-120,70],[-115,69],[-110,68],[-105,68],[-100,68],[-95,68],[-90,68],[-85,67],[-82,68],[-80,70],[-78,71],[-75,72],[-72,71],[-68,70],[-66,68],[-64,66],[-70,63],[-78,62],[-80,60],[-80,58],[-79,56],[-78,55],[-79,52],[-82,55],[-78,58],[-72,60],[-68,58],[-64,60],[-61,58],[-60,55],[-58,54],[-56,52],[-55,50],[-53,47],[-56,47],[-60,47],[-63,46],[-66,45],[-68,44],[-70,42],[-72,41],[-74,40],[-75,38],[-76,37],[-76,35],[-78,34],[-81,32],[-81,30],[-80,25],[-81,26],[-82,27],[-83,29],[-85,30],[-87,30],[-89,29],[-91,29],[-94,29],[-96,28],[-97,26],[-98,24],[-97,22],[-96,20],[-95,19],[-93,18],[-92,18],[-91,19],[-90,20],[-88,21],[-87,21],[-88,18],[-90,16],[-92,15],[-94,16],[-96,16],[-99,17],[-101,17],[-104,19],[-105,20],[-106,22],[-109,23],[-110,25],[-112,27],[-114,29],[-115,30],[-117,33],[-119,34],[-121,35],[-123,38],[-124,40],[-124,43],[-124,46],[-123,49],[-126,50],[-128,52],[-131,54],[-133,55],[-136,58],[-137,59],[-140,60],[-145,60],[-148,60],[-150,59],[-152,58],[-155,58],[-158,57],[-162,58],[-165,60],[-166,62]],
+[[-45,60],[-48,61],[-50,62],[-52,64],[-53,66],[-54,68],[-55,69],[-53,70],[-53,71],[-55,73],[-56,74],[-58,75],[-60,76],[-59,78],[-58,79],[-54,81],[-50,82],[-45,83],[-38,83],[-30,83],[-25,82],[-22,80],[-20,78],[-21,76],[-22,74],[-25,72],[-28,70],[-32,68],[-35,66],[-38,64],[-42,62]],
+[[-81,-4],[-80,-2],[-79,0],[-78,1],[-77,4],[-77,8],[-75,10],[-73,11],[-71,12],[-68,11],[-65,10],[-62,10],[-60,8],[-57,6],[-54,5],[-52,5],[-51,3],[-50,1],[-48,-1],[-46,-1],[-44,-2],[-41,-3],[-38,-4],[-36,-5],[-35,-6],[-35,-8],[-35,-9],[-37,-11],[-38,-13],[-39,-15],[-39,-18],[-40,-20],[-41,-22],[-45,-24],[-48,-25],[-48,-27],[-49,-29],[-51,-31],[-54,-34],[-56,-35],[-57,-35],[-57,-38],[-58,-39],[-62,-40],[-63,-42],[-64,-43],[-65,-45],[-67,-46],[-68,-47],[-68,-50],[-69,-52],[-70,-55],[-72,-54],[-74,-53],[-75,-51],[-75,-49],[-74,-46],[-73,-44],[-73,-41],[-73,-37],[-72,-34],[-71,-30],[-70,-26],[-70,-22],[-70,-20],[-71,-18],[-73,-17],[-76,-14],[-77,-12],[-79,-8],[-80,-6]],
+[[113,-22],[114,-24],[114,-27],[115,-30],[115,-32],[117,-35],[118,-35],[120,-34],[121,-34],[124,-33],[126,-32],[128,-32],[130,-31],[132,-32],[134,-32],[135,-35],[136,-35],[137,-36],[138,-35],[139,-37],[140,-38],[143,-39],[145,-38],[147,-38],[148,-38],[150,-37],[150,-36],[152,-33],[153,-31],[153,-28],[153,-27],[152,-25],[151,-24],[150,-22],[149,-21],[147,-19],[146,-19],[145,-15],[143,-14],[142,-11],[141,-13],[140,-17],[139,-17],[137,-16],[136,-12],[134,-12],[132,-11],[130,-12],[129,-15],[127,-14],[125,-15],[124,-16],[122,-18],[120,-20],[117,-21],[115,-22]],
+[[173,-35],[175,-37],[177,-38],[178,-38],[177,-39],[176,-40],[175,-41],[173,-41],[171,-42],[170,-44],[168,-45],[167,-46],[169,-47],[170,-46],[172,-44],[173,-43],[174,-41]],
+[[130,31],[131,32],[132,34],[133,34],[135,34],[136,35],[137,37],[139,37],[140,36],[141,38],[141,39],[142,40],[141,42],[143,42],[144,43],[145,44],[143,44],[142,45],[141,43],[140,42],[139,40],[138,37],[137,37],[136,36],[135,34],[133,35],[132,35],[131,34],[130,33]],
+[[95,5],[97,5],[98,4],[99,3],[100,1],[102,0],[103,-1],[104,-3],[105,-6],[104,-6],[102,-5],[101,-3],[100,-2],[98,0],[97,2],[95,3]],
+[[109,2],[111,3],[113,3],[115,4],[117,4],[118,3],[119,1],[118,-1],[117,-3],[116,-4],[114,-4],[112,-3],[110,-3],[109,0]],
+[[105,-6],[107,-7],[110,-7],[112,-7],[114,-8],[113,-8.5],[112,-8.5],[110,-8],[108,-7.5],[106,-7],[105,-7]],
+[[131,-1],[134,-2],[136,-2],[138,-2],[141,-3],[144,-4],[147,-6],[149,-9],[150,-10],[148,-9],[146,-8],[143,-8],[141,-9],[139,-8],[137,-8],[135,-5],[133,-4],[132,-2]],
+[[121,18],[122,17],[122,14],[123,13],[124,11],[125,10],[126,9],[126,7],[125,6],[123,6],[122,7],[121,8],[120,11],[120,13],[120,16]],
+[[49,-12],[50,-15],[50,-16],[50,-18],[49,-20],[48,-22],[47,-24],[47,-25],[45,-25],[44,-24],[44,-22],[43,-20],[43,-18],[44,-16],[46,-16],[48,-13]],
+[[80,9.5],[81,9],[82,8],[82,7],[81,6],[80,6],[80,7],[79,8],[80,9]]
 ];
 
-var DAILY=[
- {k:"d1",t:"Check every bird is alert and standing. Any fluffed, still bird = isolate immediately."},
- {k:"d2",t:"Fresh water in covered drinkers. Never open bowls during breeding."},
- {k:"d3",t:"Dry-clean droppings. NEVER wet-mop the floor (it spikes humidity)."},
- {k:"d4",t:"Check app: temp and humidity within range. Remember -3°C sensor offset applied."},
- {k:"d5",t:"Remove wet or sprouted food after 2 hours."},
- {k:"d6",t:"Cuttlebone present in every breeding cage."},
- {k:"d7",t:"Nest check by camera only. Physical check max once every 3 days."},
- {k:"d8",t:"Weigh any egg due for its 3-day weigh-in. Record it."},
- {k:"d9",t:"Confirm lights ran on schedule and exhaust cycled."},
- {k:"d10",t:"Log anything unusual: a bird off feed, a cracked egg, an aggressive male."}
-];
+/* ===== STARS ===== */
+(function(){var c=document.getElementById('stars'),x=c.getContext('2d'),st=[];
+function rs(){c.width=innerWidth;c.height=innerHeight;st=[];
+ for(var i=0;i<120;i++)st.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.2,a:Math.random(),s:Math.random()*.015+.003});}
+rs();addEventListener('resize',rs);
+(function l(){x.clearRect(0,0,c.width,c.height);
+ for(var i=0;i<st.length;i++){var s=st[i];s.a+=s.s;x.beginPath();x.arc(s.x,s.y,s.r,0,6.29);
+ x.fillStyle='rgba(130,205,235,'+(.14+Math.abs(Math.sin(s.a))*.44)+')';x.fill();}
+ requestAnimationFrame(l);})();})();
 
-/* ---------- STARFIELD ---------- */
-(function(){
-  var c=document.getElementById('stars'),x=c.getContext('2d'),st=[];
-  function rs(){c.width=innerWidth;c.height=innerHeight;st=[];
-    for(var i=0;i<130;i++)st.push({x:Math.random()*c.width,y:Math.random()*c.height,
-      r:Math.random()*1.3,a:Math.random(),s:Math.random()*.02+.004});}
-  rs();addEventListener('resize',rs);
-  (function loop(){x.clearRect(0,0,c.width,c.height);
-    for(var i=0;i<st.length;i++){var s=st[i];s.a+=s.s;
-      var al=.25+Math.abs(Math.sin(s.a))*.6;
-      x.beginPath();x.arc(s.x,s.y,s.r,0,6.29);
-      x.fillStyle='rgba(0,229,255,'+al+')';x.fill();}
-    requestAnimationFrame(loop);})();
-})();
-
-/* ---------- GLOBE ---------- */
-(function(){
-  var c=document.getElementById('globe'),x=c.getContext('2d');
-  var W=c.width,H=c.height,R=95,cx=W/2,cy=H/2,rot=0;
-  function proj(la,lo){
-    la=la*Math.PI/180; lo=(lo+rot)*Math.PI/180;
-    var X=Math.cos(la)*Math.sin(lo), Y=Math.sin(la), Z=Math.cos(la)*Math.cos(lo);
-    return {x:cx+X*R, y:cy-Y*R, z:Z};
-  }
-  function loop(){
-    x.clearRect(0,0,W,H);
-    // halo
-    var g=x.createRadialGradient(cx,cy,R*.6,cx,cy,R*1.5);
-    g.addColorStop(0,'rgba(0,229,255,.10)');g.addColorStop(1,'rgba(0,229,255,0)');
-    x.fillStyle=g;x.fillRect(0,0,W,H);
-    // rim
-    x.beginPath();x.arc(cx,cy,R,0,6.29);
-    x.strokeStyle='rgba(0,229,255,.55)';x.lineWidth=1.2;x.stroke();
-    // parallels
-    for(var la=-60;la<=60;la+=30){
-      x.beginPath();var f=1;
-      for(var lo=0;lo<=360;lo+=4){var p=proj(la,lo);
-        if(p.z<0){f=1;continue;}
-        if(f){x.moveTo(p.x,p.y);f=0;}else x.lineTo(p.x,p.y);}
-      x.strokeStyle='rgba(0,229,255,.22)';x.lineWidth=.8;x.stroke();
-    }
-    // meridians
-    for(var lo2=0;lo2<180;lo2+=30){
-      x.beginPath();var f2=1;
-      for(var la2=-90;la2<=90;la2+=4){var q=proj(la2,lo2);
-        if(q.z<0){f2=1;continue;}
-        if(f2){x.moveTo(q.x,q.y);f2=0;}else x.lineTo(q.x,q.y);}
-      x.strokeStyle='rgba(0,229,255,.16)';x.lineWidth=.8;x.stroke();
-    }
-    // Dhaka marker 23.8N 90.4E
-    var d=proj(23.8,90.4);
-    if(d.z>0){
-      x.beginPath();x.arc(d.x,d.y,4,0,6.29);
-      x.fillStyle='#ff2d92';x.fill();
-      x.beginPath();x.arc(d.x,d.y,4+Math.abs(Math.sin(rot/22))*8,0,6.29);
-      x.strokeStyle='rgba(255,45,146,.6)';x.lineWidth=1;x.stroke();
-      x.fillStyle='rgba(255,45,146,.95)';x.font='9px monospace';
-      x.fillText('DHAKA',d.x+9,d.y+3);
-    }
-    rot+=.28;
-    requestAnimationFrame(loop);
-  }
-  loop();
-})();
-
-/* ---------- CLOCK ---------- */
-function tick(){
-  var d=new Date();
-  function p(n){return n<10?'0'+n:''+n}
-  document.getElementById('clock').textContent=p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds());
-  document.getElementById('cdate').textContent=
-    d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'}).toUpperCase();
-}
+/* ===== TIME (DHAKA) ===== */
+var fT=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+var fD=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',weekday:'short',day:'numeric',month:'short',year:'numeric'});
+var fM=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',month:'numeric'});
+var fDay=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',year:'numeric',month:'2-digit',day:'2-digit'});
+function dhakaMonth(){return parseInt(fM.format(new Date()),10)-1}
+function tick(){var d=new Date();
+ document.getElementById('clock').textContent=fT.format(d);
+ document.getElementById('cdate').textContent='DHAKA · '+fD.format(d).toUpperCase()+' · UTC+6';}
 tick();setInterval(tick,1000);
 
-/* ---------- SEASON MAP ---------- */
-var sel=0, nowIdx=0;
-(function(){
-  var m=new Date().getMonth();
-  for(var i=0;i<MONTHS.length;i++){ if(MONTHS[i].i===m){nowIdx=i;sel=i;break;} }
-})();
+/* ===== SUN ===== */
+function sunPos(d){var y=d.getUTCFullYear();
+ var N=(Date.UTC(y,d.getUTCMonth(),d.getUTCDate())-Date.UTC(y,0,0))/86400000;
+ var dec=-23.44*Math.cos((360/365)*(N+10)*D2R);
+ var h=d.getUTCHours()+d.getUTCMinutes()/60+d.getUTCSeconds()/3600;
+ var lon=15*(12-h); while(lon>180)lon-=360; while(lon<-180)lon+=360;
+ return {lat:dec,lon:lon};}
+function sunElev(la,lo,s){var c=Math.sin(la*D2R)*Math.sin(s.lat*D2R)+
+ Math.cos(la*D2R)*Math.cos(s.lat*D2R)*Math.cos((lo-s.lon)*D2R);
+ return Math.asin(Math.max(-1,Math.min(1,c)))/D2R;}
 
-function buildTL(){
-  var h='';
-  for(var i=0;i<MONTHS.length;i++){
-    var M=MONTHS[i];
-    h+='<div class="mo'+(i===sel?' on':'')+(i===nowIdx?' now':'')+'" onclick="pick('+i+')">'+
-       '<div class="mn">'+M.n+'</div>'+
-       '<div class="mt">'+M.max+'° / '+M.rh+'%</div>'+
-       '<div class="bar" style="background:'+M.col+'"></div></div>';
-  }
-  document.getElementById('tl').innerHTML=h;
+/* ===== GLOBE ===== */
+var gc=document.getElementById('globe'),gx=gc.getContext('2d');
+var mc=document.createElement('canvas'),mx=mc.getContext('2d');
+var W=0,H=0,CX=0,CY=0,BR=0,R=0,zoom=1,lon0=-90.4,lat0=16,drag=null,idle=0,DPR=1;
+var maskKey='',frames=0;
+function sizeGlobe(){DPR=Math.min(devicePixelRatio||1,2);
+ var r=gc.getBoundingClientRect();
+ W=Math.max(1,Math.round(r.width));H=Math.max(1,Math.round(r.height));
+ gc.width=Math.round(W*DPR);gc.height=Math.round(H*DPR);
+ gx.setTransform(DPR,0,0,DPR,0,0);
+ CX=W/2;CY=H/2;BR=Math.min(W,H)*0.43;mc.width=W;mc.height=H;maskKey='';}
+sizeGlobe();addEventListener('resize',sizeGlobe);
+function proj(la,lo){la*=D2R;var dl=(lo-lon0)*D2R,p0=lat0*D2R;
+ var cla=Math.cos(la),sla=Math.sin(la),cdl=Math.cos(dl),sdl=Math.sin(dl);
+ var X=cla*sdl,Y=Math.cos(p0)*sla-Math.sin(p0)*cla*cdl,Z=Math.sin(p0)*sla+Math.cos(p0)*cla*cdl;
+ return {x:CX+R*X,y:CY-R*Y,z:Z,X:X,Y:Y,Z:Z};}
+function projC(la,lo){var p=proj(la,lo);
+ if(p.z<0){var m=Math.sqrt(p.X*p.X+p.Y*p.Y)||1;p.x=CX+R*p.X/m;p.y=CY-R*p.Y/m;}return p;}
+function sunView(s){var dl=(s.lon-lon0)*D2R,p0=lat0*D2R,la=s.lat*D2R;
+ var cla=Math.cos(la),sla=Math.sin(la);
+ return {x:cla*Math.sin(dl),y:Math.cos(p0)*sla-Math.sin(p0)*cla*Math.cos(dl),
+         z:Math.sin(p0)*sla+Math.cos(p0)*cla*Math.cos(dl)};}
+function buildMask(S){
+ var img=mx.createImageData(W,H),d=img.data;
+ for(var py=0;py<H;py++){var Y=-(py-CY)/R,yy=Y*Y;
+  for(var px=0;px<W;px++){var X=(px-CX)/R,r2=X*X+yy,i=(py*W+px)*4;
+   if(r2>1){d[i+3]=0;continue;}
+   var Z=Math.sqrt(1-r2),il=X*S.x+Y*S.y+Z*S.z,t;
+   if(il>0.13)t=0;else if(il<-0.13)t=1;else t=(0.13-il)/0.26;
+   if(t<=0){d[i+3]=0;continue;}
+   var tw=1-Math.abs(t-0.5)*2;if(tw<0)tw=0;
+   d[i]=4+tw*195;d[i+1]=8+tw*48;d[i+2]=20+tw*84;d[i+3]=Math.round(t*.87*255);}}
+ mx.putImageData(img,0,0);}
+function drawGlobe(){
+ R=BR*zoom;
+ var now=new Date(),S=sunPos(now),SV=sunView(S);
+ gx.clearRect(0,0,W,H);
+ var g=gx.createRadialGradient(CX,CY,R*.85,CX,CY,R*1.24);
+ g.addColorStop(0,'rgba(34,211,238,0)');g.addColorStop(.42,'rgba(34,211,238,.17)');g.addColorStop(1,'rgba(34,211,238,0)');
+ gx.fillStyle=g;gx.beginPath();gx.arc(CX,CY,R*1.24,0,6.29);gx.fill();
+ gx.save();gx.beginPath();gx.arc(CX,CY,R,0,6.29);gx.clip();
+ var o=gx.createRadialGradient(CX-R*.3,CY-R*.32,R*.08,CX,CY,R);
+ o.addColorStop(0,'#0f3048');o.addColorStop(.55,'#081c30');o.addColorStop(1,'#040e1a');
+ gx.fillStyle=o;gx.fillRect(CX-R,CY-R,R*2,R*2);
+ gx.strokeStyle='rgba(34,211,238,.09)';gx.lineWidth=.7;
+ for(var la=-60;la<=60;la+=15){gx.beginPath();var f=1;
+  for(var lo=-180;lo<=180;lo+=3){var p=proj(la,lo);
+   if(p.z<0){f=1;continue;}if(f){gx.moveTo(p.x,p.y);f=0;}else gx.lineTo(p.x,p.y);}gx.stroke();}
+ for(var lo2=-180;lo2<180;lo2+=15){gx.beginPath();var f2=1;
+  for(var la2=-88;la2<=88;la2+=3){var q=proj(la2,lo2);
+   if(q.z<0){f2=1;continue;}if(f2){gx.moveTo(q.x,q.y);f2=0;}else gx.lineTo(q.x,q.y);}gx.stroke();}
+ for(var i=0;i<LAND.length;i++){var poly=LAND[i];gx.beginPath();
+  for(var j=0;j<poly.length;j++){var pt=projC(poly[j][1],poly[j][0]);
+   if(j===0)gx.moveTo(pt.x,pt.y);else gx.lineTo(pt.x,pt.y);}
+  gx.closePath();gx.fillStyle='rgba(21,79,72,.94)';gx.fill();
+  gx.strokeStyle='rgba(74,222,128,.6)';gx.lineWidth=Math.max(.8,R*0.0022);gx.stroke();}
+ gx.beginPath();var fz=1;
+ for(var lz=-180;lz<=180;lz+=4){var pz=proj(-71,lz);
+  if(pz.z<0){fz=1;continue;}if(fz){gx.moveTo(pz.x,pz.y);fz=0;}else gx.lineTo(pz.x,pz.y);}
+ gx.strokeStyle='rgba(205,238,248,.45)';gx.lineWidth=Math.max(5,R*.055);gx.stroke();
+ var key=Math.round(lon0*2)+'_'+Math.round(lat0*2)+'_'+Math.round(R)+'_'+Math.round(Date.now()/120000);
+ if(key!==maskKey){buildMask(SV);maskKey=key;}
+ gx.imageSmoothingEnabled=false;gx.drawImage(mc,0,0);
+ for(var k=0;k<CITY.length;k++){
+  var C=CITY[k],cp=proj(C[2],C[1]);
+  if(cp.z<=0.02)continue;
+  var il=cp.X*SV.x+cp.Y*SV.y+cp.Z*SV.z;
+  var isD=C[0]==='DHAKA';
+  if(il<0.02){var a=Math.min(1,(-il)*3.4)*.95,rr=Math.max(1.2,R*.005);
+   var cg=gx.createRadialGradient(cp.x,cp.y,0,cp.x,cp.y,rr*5);
+   cg.addColorStop(0,'rgba(255,220,150,'+a+')');cg.addColorStop(1,'rgba(255,190,90,0)');
+   gx.fillStyle=cg;gx.beginPath();gx.arc(cp.x,cp.y,rr*5,0,6.29);gx.fill();}
+  if(zoom>=1.5||isD){
+   gx.beginPath();gx.arc(cp.x,cp.y,isD?Math.max(3.5,R*.009):Math.max(2,R*.005),0,6.29);
+   gx.fillStyle=isD?'#f472b6':'rgba(34,211,238,.95)';gx.fill();}
+  if(zoom>=1.9||isD){
+   var tval=TEMP[C[0]];
+   var lbl=C[0]+(tval!==undefined?'  '+tval.toFixed(0)+'°':'');
+   gx.font=(isD?'700 ':'')+Math.max(10,Math.min(15,R*.026))+'px Share Tech Mono,monospace';
+   var tw2=gx.measureText(lbl).width,bx=cp.x+9,by=cp.y-9;
+   gx.fillStyle='rgba(3,5,10,.8)';gx.fillRect(bx-4,by-12,tw2+8,17);
+   gx.fillStyle=isD?'#f472b6':'rgba(190,235,250,.95)';
+   gx.fillText(lbl,bx,by);}
+ }
+ gx.restore();
+ gx.beginPath();gx.arc(CX,CY,R,0,6.29);
+ gx.strokeStyle='rgba(34,211,238,.55)';gx.lineWidth=1.4;gx.stroke();
+ var e=sunElev(23.81,90.4,S),stt=e>0?'DAYLIGHT':(e>-6?'TWILIGHT':'NIGHT');
+ var el=document.getElementById('gsun');
+ el.style.color=e>0?'#fbbf24':(e>-6?'#f472b6':'#7f96ab');
+ var dt=TEMP['DHAKA'];
+ el.textContent='DHAKA · '+stt+' · SUN '+(e>=0?'+':'')+e.toFixed(1)+'°'+(dt!==undefined?' · '+dt.toFixed(1)+'°C':'');
+ document.getElementById('gchip').textContent='EARTH · LIVE TERMINATOR · '+zoom.toFixed(1)+'×'+(zoom<1.9?' · ZOOM FOR TEMPS':'');
 }
-function pick(i){ sel=i; buildTL(); render(); }
+function loopG(){if(!drag){idle++;if(idle>80)lon0+=0.05;}drawGlobe();requestAnimationFrame(loopG);}
+function zoomBy(f){zoom=Math.max(.85,Math.min(6,zoom*f));maskKey='';}
+function resetView(){zoom=1;lat0=16;lon0=-90.4;idle=999;maskKey='';}
+gc.addEventListener('wheel',function(e){e.preventDefault();zoomBy(e.deltaY<0?1.12:.89);},{passive:false});
+function ds(x,y){drag={x:x,y:y};idle=0;}
+function dm(x,y){if(!drag)return;lon0-=(x-drag.x)*.32/zoom;
+ lat0=Math.max(-84,Math.min(84,lat0+(y-drag.y)*.28/zoom));drag.x=x;drag.y=y;maskKey='';}
+function de(){drag=null;idle=0;}
+gc.addEventListener('mousedown',function(e){ds(e.clientX,e.clientY)});
+addEventListener('mousemove',function(e){dm(e.clientX,e.clientY)});
+addEventListener('mouseup',de);
+gc.addEventListener('touchstart',function(e){var t=e.touches[0];ds(t.clientX,t.clientY)},{passive:true});
+gc.addEventListener('touchmove',function(e){var t=e.touches[0];dm(t.clientX,t.clientY);e.preventDefault()},{passive:false});
+gc.addEventListener('touchend',de);
+loopG();
 
-function render(){
-  var M=MONTHS[sel];
-  document.getElementById('dtitle').textContent=M.n+' '+M.y+' · CLIMATE'+(M.est?' (EST)':' (VERIFIED)');
-  document.getElementById('dclimate').innerHTML=
-    row('Day max','~'+M.max+' °C')+row('Night min','~'+M.min+' °C')+
-    row('Humidity','~'+M.rh+' % RH')+row('Rainfall','~'+M.rain+' mm')+
-    row('Sunshine','~'+M.sun+' hrs')+row('LIGHT SETTING',M.light);
-  var a='';
-  for(var i=0;i<M.acts.length;i++) a+='<li>'+M.acts[i]+'</li>';
-  document.getElementById('dacts').innerHTML=a;
-
-  var N=MONTHS[nowIdx];
-  document.getElementById('phase').textContent=N.phase;
-  document.getElementById('phase').style.color=N.col;
-  document.getElementById('phase').style.textShadow='0 0 18px '+N.col+'88';
-  document.getElementById('phasesub').textContent=N.n+' '+N.y+' · '+N.sub;
-  document.getElementById('directive').innerHTML=N.dir;
-  document.getElementById('m1').textContent=N.max;
-  document.getElementById('m2').textContent=N.min;
-  document.getElementById('m3').textContent=N.rh;
-  document.getElementById('m4').textContent=(N.light.match(/\d+h/)||['—'])[0];
-  document.getElementById('m5').textContent=N.rain;
-  document.getElementById('gcap').textContent='DHAKA 23.8°N · '+N.n+' '+N.y+' · '+N.phase;
+/* ===== LIVE TEMPS (Open-Meteo, no key) ===== */
+function loadTemps(){
+ try{
+  var la=[],lo=[];
+  for(var i=0;i<CITY.length;i++){la.push(CITY[i][2]);lo.push(CITY[i][1]);}
+  fetch('https://api.open-meteo.com/v1/forecast?latitude='+la.join(',')+'&longitude='+lo.join(',')+'&current=temperature_2m')
+  .then(function(r){return r.json()})
+  .then(function(j){
+    var arr=Array.isArray(j)?j:[j];
+    for(var k=0;k<arr.length&&k<CITY.length;k++){
+      if(arr[k]&&arr[k].current&&typeof arr[k].current.temperature_2m==='number')
+        TEMP[CITY[k][0]]=arr[k].current.temperature_2m;}
+  }).catch(function(){});
+ }catch(e){}
 }
+loadTemps();setInterval(loadTemps,600000);
+
+/* ===== TABS ===== */
+function tab(i,b){var t=document.querySelectorAll('.tab'),p=document.querySelectorAll('.pane');
+ for(var k=0;k<t.length;k++){t[k].className='tab';p[k].className='pane';}
+ b.className='tab on';p[i].className='pane on';}
+
+/* ===== SEASON ===== */
+var sel=0,nowIdx=0;
+(function(){var m=dhakaMonth();for(var i=0;i<MONTHS.length;i++)if(MONTHS[i].i===m){nowIdx=i;sel=i;break;}})();
+function buildStrip(){var h='';
+ for(var i=0;i<MONTHS.length;i++){var M=MONTHS[i];
+  h+='<div class="mo'+(i===sel?' on':'')+(i===nowIdx?' now':'')+'" onclick="pick('+i+')">'+
+  '<div class="mn">'+M.n+'</div><div class="mt2">'+M.max+'° · '+M.rh+'%</div>'+
+  '<div class="dot" style="background:'+M.col+'"></div></div>';}
+ document.getElementById('strip').innerHTML=h;}
+function pick(i){sel=i;buildStrip();render();}
 function row(k,v){return '<div class="row"><span class="k">'+k+'</span><span class="v">'+v+'</span></div>'}
+function render(){var M=MONTHS[sel];
+ document.getElementById('dtitle').textContent=M.n+' '+M.y+' · '+(M.est?'ESTIMATED':'VERIFIED');
+ document.getElementById('dclimate').innerHTML=row('Day max','~'+M.max+' °C')+row('Night min','~'+M.min+' °C')+
+  row('Humidity','~'+M.rh+' % RH')+row('Rainfall','~'+M.rain+' mm')+row('Sunshine','~'+M.sun+' hrs')+row('Light setting',M.light);
+ var a='';for(var i=0;i<M.acts.length;i++)a+='<li>'+M.acts[i]+'</li>';
+ document.getElementById('dacts').innerHTML=a;
+ var N=MONTHS[nowIdx],ph=document.getElementById('phase');
+ ph.textContent=N.phase;ph.style.color=N.col;ph.style.textShadow='0 0 26px '+N.col+'66';
+ document.getElementById('phasesub').textContent=N.n+' '+N.y+' — '+N.sub;
+ document.getElementById('directive').innerHTML=N.dir;
+ document.getElementById('m1').textContent=N.max;document.getElementById('m2').textContent=N.min;
+ document.getElementById('m3').textContent=N.rh;
+ document.getElementById('m4').textContent=(N.light.match(/\d+h/)||['—'])[0];
+ document.getElementById('m5').textContent=N.rain;}
 
-/* ---------- EGG ANALYSER ---------- */
+/* ===== EGG ===== */
 function egg(){
-  var w0=parseFloat(document.getElementById('w0').value);
-  var wn=parseFloat(document.getElementById('wn').value);
-  var dy=parseInt(document.getElementById('dy').value,10);
-  var out=document.getElementById('eggout');
-  if(!(w0>0)||!(wn>0)||!(dy>0)){
-    out.innerHTML='<div class="verdict" style="color:var(--dim)">AWAITING INPUT</div>'+
-    '<div class="vsub">Weigh the egg the day it is laid, then every 3 days. This tells you if your humidity is right for THESE eggs, in THIS room.</div>';
-    return;
-  }
-  if(wn>w0){
-    out.innerHTML='<div class="verdict" style="color:var(--am)">CHECK INPUT</div>'+
-    '<div class="vsub">Today\'s weight is higher than fresh weight. Re-check your scale or which number is which.</div>';
-    return;
-  }
-  var lost=(w0-wn)/w0*100;
-  var perDay=lost/dy;
-  var proj=perDay*21;
-  var loT=13, hiT=16;
-  var v,col,msg;
-  if(proj<loT){
-    v='TOO SLOW · AIR TOO WET';col='#ff4d5e';
-    msg='Projected loss <b>'+proj.toFixed(1)+'%</b> by day 21, below the 13% floor. The egg is holding too much water. Fully formed chicks drown at internal pip this way. <b>LOWER humidity:</b> increase exhaust runtime, remove any water trays, dry-clean droppings twice daily, check for spilled drinkers.';
-  } else if(proj>hiT){
-    v='TOO FAST · AIR TOO DRY';col='#ffb300';
-    msg='Projected loss <b>'+proj.toFixed(1)+'%</b> by day 21, above the 16% ceiling. The membrane will stiffen and shrink-wrap the chick. <b>RAISE humidity:</b> cut exhaust runtime, add a shallow water tray away from cages, avoid draught directly on the nest.';
-  } else {
-    v='ON TARGET · HOLD EVERYTHING';col='#39ff88';
-    msg='Projected loss <b>'+proj.toFixed(1)+'%</b> by day 21, inside the 13-16% window. Your humidity is correct for these eggs. <b>Change nothing.</b> Keep exhaust and room settings exactly as they are and re-weigh in 3 days.';
-  }
-  var pinPct=Math.max(0,Math.min(100,(proj/24)*100));
-  out.innerHTML=
-   '<div class="verdict" style="color:'+col+'">'+v+'</div>'+
-   '<div class="vsub">'+msg+'</div>'+
-   '<div class="gauge"><div class="zone" style="left:'+(13/24*100)+'%;width:'+(3/24*100)+'%"></div>'+
-   '<div class="pin" style="left:'+pinPct+'%"></div></div>'+
-   '<div class="glbl"><span>0%</span><span style="color:var(--gr)">13-16% TARGET</span><span>24%</span></div>'+
-   '<div class="vsub" style="margin-top:12px;color:var(--dim);font-size:11px">'+
-   'Lost so far: '+lost.toFixed(2)+'% over '+dy+' day(s) · rate '+perDay.toFixed(3)+'%/day · ideal rate 0.62-0.76%/day</div>';
-}
-['w0','wn','dy'].forEach(function(id){
-  document.getElementById(id).addEventListener('input',egg);
-});
+ var w0=parseFloat(document.getElementById('w0').value),wn=parseFloat(document.getElementById('wn').value),
+  dy=parseInt(document.getElementById('dy').value,10),out=document.getElementById('eggout');
+ function sh(v,c,t,x){out.innerHTML='<h4 class="ch">ANALYSIS</h4><div class="verdict" style="color:'+c+'">'+v+'</div><div class="vtext">'+t+'</div>'+(x||'');}
+ if(!(w0>0)||!(wn>0)||!(dy>0)){sh('AWAITING INPUT','var(--dim)','Weigh each egg on lay day, then every 3 days. Enter the numbers and this tells you exactly which direction to move your humidity.');return;}
+ if(wn>w0){sh('CHECK INPUT','var(--am)','Today\'s weight is higher than the fresh weight. Re-check your scale, or which number went in which box.');return;}
+ var lost=(w0-wn)/w0*100,per=lost/dy,pr=per*21,v,c,t;
+ if(pr<13){v='TOO SLOW — AIR TOO WET';c='var(--rd)';
+  t='Projected loss <b>'+pr.toFixed(1)+'%</b> by day 21, below the 13% floor. The egg holds too much water and a fully formed chick can drown at internal pip. <b>Lower humidity:</b> increase exhaust runtime, remove water trays, dry-clean droppings twice daily, check for a spilled drinker.';}
+ else if(pr>16){v='TOO FAST — AIR TOO DRY';c='var(--am)';
+  t='Projected loss <b>'+pr.toFixed(1)+'%</b> by day 21, above the 16% ceiling. The membrane will stiffen and shrink-wrap the chick. <b>Raise humidity:</b> cut exhaust runtime, add a shallow water tray away from cages, keep draughts off the nest.';}
+ else{v='ON TARGET — HOLD EVERYTHING';c='var(--gr)';
+  t='Projected loss <b>'+pr.toFixed(1)+'%</b> by day 21, inside the 13–16% window. Your humidity is correct for these eggs. <b>Change nothing.</b> Re-weigh in three days.';}
+ var pin=Math.max(0,Math.min(100,pr/24*100));
+ sh(v,c,t,'<div class="gauge"><div class="zone" style="left:'+(13/24*100)+'%;width:'+(3/24*100)+'%"></div><div class="pin" style="left:'+pin+'%"></div></div>'+
+  '<div class="glbl"><span>0%</span><span style="color:var(--gr)">13–16% TARGET</span><span>24%</span></div>'+
+  '<div class="vtext" style="margin-top:18px;color:var(--dim);font-size:14px">Lost so far '+lost.toFixed(2)+'% over '+dy+' day(s) · rate '+per.toFixed(3)+'%/day · ideal 0.62–0.76%/day</div>');}
+['w0','wn','dy'].forEach(function(id){document.getElementById(id).addEventListener('input',egg)});
 
-/* ---------- DAILY CHECKLIST ---------- */
-function todayKey(){var d=new Date();return 'kb_'+d.getFullYear()+'_'+d.getMonth()+'_'+d.getDate()+'_';}
-function buildChk(){
-  var h='';
-  for(var i=0;i<DAILY.length;i++){
-    h+='<li><input type="checkbox" data-k="'+DAILY[i].k+'"><label>'+DAILY[i].t+'</label></li>';
-  }
-  document.getElementById('chk').innerHTML=h;
-  var bs=document.querySelectorAll('#chk input');
-  for(var j=0;j<bs.length;j++){
-    (function(b){
-      if(localStorage.getItem(todayKey()+b.dataset.k)==='1'){b.checked=true;}
-      line(b);
-      b.addEventListener('change',function(){
-        localStorage.setItem(todayKey()+b.dataset.k,b.checked?'1':'');
-        line(b);prog();
-      });
-    })(bs[j]);
-  }
-  prog();
-}
-function line(b){var li=b.parentNode; if(li){ li.className=b.checked?'done':''; }}
-function prog(){
-  var bs=document.querySelectorAll('#chk input'),d=0;
-  for(var i=0;i<bs.length;i++) if(bs[i].checked) d++;
-  document.getElementById('pfill').style.width=(d/bs.length*100)+'%';
-}
-function resetChk(){
-  var bs=document.querySelectorAll('#chk input');
-  for(var i=0;i<bs.length;i++){bs[i].checked=false;line(bs[i]);
-    localStorage.setItem(todayKey()+bs[i].dataset.k,'');}
-  prog();
-}
+/* ===== BRAIN ===== */
+var STOP={the:1,a:1,an:1,is:1,are:1,to:1,of:1,in:1,on:1,for:1,and:1,or:1,my:1,i:1,it:1,do:1,does:1,how:1,what:1,should:1,can:1,me:1,you:1,be:1,at:1,with:1,that:1,this:1,if:1,so:1};
+function tok(s){return s.toLowerCase().replace(/[^a-z0-9\u0980-\u09FF ]/g,' ').split(/\s+/).filter(function(w){return w.length>1&&!STOP[w]})}
+function findKB(q){
+ var qt=tok(q);if(!qt.length)return null;
+ var best=null,bs=0;
+ for(var i=0;i<KB.length;i++){
+  var kt=KB[i].k.split(' '),tt=tok(KB[i].t),sc=0;
+  for(var j=0;j<qt.length;j++){
+   for(var m=0;m<kt.length;m++){
+    if(kt[m]===qt[j])sc+=3;
+    else if(kt[m].indexOf(qt[j])===0||qt[j].indexOf(kt[m])===0)sc+=1.5;}
+   for(var n=0;n<tt.length;n++)if(tt[n]===qt[j])sc+=2;}
+  if(sc>bs){bs=sc;best=KB[i];}}
+ return bs>=3?best:null;}
+function push(cls,html){
+ var m=document.getElementById('msgs'),d=document.createElement('div');
+ d.className='msg '+cls;d.innerHTML=html;m.appendChild(d);m.scrollTop=m.scrollHeight;}
+function ask(txt){
+ var inp=document.getElementById('q');
+ var q=(typeof txt==='string'?txt:inp.value).trim();
+ if(!q)return;inp.value='';
+ push('me',q);
+ setTimeout(function(){
+  var r=findKB(q);
+  if(r)push('ai','<div class="mt">'+r.t+'</div>'+r.a+'<div class="sc">SOURCE · '+r.s+'</div>');
+  else{
+   var s='';for(var i=0;i<KB.length;i++)s+='<li>'+KB[i].t+'</li>';
+   push('ai','<div class="mt">NOT IN THE KNOWLEDGE BASE</div>I will not guess an answer that could cost you a clutch. Nothing in the verified base matches that.<br><br>Ask Ayaan to add it in the next weekly update, or try one of these:<ul style="margin:12px 0 0 20px;line-height:2">'+s+'</ul>');}
+ },260);}
+(function(){
+ push('ai','<div class="mt">KINBIRD BRAIN ONLINE</div>Ask me anything about your aviary. Every answer comes from the verified knowledge base with its source, and I will tell you plainly when something is not in it rather than invent a number.<br><br>Right now: <b>'+MONTHS[nowIdx].phase+'</b> — '+MONTHS[nowIdx].sub);
+ var picks=[0,2,3,4,8,10,12,29],h='';
+ for(var i=0;i<picks.length;i++)h+='<div class="cp" onclick="ask(\''+KB[picks[i]].t.replace(/'/g,"\\'").replace(/—/g,'-')+'\')">'+KB[picks[i]].t+'</div>';
+ document.getElementById('chips').innerHTML=h;})();
 
-buildTL();render();buildChk();
-setInterval(function(){ var d=new Date();
-  for(var i=0;i<MONTHS.length;i++){ if(MONTHS[i].i===d.getMonth()){ if(nowIdx!==i){nowIdx=i;buildTL();render();} break; } }
-},60000);
+/* ===== TASKS ===== */
+var TK=[];
+function loadTasks(){try{TK=JSON.parse(localStorage.getItem('kb_tasks')||'null')}catch(e){TK=null}
+ if(!TK){TK=[];for(var i=0;i<SEED.length;i++)TK.push({t:SEED[i],d:0});saveTasks();}}
+function saveTasks(){localStorage.setItem('kb_tasks',JSON.stringify(TK))}
+function drawTasks(){var h='',done=0;
+ for(var i=0;i<TK.length;i++){if(TK[i].d)done++;
+  h+='<li class="'+(TK[i].d?'done':'')+'"><input type="checkbox" '+(TK[i].d?'checked':'')+
+     ' onchange="tgTask('+i+')"><label onclick="tgTask('+i+')">'+TK[i].t+
+     '</label><button class="del" onclick="rmTask('+i+')">×</button></li>';}
+ document.getElementById('tasks').innerHTML=h||'<li><label style="color:var(--dim2)">No tasks yet. Add one above.</label></li>';
+ document.getElementById('tfill').style.width=(TK.length?done/TK.length*100:0)+'%';
+ document.getElementById('ttext').textContent=done+' / '+TK.length+' DONE';}
+function addTask(){var v=document.getElementById('nt').value.trim();if(!v)return;
+ TK.unshift({t:v,d:0});document.getElementById('nt').value='';saveTasks();drawTasks();}
+function tgTask(i){TK[i].d=TK[i].d?0:1;saveTasks();drawTasks();}
+function rmTask(i){TK.splice(i,1);saveTasks();drawTasks();}
+
+/* ===== DAILY ===== */
+function dayKey(){return 'kb2_'+fDay.format(new Date()).replace(/\//g,'-')+'_'}
+function buildChk(){var h='';
+ for(var i=0;i<DAILY.length;i++)h+='<li><input type="checkbox" data-k="d'+i+'" id="c'+i+'"><label for="c'+i+'">'+DAILY[i]+'</label></li>';
+ document.getElementById('chk').innerHTML=h;
+ var b=document.querySelectorAll('#chk input');
+ for(var j=0;j<b.length;j++)(function(x){
+  if(localStorage.getItem(dayKey()+x.dataset.k)==='1')x.checked=true;mk(x);
+  x.addEventListener('change',function(){localStorage.setItem(dayKey()+x.dataset.k,x.checked?'1':'');mk(x);prog();});})(b[j]);
+ prog();}
+function mk(x){x.parentNode.className=x.checked?'done':''}
+function prog(){var b=document.querySelectorAll('#chk input'),d=0;
+ for(var i=0;i<b.length;i++)if(b[i].checked)d++;
+ document.getElementById('pfill').style.width=(d/b.length*100)+'%';
+ document.getElementById('ptext').textContent=d+' / '+b.length+' COMPLETE';}
+function resetChk(){var b=document.querySelectorAll('#chk input');
+ for(var i=0;i<b.length;i++){b[i].checked=false;mk(b[i]);localStorage.setItem(dayKey()+b[i].dataset.k,'');}prog();}
+
+buildStrip();render();buildChk();loadTasks();drawTasks();
+setInterval(function(){var m=dhakaMonth();
+ for(var i=0;i<MONTHS.length;i++)if(MONTHS[i].i===m&&nowIdx!==i){nowIdx=i;buildStrip();render();break;}},60000);
 </script>
 </body>
 </html>
