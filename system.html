@@ -274,6 +274,19 @@ ul.list li.done label{color:var(--dim2);text-decoration:line-through}
 .vrow .vv{font-family:var(--mono);color:var(--cy)}
 .vrow .vd{color:var(--dim);font-size:13.5px}
 
+/* AGENTS */
+.agents{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-bottom:30px}
+.ag{position:relative;padding:15px 16px 15px 18px;border-radius:11px;overflow:hidden;
+  background:linear-gradient(150deg,rgba(12,22,34,.72),rgba(6,11,18,.62));
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(34,211,238,.14)}
+.ag .agh{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.ag .dot{width:8px;height:8px;border-radius:50%;background:var(--gr);box-shadow:0 0 10px var(--gr);
+  animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.ag .agn{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:1.2px;color:var(--tx)}
+.ag .agf{font-size:13px;line-height:1.55;color:var(--tx);margin-bottom:8px}
+.ag .agm{font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--dim2)}
+
 /* WEATHER */
 .wxg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:8px}
 .wx{padding:18px;border-radius:11px;text-align:center;
@@ -448,6 +461,8 @@ tr:last-child td{border:none}
   <div class="pane">
     <h3 class="sh">WEATHER INTELLIGENCE · DHAKA</h3>
     <p class="sd">Live conditions and a 3-day outlook, translated into exactly what to do with your fans, exhaust, lights, feeding and supplements. Updates every 15 minutes.</p>
+    <h4 class="ch" style="margin:0 0 14px">AUTONOMOUS AGENTS · RUNNING IN THIS BROWSER</h4>
+    <div class="agents" id="agents"></div>
     <div id="wxnow"></div>
     <h4 class="ch" style="margin:32px 0 16px">TODAY'S BRIEF</h4>
     <div class="card sub" id="wxbrief"></div>
@@ -648,6 +663,22 @@ tr:last-child td{border:none}
       <div class="card scard"><h5>THE OCTOBER PROOF</h5><span class="big">33°C / 76%</span>
         <p>Dhaka's October normals are 33°C max and 76% RH — and that is your best breeding month on record. Conclusion: lovebirds breed excellently at 75% humidity. Humidity is not your blocker.</p>
         <div class="src">Foreca / World Weather &amp; Climate, 1990–2020</div></div>
+    </div>
+    <h3 class="sh" style="margin:34px 0 6px">WAR DOCTRINE — SMALL ARMY, BIG WIN</h3>
+    <p class="sd">How ~10 elite pairs beat a competitor triple your size. Force concentration, not force size.</p>
+    <div class="sci">
+      <div class="card scard"><h5>NAPOLEON — CONCENTRATION OF FORCE</h5><span class="big">OCT–FEB</span>
+        <p>Napoleon won outnumbered by massing everything at the decisive point. Your decisive point is the Oct-Feb window. Do not spread effort across 12 months. Pour supplements, light, attention and your best cages into the 5 months that convert, and rest the rest.</p>
+        <div class="src">Applied doctrine</div></div>
+      <div class="card scard"><h5>KHALID IBN AL-WALID — MOBILITY &amp; SURPRISE</h5><span class="big">EL NIÑO</span>
+        <p>Khalid never lost, by striking where the enemy did not expect. This season's surprise is the El Niño drought: competitors will manage for humidity and get caught by dry air drying their eggs. You will already be raising humidity. Win on the front they cannot see.</p>
+        <div class="src">Applied doctrine + WMO/IRI ENSO</div></div>
+      <div class="card scard"><h5>ALEXANDER — ELITE CORE, NOT MASS</h5><span class="big">QUALITY</span>
+        <p>Alexander's Companion cavalry was small and decisive, not the biggest army. Ten proven pairs with logged fertility beat thirty unmeasured ones on revenue and margin. Cull weak pairs the moment your LOG data flags them. Breed only your Companions.</p>
+        <div class="src">Applied doctrine</div></div>
+      <div class="card scard"><h5>THE DATA MOAT</h5><span class="big">OWN IT</span>
+        <p>A rival can copy your cages, your devices, even this dashboard. He cannot copy your production record. Every clutch you log widens a moat no competitor can cross. The data is the one weapon that compounds while you sleep.</p>
+        <div class="src">Naval — long-term games</div></div>
     </div>
   </div>
 
@@ -2000,6 +2031,52 @@ KB.push({k:"el nino la nina enso climate drought rainfall dry winter 2026 2027 p
  a:"A <b>strong El Nino</b> is locked in through the 2026-27 winter (97-100% probability). For Bangladesh it <b>suppresses rainfall</b>, so your Oct-Mar breeding window will likely run <b>drier than normal</b>.<br><br><b>What it flips:</b> your usual enemy is high humidity. This season the bigger risk becomes eggs losing weight <b>too fast</b> in dry air, which shrink-wraps chicks. Be ready to RAISE humidity: cut exhaust runtime, add water trays, and watch egg weight loss closely from December. Adjust from the Egg Lab, not from feel.",
  s:"WMO / IRI Columbia / NOAA CPC"});
 
+/* ================= AUTONOMOUS AGENTS (in-browser, no server) ================= */
+var AGENTS=[
+ {id:"weather",n:"WEATHER AGENT",every:"15 min",last:0,f:"Standing by...",c:"var(--gr)"},
+ {id:"front",n:"FRONT-WATCH AGENT",every:"15 min",last:0,f:"Scanning Bangladesh network...",c:"var(--gr)"},
+ {id:"drought",n:"DROUGHT / EL NIÑO AGENT",every:"15 min",last:0,f:"Comparing rainfall to normals...",c:"var(--gr)"},
+ {id:"egg",n:"EGG-WATCH AGENT",every:"live",last:0,f:"No eggs logged yet.",c:"var(--am)"},
+ {id:"season",n:"SEASON AGENT",every:"1 min",last:0,f:"Tracking phase...",c:"var(--gr)"}];
+function agSet(id,f,c){for(var i=0;i<AGENTS.length;i++)if(AGENTS[i].id===id){AGENTS[i].f=f;AGENTS[i].c=c;AGENTS[i].last=Date.now();}}
+function agAgo(t){if(!t)return"never";var s=Math.round((Date.now()-t)/1000);
+ if(s<60)return s+"s ago";if(s<3600)return Math.round(s/60)+"m ago";return Math.round(s/3600)+"h ago";}
+function runAgents(){
+ var N=MONTHS[nowIdx];
+ // WEATHER
+ if(WX&&WX.current){var c=WX.current;
+  agSet("weather",c.temperature_2m.toFixed(1)+"°C, "+c.relative_humidity_2m+"% RH, "+wname(c.weather_code)+".",
+   "var(--gr)");}
+ // FRONT-WATCH: find an upwind BD city markedly more humid/hot than Dhaka
+ if(WXBD&&WXBD.length&&WXBD[0]&&WXBD[0].current){
+  var dh=WXBD[0].current.relative_humidity_2m,dt=WXBD[0].current.temperature_2m,worst=null,wd=0;
+  for(var i=1;i<WXBD.length&&i<8;i++){if(!WXBD[i]||!WXBD[i].current)continue;
+   var d=WXBD[i].current.relative_humidity_2m-dh;if(d>wd){wd=d;worst=BDC[i][0];}}
+  if(worst&&wd>=8)agSet("front",worst+" is "+wd.toFixed(0)+"% more humid than Dhaka. A wet front may reach you in 12-36h. Pre-raise exhaust.","var(--am)");
+  else agSet("front","No incoming humidity front. Network is even with Dhaka.","var(--gr)");}
+ // DROUGHT: compare 3-day rain probability to what the month normally brings
+ if(WX&&WX.daily){var d=WX.daily,pp=Math.max(d.precipitation_probability_max[0]||0,d.precipitation_probability_max[1]||0,d.precipitation_probability_max[2]||0);
+  var wet=(N.rain>=120);
+  if(wet&&pp<=30)agSet("drought","El Niño signature: "+N.n+" normally wet ("+N.rain+"mm) but 3-day rain peaks at only "+pp+"%. Air will run dry. Cut exhaust, watch eggs over-drying.","var(--rd)");
+  else if(pp<=25)agSet("drought","Dry spell: rain peaks "+pp+"% over 3 days. If eggs are incubating, reduce exhaust and add a water tray.","var(--am)");
+  else agSet("drought","Rainfall in normal range for "+N.n+". El Niño drought not acute right now.","var(--gr)");}
+ // EGG
+ var tr=eggTrend(),bad=tr.filter(function(x){return x.st==='TOO WET'||x.st==='TOO DRY'});
+ if(!tr.length)agSet("egg","No eggs logged. Start weighing to activate this agent.","var(--am)");
+ else if(bad.length)agSet("egg",bad.length+" of "+tr.length+" egg(s) off the 13-16% target. Open LOG.","var(--rd)");
+ else agSet("egg","All "+tr.length+" tracked egg(s) on target. Holding.","var(--gr)");
+ // SEASON
+ agSet("season",N.n+" · "+N.phase+". "+N.light+".","var(--vi)");
+ drawAgents();
+}
+function drawAgents(){
+ var el=document.getElementById('agents');if(!el)return;var h='';
+ for(var i=0;i<AGENTS.length;i++){var a=AGENTS[i];
+  h+='<div class="ag"><div class="agh"><span class="dot" style="background:'+a.c+';box-shadow:0 0 10px '+a.c+
+     '"></span><span class="agn">'+a.n+'</span></div><div class="agf">'+a.f+
+     '</div><div class="agm">EVERY '+a.every.toUpperCase()+' · '+agAgo(a.last)+'</div></div>';}
+ el.innerHTML=h;}
+
 /* ================= DAILY BRIEFING ================= */
 function briefDate(){return new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date()).toUpperCase();}
 function generateBrief(){
@@ -2082,6 +2159,9 @@ loadWX();setInterval(loadWX,900000);
 loadAnom();drawAnom();drawVer();drawLearn();
 setInterval(drawBrief,900000);
 setTimeout(drawBrief,3000);setTimeout(drawBrief,8000);
+runAgents();setTimeout(runAgents,3500);setTimeout(runAgents,9000);
+setInterval(runAgents,60000);
+setInterval(function(){drawAgents();},20000);
 setInterval(function(){drawIntel();drawCds();},45000);
 setInterval(function(){var m=dhakaMonth();
  for(var i=0;i<MONTHS.length;i++)if(MONTHS[i].i===m&&nowIdx!==i){nowIdx=i;buildStrip();render();drawIntel();break;}},60000);
