@@ -463,37 +463,6 @@ tr:last-child td{border:none}
 </div></div>
 
 <div class="wrap">
-  <div class="hero">
-    <div class="card gwrap">
-      <canvas id="globe"></canvas>
-      <div class="gtop">
-        <div class="chip" id="gchip">EARTH · LIVE TERMINATOR</div>
-        <div class="chip" id="gsun">—</div>
-      </div>
-      <div class="gctl">
-        <button class="gb" onclick="zoomBy(1.3)">+</button>
-        <button class="gb" onclick="zoomBy(.77)">−</button>
-        <button class="gb" onclick="resetView()" style="font-size:13px">⟲</button>
-      </div>
-      <div class="ghint">DRAG TO ROTATE · SCROLL TO ZOOM · ZOOM IN FOR CITY TEMPS</div>
-    </div>
-    <div class="card dpanel">
-      <div class="kick">CURRENT DIRECTIVE</div>
-      <div class="phase" id="phase">—</div>
-      <div class="psub" id="phasesub">—</div>
-      <div class="dir" id="directive">—</div>
-      <div class="mets">
-        <div class="met"><div class="v" id="m1">—</div><div class="k">DAY MAX °C</div></div>
-        <div class="met"><div class="v" id="m2">—</div><div class="k">NIGHT MIN °C</div></div>
-        <div class="met"><div class="v" id="m3">—</div><div class="k">HUMIDITY %</div></div>
-        <div class="met"><div class="v" id="m4">—</div><div class="k">LIGHT HRS</div></div>
-        <div class="met"><div class="v" id="m5">—</div><div class="k">RAIN MM</div></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="intel" id="intel"></div>
-
   <div class="tabs">
     <button class="tab on" onclick="tab(0,this)">BRAIN</button>
     <button class="tab" onclick="tab(1,this)">WEATHER</button>
@@ -507,9 +476,38 @@ tr:last-child td{border:none}
     <button class="tab" onclick="tab(9,this)">RESEARCH</button>
   </div>
 
-  <!-- BRAIN -->
+  <!-- BRAIN / OVERVIEW -->
   <div class="pane on">
     <div id="brief"></div>
+    <div class="hero">
+      <div class="card gwrap">
+        <canvas id="globe"></canvas>
+        <div class="gtop">
+          <div class="chip" id="gchip">EARTH · LIVE TERMINATOR</div>
+          <div class="chip" id="gsun">—</div>
+        </div>
+        <div class="gctl">
+          <button class="gb" onclick="zoomBy(1.3)">+</button>
+          <button class="gb" onclick="zoomBy(.77)">−</button>
+          <button class="gb" onclick="resetView()" style="font-size:13px">⟲</button>
+        </div>
+        <div class="ghint">DRAG TO ROTATE · SCROLL TO ZOOM · ZOOM IN FOR CITY TEMPS</div>
+      </div>
+      <div class="card dpanel">
+        <div class="kick">CURRENT DIRECTIVE</div>
+        <div class="phase" id="phase">—</div>
+        <div class="psub" id="phasesub">—</div>
+        <div class="dir" id="directive">—</div>
+        <div class="mets">
+          <div class="met"><div class="v" id="m1">—</div><div class="k">DAY MAX °C</div></div>
+          <div class="met"><div class="v" id="m2">—</div><div class="k">NIGHT MIN °C</div></div>
+          <div class="met"><div class="v" id="m3">—</div><div class="k">HUMIDITY %</div></div>
+          <div class="met"><div class="v" id="m4">—</div><div class="k">LIGHT HRS</div></div>
+          <div class="met"><div class="v" id="m5">—</div><div class="k">RAIN MM</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="intel" id="intel"></div>
     <h3 class="sh">ASK THE AVIARY BRAIN</h3>
     <p class="sd">Every answer comes from the verified knowledge base with its source. It works offline and never invents a number.</p>
     <div class="card chat">
