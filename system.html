@@ -22,9 +22,54 @@ body{background:var(--bg);color:var(--tx);font-family:var(--ui);
   font-size:16px;line-height:1.65;min-height:100vh;position:relative;
   -webkit-font-smoothing:antialiased}
 #stars{position:fixed;inset:0;z-index:0;opacity:.55}
+/* alien mesh field */
+body::before{content:"";position:fixed;inset:-20%;z-index:0;pointer-events:none;
+  background:
+   radial-gradient(38% 30% at 18% 22%,rgba(34,211,238,.13),transparent 62%),
+   radial-gradient(34% 28% at 82% 30%,rgba(244,114,182,.11),transparent 60%),
+   radial-gradient(46% 34% at 50% 88%,rgba(167,139,250,.10),transparent 62%),
+   radial-gradient(30% 24% at 88% 78%,rgba(74,222,128,.07),transparent 60%);
+  filter:blur(48px);animation:drift 26s ease-in-out infinite alternate}
+@keyframes drift{0%{transform:translate3d(0,0,0) scale(1)}
+ 50%{transform:translate3d(2.5%,-2%,0) scale(1.06)}
+ 100%{transform:translate3d(-2%,2.5%,0) scale(1.02)}}
+/* grid + scan */
+body::after{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:
+   linear-gradient(rgba(34,211,238,.045) 1px,transparent 1px) 0 0/100% 46px,
+   linear-gradient(90deg,rgba(34,211,238,.045) 1px,transparent 1px) 0 0/46px 100%,
+   repeating-linear-gradient(0deg,rgba(0,0,0,.16) 0 1px,transparent 1px 3px);
+  mask-image:radial-gradient(circle at 50% 32%,#000 12%,transparent 78%);
+  -webkit-mask-image:radial-gradient(circle at 50% 32%,#000 12%,transparent 78%)}
+.sweep{position:fixed;left:0;right:0;height:190px;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(34,211,238,.055),transparent);
+  animation:sw 8.5s linear infinite}
+@keyframes sw{0%{top:-190px}100%{top:100%}}
 .wrap{position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:0 26px 90px}
 @media(max-width:600px){.wrap{padding:0 14px 60px}}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}
+/* holo glass panel */
+.card{position:relative;border-radius:var(--r);
+  background:linear-gradient(150deg,rgba(12,22,34,.78),rgba(6,11,18,.7));
+  backdrop-filter:blur(22px) saturate(150%);-webkit-backdrop-filter:blur(22px) saturate(150%);
+  border:1px solid rgba(34,211,238,.16);
+  box-shadow:0 0 0 1px rgba(255,255,255,.02) inset,0 18px 50px -22px rgba(0,0,0,.9),
+             0 0 46px -26px rgba(34,211,238,.5)}
+/* HUD corner brackets */
+.card::before,.card::after{content:"";position:absolute;width:15px;height:15px;pointer-events:none;opacity:.6}
+.card::before{top:-1px;left:-1px;border-top:1.5px solid var(--cy);border-left:1.5px solid var(--cy);
+  border-radius:var(--r) 0 0 0}
+.card::after{bottom:-1px;right:-1px;border-bottom:1.5px solid var(--cy);border-right:1.5px solid var(--cy);
+  border-radius:0 0 var(--r) 0}
+/* INTEL strip */
+.intel{display:grid;grid-template-columns:repeat(auto-fit,minmax(212px,1fr));gap:14px;margin-bottom:30px}
+.ic{position:relative;padding:17px 19px;border-radius:11px;overflow:hidden;
+  background:linear-gradient(150deg,rgba(12,22,34,.72),rgba(6,11,18,.62));
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border:1px solid rgba(34,211,238,.14)}
+.ic .il{font-family:var(--mono);font-size:9px;letter-spacing:2.2px;color:var(--dim2);margin-bottom:9px}
+.ic .iv{font-family:var(--dsp);font-size:26px;font-weight:700;line-height:1;margin-bottom:7px}
+.ic .id{font-size:13.5px;color:var(--dim);line-height:1.55}
+.ic .bar{position:absolute;left:0;top:0;bottom:0;width:3px}
 
 /* TOP */
 .top{position:sticky;top:0;z-index:50;background:rgba(3,5,10,.93);
@@ -187,6 +232,44 @@ ul.list li.done label{color:var(--dim2);text-decoration:line-through}
   font-family:var(--mono);font-size:11px;letter-spacing:2px;padding:12px 26px;border-radius:9px;cursor:pointer}
 .rbtn:hover{border-color:var(--rd);color:var(--rd)}
 
+/* LOG + TEACH */
+.subtabs{display:flex;gap:6px;margin-bottom:20px;overflow-x:auto}
+.stb{font-family:var(--mono);font-size:11px;letter-spacing:1.6px;color:var(--dim);
+  background:var(--panel);border:1px solid var(--line);padding:11px 17px;border-radius:8px;
+  cursor:pointer;white-space:nowrap;transition:.15s}
+.stb:hover{color:var(--tx);border-color:var(--dim2)}
+.stb.on{color:var(--cy);border-color:var(--cy);background:rgba(34,211,238,.1)}
+.lgp{display:none}.lgp.on{display:block}
+.frm{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:18px}
+.fi label{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:1.6px;
+  color:var(--dim);margin-bottom:7px}
+.fi input{width:100%;background:#04080f;border:1px solid var(--line);color:var(--cy);
+  font-family:var(--mono);font-size:16px;padding:11px 13px;border-radius:8px;outline:none}
+.fi input:focus{border-color:var(--cy)}
+textarea{width:100%;background:#04080f;border:1px solid var(--line);color:var(--tx);
+  font-family:var(--ui);font-size:16px;padding:13px 15px;border-radius:9px;outline:none;
+  min-height:120px;resize:vertical;line-height:1.65}
+textarea:focus{border-color:var(--cy)}
+.gobtn{background:var(--cy);color:#03050a;border:none;font-family:var(--dsp);font-weight:700;
+  font-size:12px;letter-spacing:1.6px;padding:13px 24px;border-radius:9px;cursor:pointer;margin-right:10px}
+.gobtn.alt{background:none;color:var(--dim);border:1px solid var(--line)}
+.gobtn.alt:hover{border-color:var(--cy);color:var(--cy)}
+.hint{font-size:14px;color:var(--dim);margin-top:14px;line-height:1.7}
+.tw{overflow-x:auto;margin-top:22px}
+table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:13px}
+th{text-align:left;font-size:9.5px;letter-spacing:1.4px;color:var(--dim);
+  padding:11px 12px;border-bottom:1px solid var(--line);white-space:nowrap;font-weight:400}
+td{padding:12px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border:none}
+.xb{background:none;border:none;color:var(--dim2);font-size:17px;cursor:pointer;padding:0 4px}
+.xb:hover{color:var(--rd)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-top:22px}
+.st{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:16px 12px;text-align:center}
+.st .v{font-family:var(--dsp);font-size:25px;font-weight:700;line-height:1}
+.st .k{font-family:var(--mono);font-size:8.5px;letter-spacing:1.4px;color:var(--dim2);margin-top:8px}
+.warnb{background:rgba(248,113,113,.1);border-left:3px solid var(--rd);border-radius:0 8px 8px 0;
+  padding:14px 18px;font-size:14.5px;line-height:1.7;margin-top:18px}
+
 /* SCIENCE */
 .sci{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
 .scard{padding:28px}
@@ -203,6 +286,7 @@ ul.list li.done label{color:var(--dim2);text-decoration:line-through}
 </head>
 <body>
 <canvas id="stars"></canvas>
+<div class="sweep"></div>
 
 <div class="top"><div class="topin">
   <div>
@@ -246,13 +330,17 @@ ul.list li.done label{color:var(--dim2);text-decoration:line-through}
     </div>
   </div>
 
+  <div class="intel" id="intel"></div>
+
   <div class="tabs">
     <button class="tab on" onclick="tab(0,this)">BRAIN</button>
     <button class="tab" onclick="tab(1,this)">SEASON</button>
     <button class="tab" onclick="tab(2,this)">EGG LAB</button>
-    <button class="tab" onclick="tab(3,this)">TASKS</button>
-    <button class="tab" onclick="tab(4,this)">DAILY</button>
-    <button class="tab" onclick="tab(5,this)">SCIENCE</button>
+    <button class="tab" onclick="tab(3,this)">LOG</button>
+    <button class="tab" onclick="tab(4,this)">TASKS</button>
+    <button class="tab" onclick="tab(5,this)">DAILY</button>
+    <button class="tab" onclick="tab(6,this)">TEACH</button>
+    <button class="tab" onclick="tab(7,this)">SCIENCE</button>
   </div>
 
   <!-- BRAIN -->
@@ -298,6 +386,79 @@ ul.list li.done label{color:var(--dim2);text-decoration:line-through}
     <div class="note"><b style="color:var(--am)">TARGET:</b> lovebird eggs must lose <b>13–16% of fresh weight</b> by day 21 (internal pip), about 0.69% per day. Too fast means the air is too dry — raise humidity. Too slow means too wet — lower it. Inadequate weight loss drowns fully formed chicks at internal pip, exactly the dead-in-shell you are fighting.</div>
   </div>
 
+  <!-- LOG -->
+  <div class="pane">
+    <h3 class="sh">AVIARY DATA LOG</h3>
+    <p class="sd">This is the asset. Every entry makes the brain smarter about <b>your</b> aviary, and no competitor can copy it. Ask the BRAIN things like "my stats", "pair 7", "worst pair", "egg trend".</p>
+    <div class="subtabs" id="lgtabs">
+      <button class="stb on" onclick="lgTab(0,this)">PAIRS</button>
+      <button class="stb" onclick="lgTab(1,this)">CLUTCHES</button>
+      <button class="stb" onclick="lgTab(2,this)">EGG WEIGHTS</button>
+      <button class="stb" onclick="lgTab(3,this)">ROOM READINGS</button>
+    </div>
+
+    <div class="lgp on card sub">
+      <h4 class="ch">PAIR / BIRD REGISTER</h4>
+      <div class="frm">
+        <div class="fi"><label>PAIR ID</label><input id="p_id" placeholder="P7"></div>
+        <div class="fi"><label>MALE (ring / mutation)</label><input id="p_m" placeholder="BD-101 · Lutino"></div>
+        <div class="fi"><label>FEMALE (ring / mutation)</label><input id="p_f" placeholder="BD-208 · Blue"></div>
+        <div class="fi"><label>COHORT</label><input id="p_c" placeholder="A"></div>
+      </div>
+      <button class="gobtn" onclick="addPair()">ADD PAIR</button>
+      <div class="tw"><table id="t_pairs"></table></div>
+    </div>
+
+    <div class="lgp card sub">
+      <h4 class="ch">CLUTCH OUTCOMES</h4>
+      <div class="frm">
+        <div class="fi"><label>PAIR ID</label><input id="c_p" placeholder="P7"></div>
+        <div class="fi"><label>DATE</label><input id="c_d" type="date"></div>
+        <div class="fi"><label>EGGS LAID</label><input id="c_l" type="number" placeholder="5"></div>
+        <div class="fi"><label>FERTILE</label><input id="c_f" type="number" placeholder="5"></div>
+        <div class="fi"><label>DEAD IN SHELL</label><input id="c_ds" type="number" placeholder="1"></div>
+        <div class="fi"><label>HATCHED</label><input id="c_h" type="number" placeholder="4"></div>
+        <div class="fi"><label>FLEDGED</label><input id="c_fl" type="number" placeholder="4"></div>
+      </div>
+      <button class="gobtn" onclick="addClutch()">ADD CLUTCH</button>
+      <div id="statbox"></div>
+      <div class="tw"><table id="t_clutch"></table></div>
+    </div>
+
+    <div class="lgp card sub">
+      <h4 class="ch">EGG WEIGHT TRACKING</h4>
+      <div class="frm">
+        <div class="fi"><label>EGG ID</label><input id="e_id" placeholder="P7-E1"></div>
+        <div class="fi"><label>DAY OF INCUBATION</label><input id="e_d" type="number" placeholder="0"></div>
+        <div class="fi"><label>WEIGHT (g)</label><input id="e_w" type="number" step="0.01" placeholder="2.20"></div>
+      </div>
+      <button class="gobtn" onclick="addEgg()">ADD WEIGHT</button>
+      <p class="hint">Enter day 0 first (fresh weight on lay day), then each re-weigh. The system computes the loss curve and flags any egg drifting off the 13–16% target.</p>
+      <div class="tw"><table id="t_egg"></table></div>
+    </div>
+
+    <div class="lgp card sub">
+      <h4 class="ch">ROOM READINGS</h4>
+      <div class="frm">
+        <div class="fi"><label>ROOM</label><input id="r_r" placeholder="R1"></div>
+        <div class="fi"><label>DATE</label><input id="r_d" type="date"></div>
+        <div class="fi"><label>TEMP °C</label><input id="r_t" type="number" step="0.1" placeholder="30.6"></div>
+        <div class="fi"><label>HUMIDITY %</label><input id="r_h" type="number" step="0.1" placeholder="75.8"></div>
+      </div>
+      <button class="gobtn" onclick="addRead()">ADD READING</button>
+      <div class="tw"><table id="t_read"></table></div>
+    </div>
+
+    <div class="card sub" style="margin-top:20px">
+      <h4 class="ch">BACKUP &amp; SYNC</h4>
+      <p class="hint" style="margin-bottom:16px">Your data lives on this device. Export regularly — it is the one thing here that cannot be rebuilt.</p>
+      <button class="gobtn" onclick="expData()">EXPORT ALL DATA</button>
+      <button class="gobtn alt" onclick="document.getElementById('imp').click()">IMPORT</button>
+      <input type="file" id="imp" accept=".json" style="display:none" onchange="impData(this)">
+      <div id="cloudbox" style="margin-top:20px"></div>
+    </div>
+  </div>
+
   <!-- TASKS -->
   <div class="pane">
     <h3 class="sh">AVIARY TASK TRACKER</h3>
@@ -322,6 +483,27 @@ ul.list li.done label{color:var(--dim2);text-decoration:line-through}
       <div class="pct" id="ptext">0 / 0 COMPLETE</div>
       <ul class="list" id="chk"></ul>
       <button class="rbtn" onclick="resetChk()">RESET TODAY</button>
+    </div>
+  </div>
+
+  <!-- TEACH -->
+  <div class="pane">
+    <h3 class="sh">TEACH THE BRAIN</h3>
+    <p class="sd">Anything you learn, add here. The brain searches your entries alongside the verified core and remembers them permanently on this device.</p>
+    <div class="card sub">
+      <h4 class="ch">ADD KNOWLEDGE</h4>
+      <div class="fld"><label>QUESTION / TOPIC KEYWORDS</label>
+        <input id="k_q" style="font-size:17px;font-family:var(--ui)" placeholder="e.g. best seed mix for breeding season"></div>
+      <div class="fld"><label>ANSWER</label>
+        <textarea id="k_a" placeholder="What you want the brain to tell you next time..."></textarea></div>
+      <div class="fld"><label>SOURCE (who told you / where you read it)</label>
+        <input id="k_s" style="font-size:17px;font-family:var(--ui)" placeholder="e.g. Monty, 12 yrs breeding · or a paper title"></div>
+      <button class="gobtn" onclick="addKB()">TEACH IT</button>
+      <p class="hint" style="margin-top:14px">Only add what you have verified. The brain will repeat this back to you as fact.</p>
+    </div>
+    <div class="card sub" style="margin-top:20px">
+      <h4 class="ch">YOUR ENTRIES <span id="kbcount" style="color:var(--dim)"></span></h4>
+      <ul class="list" id="mykb"></ul>
     </div>
   </div>
 
@@ -538,7 +720,7 @@ rs();addEventListener('resize',rs);
  requestAnimationFrame(l);})();})();
 
 /* ===== TIME (DHAKA) ===== */
-var fT=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});
+var fT=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Dhaka',hour:'numeric',minute:'2-digit',second:'2-digit',hour12:true});
 var fD=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',weekday:'short',day:'numeric',month:'short',year:'numeric'});
 var fM=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',month:'numeric'});
 var fDay=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',year:'numeric',month:'2-digit',day:'2-digit'});
@@ -755,18 +937,32 @@ function findKB(q){
 function push(cls,html){
  var m=document.getElementById('msgs'),d=document.createElement('div');
  d.className='msg '+cls;d.innerHTML=html;m.appendChild(d);m.scrollTop=m.scrollHeight;}
+function localAnswer(q){
+ var r=findKB(q);
+ if(r)return '<div class="mt">'+r.t+'</div>'+r.a+'<div class="sc">SOURCE · '+r.s+'</div>';
+ var s='';for(var i=0;i<KB.length;i++)s+='<li>'+KB[i].t+'</li>';
+ for(var j=0;j<DB.kb.length;j++)s+='<li>'+esc(DB.kb[j].t)+'</li>';
+ return '<div class="mt">NOT IN THE KNOWLEDGE BASE</div>I will not guess an answer that could cost you a clutch. Nothing verified matches that.<br><br>Add it yourself in the <b>TEACH</b> tab, or try one of these:<ul style="margin:12px 0 0 20px;line-height:2">'+s+'</ul>';}
 function ask(txt){
  var inp=document.getElementById('q');
  var q=(typeof txt==='string'?txt:inp.value).trim();
  if(!q)return;inp.value='';
  push('me',q);
- setTimeout(function(){
-  var r=findKB(q);
-  if(r)push('ai','<div class="mt">'+r.t+'</div>'+r.a+'<div class="sc">SOURCE · '+r.s+'</div>');
-  else{
-   var s='';for(var i=0;i<KB.length;i++)s+='<li>'+KB[i].t+'</li>';
-   push('ai','<div class="mt">NOT IN THE KNOWLEDGE BASE</div>I will not guess an answer that could cost you a clutch. Nothing in the verified base matches that.<br><br>Ask Ayaan to add it in the next weekly update, or try one of these:<ul style="margin:12px 0 0 20px;line-height:2">'+s+'</ul>');}
- },260);}
+ var d=dataAnswer(q);
+ if(d){setTimeout(function(){
+   push('ai','<div class="mt">'+d.t+'</div>'+d.a+'<div class="sc">SOURCE · '+d.s+'</div>');},220);
+  return;}
+ if(CLOUD){
+  var m=document.getElementById('msgs'),el=document.createElement('div');
+  el.className='msg ai';el.innerHTML='<div class="mt">THINKING</div><span style="color:var(--dim)">Reasoning over the verified base and your logged data...</span>';
+  m.appendChild(el);m.scrollTop=m.scrollHeight;
+  cloudAsk(q,function(a){
+   if(a)el.innerHTML='<div class="mt">KINBIRD BRAIN</div>'+esc(a).replace(/\n/g,'<br>')+
+     '<div class="sc">GROUNDED IN THE VERIFIED BASE · CLOUDFLARE WORKERS AI</div>';
+   else el.innerHTML=localAnswer(q);
+   m.scrollTop=m.scrollHeight;});
+  return;}
+ setTimeout(function(){push('ai',localAnswer(q))},260);}
 (function(){
  push('ai','<div class="mt">KINBIRD BRAIN ONLINE</div>Ask me anything about your aviary. Every answer comes from the verified knowledge base with its source, and I will tell you plainly when something is not in it rather than invent a number.<br><br>Right now: <b>'+MONTHS[nowIdx].phase+'</b> — '+MONTHS[nowIdx].sub);
  var picks=[0,2,3,4,8,10,12,29],h='';
@@ -809,9 +1005,280 @@ function prog(){var b=document.querySelectorAll('#chk input'),d=0;
 function resetChk(){var b=document.querySelectorAll('#chk input');
  for(var i=0;i<b.length;i++){b[i].checked=false;mk(b[i]);localStorage.setItem(dayKey()+b[i].dataset.k,'');}prog();}
 
-buildStrip();render();buildChk();loadTasks();drawTasks();
+/* ================= DATA LOG ================= */
+var DB={pairs:[],clutches:[],eggs:[],reads:[],kb:[]};
+function loadDB(){try{var d=JSON.parse(localStorage.getItem('kb_db')||'null');
+ if(d){DB.pairs=d.pairs||[];DB.clutches=d.clutches||[];DB.eggs=d.eggs||[];DB.reads=d.reads||[];DB.kb=d.kb||[];}}catch(e){}}
+function saveDB(){localStorage.setItem('kb_db',JSON.stringify(DB));cloudPush();}
+function val(id){var e=document.getElementById(id);return e?e.value.trim():''}
+function num(id){var v=parseFloat(val(id));return isNaN(v)?0:v}
+function clr(ids){for(var i=0;i<ids.length;i++){var e=document.getElementById(ids[i]);if(e)e.value='';}}
+function esc(s){return String(s).replace(/[<>&]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;'}[c]})}
+
+function lgTab(i,b){var t=document.querySelectorAll('.stb'),p=document.querySelectorAll('.lgp');
+ for(var k=0;k<t.length;k++){t[k].className='stb';p[k].className='lgp';}
+ b.className='stb on';p[i].className='lgp on';}
+
+function addPair(){var id=val('p_id');if(!id)return alert('Pair ID required');
+ DB.pairs.push({id:id,m:val('p_m'),f:val('p_f'),c:val('p_c')});
+ clr(['p_id','p_m','p_f','p_c']);saveDB();drawLog();}
+function addClutch(){var p=val('c_p');if(!p)return alert('Pair ID required');
+ DB.clutches.push({p:p,d:val('c_d')||fDay.format(new Date()),l:num('c_l'),f:num('c_f'),
+  ds:num('c_ds'),h:num('c_h'),fl:num('c_fl')});
+ clr(['c_p','c_l','c_f','c_ds','c_h','c_fl']);saveDB();drawLog();}
+function addEgg(){var id=val('e_id');if(!id)return alert('Egg ID required');
+ DB.eggs.push({id:id,d:num('e_d'),w:num('e_w')});
+ clr(['e_id','e_d','e_w']);saveDB();drawLog();}
+function addRead(){DB.reads.push({r:val('r_r')||'R1',d:val('r_d')||fDay.format(new Date()),
+ t:num('r_t'),h:num('r_h')});clr(['r_t','r_h']);saveDB();drawLog();}
+function delRow(a,i){DB[a].splice(i,1);saveDB();drawLog();}
+
+function stats(){
+ var s={l:0,f:0,ds:0,h:0,fl:0,n:DB.clutches.length},per={};
+ for(var i=0;i<DB.clutches.length;i++){var c=DB.clutches[i];
+  s.l+=c.l;s.f+=c.f;s.ds+=c.ds;s.h+=c.h;s.fl+=c.fl;
+  if(!per[c.p])per[c.p]={l:0,f:0,ds:0,h:0,fl:0,n:0};
+  var q=per[c.p];q.l+=c.l;q.f+=c.f;q.ds+=c.ds;q.h+=c.h;q.fl+=c.fl;q.n++;}
+ s.fert=s.l?s.f/s.l*100:0;
+ s.dsr=s.f?s.ds/s.f*100:0;
+ s.hat=s.f?s.h/s.f*100:0;
+ s.fled=s.h?s.fl/s.h*100:0;
+ s.per=per;return s;}
+
+function drawStats(){
+ var s=stats(),b=document.getElementById('statbox');
+ if(!s.n){b.innerHTML='<p class="hint">No clutches logged yet. Add one and your real fertility, dead-in-shell and fledge rates appear here.</p>';return;}
+ var h='<div class="stats">'+
+  st(s.fert.toFixed(0)+'%','FERTILITY',s.fert>=80?'var(--gr)':s.fert>=65?'var(--am)':'var(--rd)')+
+  st(s.dsr.toFixed(0)+'%','DEAD IN SHELL',s.dsr<=10?'var(--gr)':s.dsr<=20?'var(--am)':'var(--rd)')+
+  st(s.hat.toFixed(0)+'%','HATCH RATE',s.hat>=80?'var(--gr)':s.hat>=65?'var(--am)':'var(--rd)')+
+  st(s.fled.toFixed(0)+'%','FLEDGE RATE',s.fled>=90?'var(--gr)':s.fled>=75?'var(--am)':'var(--rd)')+
+  st(s.fl,'BABIES TOTAL','var(--cy)')+
+  st(s.n,'CLUTCHES','var(--cy)')+'</div>';
+ var worst=null,wv=-1;
+ for(var p in s.per){var q=s.per[p];if(q.f>=3){var r=q.ds/q.f*100;if(r>wv){wv=r;worst=p;}}}
+ if(worst&&wv>25)h+='<div class="warnb"><b style="color:var(--rd)">FLAG:</b> pair <b>'+esc(worst)+
+  '</b> is running '+wv.toFixed(0)+'% dead-in-shell against an aviary average of '+s.dsr.toFixed(0)+
+  '%. If your egg weight loss is on target, look at that pair\'s nutrition, age, or relatedness next.</div>';
+ b.innerHTML=h;}
+function st(v,k,c){return '<div class="st"><div class="v" style="color:'+c+'">'+v+'</div><div class="k">'+k+'</div></div>'}
+
+function eggTrend(){
+ var by={};
+ for(var i=0;i<DB.eggs.length;i++){var e=DB.eggs[i];(by[e.id]=by[e.id]||[]).push(e);}
+ var out=[];
+ for(var id in by){var a=by[id].slice().sort(function(x,y){return x.d-y.d});
+  var f=null;for(var j=0;j<a.length;j++)if(a[j].d===0||f===null&&a[j].d<=1){f=a[j];break;}
+  if(!f)f=a[0];
+  var last=a[a.length-1];
+  if(last.d<=0||!f.w||last.w>f.w){out.push({id:id,n:a.length,st:'—',pr:0,c:'var(--dim)'});continue;}
+  var lost=(f.w-last.w)/f.w*100,pr=lost/last.d*21;
+  var stt=pr<13?'TOO WET':pr>16?'TOO DRY':'ON TARGET';
+  var c=pr<13?'var(--rd)':pr>16?'var(--am)':'var(--gr)';
+  out.push({id:id,n:a.length,st:stt,pr:pr,c:c,day:last.d,lost:lost});}
+ return out;}
+
+function drawLog(){
+ var h='<tr><th>PAIR</th><th>MALE</th><th>FEMALE</th><th>COHORT</th><th></th></tr>';
+ for(var i=0;i<DB.pairs.length;i++){var p=DB.pairs[i];
+  h+='<tr><td style="color:var(--cy)">'+esc(p.id)+'</td><td>'+esc(p.m||'—')+'</td><td>'+esc(p.f||'—')+
+     '</td><td>'+esc(p.c||'—')+'</td><td><button class="xb" onclick="delRow(\'pairs\','+i+')">×</button></td></tr>';}
+ document.getElementById('t_pairs').innerHTML=DB.pairs.length?h:'<tr><td style="color:var(--dim2)">No pairs yet.</td></tr>';
+
+ h='<tr><th>PAIR</th><th>DATE</th><th>LAID</th><th>FERT</th><th>DIS</th><th>HATCH</th><th>FLEDGE</th><th></th></tr>';
+ for(i=DB.clutches.length-1;i>=0;i--){var c=DB.clutches[i];
+  h+='<tr><td style="color:var(--cy)">'+esc(c.p)+'</td><td>'+esc(c.d)+'</td><td>'+c.l+'</td><td>'+c.f+
+     '</td><td style="color:'+(c.ds>0?'var(--rd)':'var(--dim)')+'">'+c.ds+'</td><td>'+c.h+'</td><td>'+c.fl+
+     '</td><td><button class="xb" onclick="delRow(\'clutches\','+i+')">×</button></td></tr>';}
+ document.getElementById('t_clutch').innerHTML=DB.clutches.length?h:'<tr><td style="color:var(--dim2)">No clutches yet.</td></tr>';
+ drawStats();
+
+ var tr=eggTrend();
+ h='<tr><th>EGG</th><th>READINGS</th><th>DAY</th><th>LOST</th><th>PROJ @21</th><th>STATUS</th></tr>';
+ for(i=0;i<tr.length;i++){var t=tr[i];
+  h+='<tr><td style="color:var(--cy)">'+esc(t.id)+'</td><td>'+t.n+'</td><td>'+(t.day||'—')+
+     '</td><td>'+(t.lost!==undefined?t.lost.toFixed(2)+'%':'—')+'</td><td>'+(t.pr?t.pr.toFixed(1)+'%':'—')+
+     '</td><td style="color:'+t.c+'">'+t.st+'</td></tr>';}
+ document.getElementById('t_egg').innerHTML=tr.length?h:'<tr><td style="color:var(--dim2)">No egg weights yet. Add day 0 first.</td></tr>';
+
+ h='<tr><th>ROOM</th><th>DATE</th><th>TEMP</th><th>RH</th><th></th></tr>';
+ for(i=DB.reads.length-1;i>=0&&i>DB.reads.length-40;i--){var r=DB.reads[i];
+  h+='<tr><td style="color:var(--cy)">'+esc(r.r)+'</td><td>'+esc(r.d)+'</td><td>'+r.t+'°C</td><td>'+r.h+
+     '%</td><td><button class="xb" onclick="delRow(\'reads\','+i+')">×</button></td></tr>';}
+ document.getElementById('t_read').innerHTML=DB.reads.length?h:'<tr><td style="color:var(--dim2)">No readings yet.</td></tr>';
+ drawMyKB();}
+
+function expData(){
+ var b=new Blob([JSON.stringify({v:2,exported:new Date().toISOString(),db:DB,tasks:TK},null,2)],{type:'application/json'});
+ var a=document.createElement('a');a.href=URL.createObjectURL(b);
+ a.download='kinbird-data-'+fDay.format(new Date()).replace(/\//g,'-')+'.json';a.click();}
+function impData(inp){
+ var f=inp.files[0];if(!f)return;var rd=new FileReader();
+ rd.onload=function(){try{var j=JSON.parse(rd.result);
+  if(j.db){DB=j.db;saveDB();}
+  if(j.tasks){TK=j.tasks;saveTasks();drawTasks();}
+  drawLog();alert('Data imported.');}catch(e){alert('Could not read that file.')}};
+ rd.readAsText(f);inp.value='';}
+
+/* ================= TEACH ================= */
+function addKB(){
+ var q=val('k_q'),a=document.getElementById('k_a').value.trim(),s=val('k_s');
+ if(!q||!a)return alert('Question keywords and answer are both required.');
+ DB.kb.push({k:q.toLowerCase(),t:q,a:esc(a).replace(/\n/g,'<br>'),s:s||'Ayaan (taught)',mine:1});
+ clr(['k_q','k_s']);document.getElementById('k_a').value='';saveDB();drawMyKB();
+ alert('Learned. Ask the BRAIN about it.');}
+function delKB(i){DB.kb.splice(i,1);saveDB();drawMyKB();}
+function drawMyKB(){
+ var el=document.getElementById('mykb');if(!el)return;
+ var h='';
+ for(var i=0;i<DB.kb.length;i++)
+  h+='<li><label style="flex:1"><b style="color:var(--mg)">'+esc(DB.kb[i].t)+'</b><br><span style="font-size:14px;color:var(--dim)">'+
+     DB.kb[i].a.replace(/<br>/g,' ').slice(0,150)+'</span></label><button class="del" onclick="delKB('+i+')">×</button></li>';
+ el.innerHTML=h||'<li><label style="color:var(--dim2)">Nothing taught yet.</label></li>';
+ document.getElementById('kbcount').textContent='('+DB.kb.length+')';}
+
+/* ================= CLOUD (optional) ================= */
+var CLOUD=localStorage.getItem('kb_cloud')||'';
+var CKEY=localStorage.getItem('kb_ckey')||'';
+function hdrs(){var h={'Content-Type':'application/json'};if(CKEY)h['X-Kinbird-Key']=CKEY;return h}
+function drawCloud(){
+ var b=document.getElementById('cloudbox');if(!b)return;
+ b.innerHTML='<div class="frm"><div class="fi"><label>CLOUDFLARE WORKER URL (blank = stay local)</label>'+
+  '<input id="cu" placeholder="https://kinbird-api.YOURNAME.workers.dev" value="'+esc(CLOUD)+'"></div>'+
+  '<div class="fi"><label>YOUR ACCESS KEY (the one you set in Cloudflare)</label>'+
+  '<input id="ck" type="password" placeholder="••••••••" value="'+esc(CKEY)+'"></div></div>'+
+  '<button class="gobtn alt" onclick="saveCloud()">CONNECT</button>'+
+  '<span id="cst" style="font-family:var(--mono);font-size:12px;color:'+(CLOUD?'var(--gr)':'var(--dim)')+
+  ';margin-left:12px">'+(CLOUD?'● CLOUD + AI ON':'● LOCAL ONLY')+'</span>'+
+  '<p class="hint">With a Worker connected you get cross-device sync and conversational AI chat, still grounded in the verified base. Without one, everything works locally and offline.</p>';}
+function saveCloud(){CLOUD=val('cu');CKEY=val('ck');
+ localStorage.setItem('kb_cloud',CLOUD);localStorage.setItem('kb_ckey',CKEY);
+ drawCloud();if(CLOUD)cloudPull();}
+function cloudPush(){if(!CLOUD)return;
+ try{fetch(CLOUD+'/save',{method:'POST',headers:hdrs(),
+  body:JSON.stringify({db:DB,tasks:TK})}).catch(function(){});}catch(e){}}
+function cloudPull(){if(!CLOUD)return;
+ try{fetch(CLOUD+'/load',{headers:hdrs()}).then(function(r){return r.json()}).then(function(j){
+  if(j&&j.db){DB=j.db;localStorage.setItem('kb_db',JSON.stringify(DB));
+   if(j.tasks){TK=j.tasks;saveTasks();drawTasks();}drawLog();drawIntel();}}).catch(function(){});}catch(e){}}
+function cloudAsk(q,onDone){
+ if(!CLOUD){onDone(null);return;}
+ var pack=[];
+ for(var i=0;i<KB.length;i++)pack.push({t:KB[i].t,a:KB[i].a,s:KB[i].s});
+ for(var j=0;j<DB.kb.length;j++)pack.push({t:DB.kb[j].t,a:DB.kb[j].a,s:DB.kb[j].s});
+ var to=setTimeout(function(){to=null;onDone(null)},14000);
+ try{
+  fetch(CLOUD+'/ask',{method:'POST',headers:hdrs(),
+   body:JSON.stringify({q:q,kb:pack,stats:stats()})})
+  .then(function(r){return r.json()})
+  .then(function(j){if(!to)return;clearTimeout(to);to=null;
+   onDone(j&&j.answer?j.answer:null);})
+  .catch(function(){if(to){clearTimeout(to);to=null;onDone(null);}});
+ }catch(e){if(to){clearTimeout(to);to=null;onDone(null);}}}
+
+/* ================= BRAIN v2 ================= */
+function dataAnswer(q){
+ var s=stats(),ql=q.toLowerCase();
+ if(/(my |our )?(stat|number|performance|how am i|overall|summary|result)/.test(ql)){
+  if(!s.n)return {t:"Your stats",a:"You have not logged any clutches yet. Open the <b>LOG</b> tab and add one — after that I can tell you your real fertility, dead-in-shell and fledge rates instead of general theory.",s:"Your data log"};
+  return {t:"Your aviary stats",a:"From <b>"+s.n+"</b> logged clutch(es), "+s.l+" eggs:<br><br>"+
+   "• Fertility <b>"+s.fert.toFixed(0)+"%</b><br>• Dead-in-shell <b>"+s.dsr.toFixed(0)+"%</b> of fertile<br>"+
+   "• Hatch rate <b>"+s.hat.toFixed(0)+"%</b><br>• Fledge rate <b>"+s.fled.toFixed(0)+"%</b><br>"+
+   "• Babies to date <b>"+s.fl+"</b><br><br>"+
+   (s.dsr>20?"Your dead-in-shell is above 20%. That is a humidity signal first — start weighing eggs before changing anything else.":
+    s.dsr>10?"Dead-in-shell is elevated but not alarming. Egg weights will tell you if humidity is the cause.":
+    "Dead-in-shell is in good shape. Hold your current settings."),s:"Your data log"};}
+ var pm=ql.match(/\b(p\s?\d+|pair\s+\w+)\b/);
+ if(pm){
+  var key=pm[0].replace(/pair\s*/,'').replace(/\s/g,'').toUpperCase();
+  for(var p in s.per){ if(p.toUpperCase().replace(/\s/g,'')===key||p.toUpperCase().replace(/\s/g,'')==='P'+key){
+   var q2=s.per[p];
+   return {t:"Pair "+p,a:"Across <b>"+q2.n+"</b> clutch(es): "+q2.l+" eggs laid, "+q2.f+" fertile, <b>"+q2.ds+
+    "</b> dead-in-shell, "+q2.h+" hatched, <b>"+q2.fl+"</b> fledged.<br><br>Fertility <b>"+
+    (q2.l?(q2.f/q2.l*100).toFixed(0):0)+"%</b> · dead-in-shell <b>"+(q2.f?(q2.ds/q2.f*100).toFixed(0):0)+
+    "%</b> vs aviary average <b>"+s.dsr.toFixed(0)+"%</b>.",s:"Your data log"};}}
+  return {t:"Pair not found",a:"No clutches logged for that pair yet. Add them in the <b>LOG</b> tab.",s:"Your data log"};}
+ if(/worst|problem pair|bad pair|underperform/.test(ql)&&s.n){
+  var w=null,wv=-1;
+  for(var p2 in s.per){var r=s.per[p2];if(r.f>=2){var v=r.ds/r.f*100;if(v>wv){wv=v;w=p2;}}}
+  if(w)return {t:"Weakest pair",a:"<b>"+esc(w)+"</b> is running <b>"+wv.toFixed(0)+"%</b> dead-in-shell against an aviary average of "+
+   s.dsr.toFixed(0)+"%.<br><br>Before you blame the pair: confirm your egg weight loss is inside 13–16%. If it is, then look at that pair's nutrition, hen age, or relatedness.",s:"Your data log"};}
+ if(/egg (trend|weight|loss)|weighing|which egg/.test(ql)){
+  var tr=eggTrend();if(!tr.length)return null;
+  var bad=tr.filter(function(x){return x.st==='TOO WET'||x.st==='TOO DRY'});
+  var txt='Tracking <b>'+tr.length+'</b> egg(s).<br><br>';
+  if(!bad.length)txt+='All eggs are inside the 13–16% window. Change nothing.';
+  else{txt+='<b style="color:var(--am)">'+bad.length+' egg(s) off target:</b><br>';
+   for(var i=0;i<bad.length&&i<6;i++)txt+='• '+esc(bad[i].id)+' — '+bad[i].st+' ('+bad[i].pr.toFixed(1)+'% projected)<br>';
+   txt+='<br>TOO WET means lower humidity. TOO DRY means raise it.';}
+  return {t:"Egg weight trend",a:txt,s:"Your egg log"};}
+ if(/room (reading|temp|humidity)|average temp|my temp|my humidity/.test(ql)&&DB.reads.length){
+  var n=Math.min(DB.reads.length,14),t=0,hh=0;
+  for(var i2=DB.reads.length-n;i2<DB.reads.length;i2++){t+=DB.reads[i2].t;hh+=DB.reads[i2].h;}
+  return {t:"Your room readings",a:"Last <b>"+n+"</b> logged reading(s) average <b>"+(t/n).toFixed(1)+"°C</b> and <b>"+
+   (hh/n).toFixed(1)+"% RH</b>.<br><br>For reference, Dhaka's October normal is 33°C / 76% RH — your best month on record.",s:"Your data log"};}
+ return null;}
+
+var _findKB=findKB;
+findKB=function(q){
+ var d=dataAnswer(q);if(d)return d;
+ var qt=tok(q),best=null,bs=0;
+ for(var i=0;i<DB.kb.length;i++){
+  var kt=tok(DB.kb[i].k),sc=0;
+  for(var j=0;j<qt.length;j++)for(var m=0;m<kt.length;m++){
+   if(kt[m]===qt[j])sc+=3;else if(kt[m].indexOf(qt[j])===0)sc+=1.5;}
+  if(sc>bs){bs=sc;best=DB.kb[i];}}
+ var core=_findKB(q);
+ if(best&&bs>=3){if(!core)return best;return bs>=6?best:core;}
+ return core;};
+
+/* ================= PROACTIVE INTEL ================= */
+function dhakaDate(){
+ var p=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Dhaka',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+ return new Date(p+'T00:00:00Z');}
+function icard(l,v,d,c){return '<div class="ic"><div class="bar" style="background:'+c+
+ '"></div><div class="il">'+l+'</div><div class="iv" style="color:'+c+'">'+v+'</div><div class="id">'+d+'</div></div>'}
+function drawIntel(){
+ var el=document.getElementById('intel');if(!el)return;
+ var now=dhakaDate(),h='';
+ // 1 season countdown
+ var y=now.getUTCFullYear(),oct=Date.UTC(y,9,1);
+ if(now.getTime()>oct)oct=Date.UTC(y+1,9,1);
+ var days=Math.ceil((oct-now.getTime())/86400000);
+ var N=MONTHS[nowIdx];
+ if(N.phase==='STRIKE'||N.phase==='PEAK'||N.phase==='PUSH')
+  h+=icard('SEASON STATUS','LIVE','You are inside the breeding window. Push output now.','var(--gr)');
+ else h+=icard('DAYS TO OCTOBER',days,'Strike month. Everything you do now is preparation for it.','var(--am)');
+ // 2 photoperiod
+ var lt=N.light;
+ h+=icard('LIGHT PROGRAM',(lt.match(/\d+h/)||['—'])[0],lt,'var(--vi)');
+ // 3 live temp vs normal
+ var t=TEMP['DHAKA'];
+ if(t!==undefined){
+  var dl=t-N.max, c=t>N.max+2?'var(--rd)':t<N.min-2?'var(--cy)':'var(--gr)';
+  h+=icard('DHAKA LIVE',t.toFixed(1)+'°C',
+   (dl>0?'+'+dl.toFixed(1):dl.toFixed(1))+'°C vs the '+N.n+' daytime normal of '+N.max+'°C','var(--cy)');
+ } else h+=icard('DHAKA LIVE','—','Fetching live temperature...','var(--dim)');
+ // 4 egg alerts
+ var tr=eggTrend(),bad=tr.filter(function(x){return x.st==='TOO WET'||x.st==='TOO DRY'});
+ if(tr.length) h+=icard('EGGS TRACKED',tr.length+(bad.length?' · '+bad.length+' OFF':''),
+   bad.length?bad.length+' egg(s) drifting off the 13–16% target. Open LOG.':'All eggs inside target. Change nothing.',
+   bad.length?'var(--rd)':'var(--gr)');
+ else h+=icard('EGG TRACKING','0','No egg weights logged. This is the number that fixes dead-in-shell.','var(--am)');
+ // 5 stats or tasks
+ var s=stats();
+ if(s.n) h+=icard('DEAD IN SHELL',s.dsr.toFixed(0)+'%',
+   'Across '+s.n+' logged clutch(es). '+(s.dsr>20?'Above 20% — check egg weights first.':'Within workable range.'),
+   s.dsr<=10?'var(--gr)':s.dsr<=20?'var(--am)':'var(--rd)');
+ var open=0;for(var i=0;i<TK.length;i++)if(!TK[i].d)open++;
+ if(open) h+=icard('OPEN TASKS',open,'Next: '+esc((TK.filter(function(x){return !x.d})[0]||{t:''}).t).slice(0,68),'var(--mg)');
+ el.innerHTML=h;}
+
+loadDB();drawCloud();if(CLOUD)cloudPull();
+buildStrip();render();buildChk();loadTasks();drawTasks();drawLog();drawIntel();
+setInterval(drawIntel,45000);
 setInterval(function(){var m=dhakaMonth();
- for(var i=0;i<MONTHS.length;i++)if(MONTHS[i].i===m&&nowIdx!==i){nowIdx=i;buildStrip();render();break;}},60000);
+ for(var i=0;i<MONTHS.length;i++)if(MONTHS[i].i===m&&nowIdx!==i){nowIdx=i;buildStrip();render();drawIntel();break;}},60000);
 </script>
 </body>
 </html>
