@@ -1153,7 +1153,10 @@ var SVGI={
  flask:'<path d="M9 3h6M10 3v6l-5 9a2 2 0 002 3h10a2 2 0 002-3l-5-9V3"/>',
  book:'<path d="M5 4h11a2 2 0 012 2v14H7a2 2 0 01-2-2z"/><path d="M5 17h13"/>',
  teach:'<circle cx="12" cy="8" r="3"/><path d="M5 20a7 7 0 0114 0"/><path d="M12 12v1"/>',
- bolt:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>'};
+ bolt:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
+ thermo:'<path d="M14 14.8V5a2 2 0 10-4 0v9.8a4 4 0 104 0z"/><path d="M12 9v6"/>',
+ fan:'<circle cx="12" cy="12" r="1.6"/><path d="M12 11c-.6-3 .3-6 2.2-6.4 1.5-.3 2 1.6.4 3.4-1 1.2-2 2.3-2.6 3M13 12c3-.6 6 .3 6.4 2.2.3 1.5-1.6 2-3.4.4-1.2-1-2.3-2-3-2.6M12 13c.6 3-.3 6-2.2 6.4-1.5.3-2-1.6-.4-3.4 1-1.2 2-2.3 2.6-3M11 12c-3 .6-6-.3-6.4-2.2-.3-1.5 1.6-2 3.4-.4 1.2 1 2.3 2 3 2.6"/>',
+ droplet:'<path d="M12 3s6 6.5 6 11a6 6 0 01-12 0c0-4.5 6-11 6-11z"/>'};
 function ICO(n){return '<svg viewBox="0 0 24 24">'+(SVGI[n]||'')+'</svg>';}
 var RAIL=[
  ['TODAY',10,'today'],['WEATHER',1,'cloud'],['EGGS',3,'egg'],['LOG',4,'log'],
@@ -1198,8 +1201,8 @@ function renderToday(){
  else{days=Math.ceil((sStart-now)/86400000);lab='days to October';pc=Math.max(0,Math.min(100,(1-days/92)*100));}
  var c3='<div class="v">'+days+'</div><div class="sub">'+N.phase+' · '+N.n+' — '+lab+'.</div>'+(pc!=null?'<div class="prog"><i style="width:'+pc+'%"></i></div>':'');
  el.innerHTML=
-  '<div class="gcard blue"><div class="ic">'+ICO('cloud')+'</div><div class="lab">CONDITIONS NOW</div>'+c1+'</div>'+
-  '<div class="gcard fire"><div class="ic">'+ICO('bolt')+'</div><div class="lab">TODAY\'S TOP ORDER</div>'+c2+'</div>'+
+  '<div class="gcard blue"><div class="ic">'+ICO('thermo')+'</div><div class="lab">CONDITIONS NOW</div>'+c1+'</div>'+
+  '<div class="gcard fire"><div class="ic">'+ICO('fan')+'</div><div class="lab">TODAY\'S TOP ORDER</div>'+c2+'</div>'+
   '<div class="gcard viol"><div class="ic">'+ICO('cal')+'</div><div class="lab">SEASON</div>'+c3+'</div>';
  var oh='';for(var i=0;i<o.length;i++)
   oh+='<div class="ord"><div class="oi" style="background:'+o[i].c+'22;color:'+o[i].c+';border:1px solid '+o[i].c+'55">'+o[i].i+
