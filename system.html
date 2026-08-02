@@ -232,6 +232,34 @@ ul.list li.done label{color:var(--dim2);text-decoration:line-through}
   font-family:var(--mono);font-size:11px;letter-spacing:2px;padding:12px 26px;border-radius:9px;cursor:pointer}
 .rbtn:hover{border-color:var(--rd);color:var(--rd)}
 
+/* WEATHER */
+.wxg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:8px}
+.wx{padding:18px;border-radius:11px;text-align:center;
+  background:linear-gradient(150deg,rgba(12,22,34,.75),rgba(6,11,18,.65));
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(34,211,238,.14)}
+.wx .wl{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--dim2);margin-bottom:10px}
+.wx .wv{font-family:var(--dsp);font-size:30px;font-weight:700;line-height:1}
+.wx .wd{font-size:12.5px;color:var(--dim);margin-top:9px;line-height:1.5}
+.fc{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.fd{padding:20px;border-radius:11px;
+  background:linear-gradient(150deg,rgba(12,22,34,.75),rgba(6,11,18,.65));
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(34,211,238,.14)}
+.fd .fday{font-family:var(--dsp);font-size:13px;font-weight:700;letter-spacing:1.6px;color:var(--cy);margin-bottom:14px}
+.fd .ftemp{font-family:var(--dsp);font-size:27px;font-weight:700;line-height:1}
+.fd .ftemp span{font-size:16px;color:var(--dim)}
+.fd .frow{display:flex;justify-content:space-between;font-size:13px;padding:7px 0;
+  border-bottom:1px solid var(--line);color:var(--dim)}
+.fd .frow:last-child{border:none}
+.fd .frow b{color:var(--tx);font-family:var(--mono)}
+.fd .fv{margin-top:14px;font-size:13.5px;line-height:1.6;padding-top:14px;border-top:1px solid var(--line)}
+.ord{display:flex;gap:15px;align-items:flex-start;padding:17px 20px;margin-bottom:12px;border-radius:10px;
+  background:linear-gradient(150deg,rgba(12,22,34,.7),rgba(6,11,18,.6));
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(34,211,238,.12)}
+.ord .oi{flex:0 0 42px;height:42px;border-radius:10px;display:flex;align-items:center;
+  justify-content:center;font-family:var(--dsp);font-weight:700;font-size:15px}
+.ord .ot{font-family:var(--dsp);font-size:12.5px;font-weight:700;letter-spacing:1.4px;margin-bottom:6px}
+.ord .od{font-size:14.5px;line-height:1.7;color:var(--tx)}
+
 /* COUNTDOWNS */
 .cds{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px;margin-bottom:26px}
 .cd{position:relative;padding:20px;border-radius:11px;overflow:hidden;text-align:center;
@@ -348,13 +376,14 @@ tr:last-child td{border:none}
 
   <div class="tabs">
     <button class="tab on" onclick="tab(0,this)">BRAIN</button>
-    <button class="tab" onclick="tab(1,this)">SEASON</button>
-    <button class="tab" onclick="tab(2,this)">EGG LAB</button>
-    <button class="tab" onclick="tab(3,this)">LOG</button>
-    <button class="tab" onclick="tab(4,this)">TASKS</button>
-    <button class="tab" onclick="tab(5,this)">DAILY</button>
-    <button class="tab" onclick="tab(6,this)">TEACH</button>
-    <button class="tab" onclick="tab(7,this)">SCIENCE</button>
+    <button class="tab" onclick="tab(1,this)">WEATHER</button>
+    <button class="tab" onclick="tab(2,this)">SEASON</button>
+    <button class="tab" onclick="tab(3,this)">EGG LAB</button>
+    <button class="tab" onclick="tab(4,this)">LOG</button>
+    <button class="tab" onclick="tab(5,this)">TASKS</button>
+    <button class="tab" onclick="tab(6,this)">DAILY</button>
+    <button class="tab" onclick="tab(7,this)">TEACH</button>
+    <button class="tab" onclick="tab(8,this)">SCIENCE</button>
   </div>
 
   <!-- BRAIN -->
@@ -369,6 +398,22 @@ tr:last-child td{border:none}
         <button onclick="ask()">SEND</button>
       </div>
     </div>
+  </div>
+
+  <!-- WEATHER -->
+  <div class="pane">
+    <h3 class="sh">WEATHER INTELLIGENCE · DHAKA</h3>
+    <p class="sd">Live conditions and a 3-day outlook, translated into exactly what to do with your fans, exhaust, lights, feeding and supplements. Updates every 15 minutes.</p>
+    <div id="wxnow"></div>
+    <h4 class="ch" style="margin:30px 0 16px">ACTION ORDERS — NEXT 72 HOURS</h4>
+    <div id="wxact"></div>
+    <h4 class="ch" style="margin:30px 0 16px">3-DAY FORECAST</h4>
+    <div class="fc" id="wxfc"></div>
+    <h4 class="ch" style="margin:30px 0 16px">BANGLADESH NETWORK</h4>
+    <p class="sd" style="margin-bottom:16px">How your region compares right now. Useful for spotting a heat or humidity front moving toward Dhaka.</p>
+    <div class="card sub"><div class="tw"><table id="wxbd"></table></div></div>
+    <h4 class="ch" style="margin:30px 0 16px">MONTH OUTLOOK</h4>
+    <div id="wxmon"></div>
   </div>
 
   <!-- SEASON -->
@@ -1291,6 +1336,144 @@ findKB=function(q){
  if(best&&bs>=3){if(!core)return best;return bs>=6?best:core;}
  return core;};
 
+/* ================= WEATHER INTELLIGENCE ================= */
+var BDC=[["DHAKA",23.81,90.41],["CHITTAGONG",22.36,91.83],["SYLHET",24.90,91.87],
+ ["RAJSHAHI",24.37,88.60],["KHULNA",22.85,89.57],["RANGPUR",25.75,89.24],
+ ["BARISAL",22.70,90.37],["MYMENSINGH",24.75,90.40]];
+var WX=null,WXBD=null;
+var WCODE={0:"Clear",1:"Mostly clear",2:"Partly cloudy",3:"Overcast",45:"Fog",48:"Fog",
+ 51:"Light drizzle",53:"Drizzle",55:"Heavy drizzle",61:"Light rain",63:"Rain",65:"Heavy rain",
+ 66:"Freezing rain",67:"Freezing rain",71:"Snow",80:"Light showers",81:"Showers",82:"Violent showers",
+ 95:"Thunderstorm",96:"Thunderstorm",99:"Severe thunderstorm"};
+function wname(c){return WCODE[c]||"Mixed"}
+
+function loadWX(){
+ var u='https://api.open-meteo.com/v1/forecast?latitude=23.81&longitude=90.41'+
+  '&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m,apparent_temperature'+
+  '&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,weather_code,relative_humidity_2m_max,relative_humidity_2m_min'+
+  '&timezone=Asia%2FDhaka&forecast_days=4';
+ fetch(u).then(function(r){return r.json()}).then(function(j){WX=j;drawWX();drawIntel();}).catch(function(){});
+ var la=[],lo=[];
+ for(var i=0;i<BDC.length;i++){la.push(BDC[i][1]);lo.push(BDC[i][2]);}
+ fetch('https://api.open-meteo.com/v1/forecast?latitude='+la.join(',')+'&longitude='+lo.join(',')+
+  '&current=temperature_2m,relative_humidity_2m,weather_code&daily=temperature_2m_max,precipitation_probability_max&timezone=Asia%2FDhaka&forecast_days=2')
+ .then(function(r){return r.json()}).then(function(j){WXBD=Array.isArray(j)?j:[j];drawBD();}).catch(function(){});
+}
+
+/* ---- the advisor: turns forecast into orders ---- */
+function orders(){
+ if(!WX||!WX.daily)return [];
+ var N=MONTHS[nowIdx],d=WX.daily,c=WX.current||{},o=[];
+ var mx=Math.max(d.temperature_2m_max[0],d.temperature_2m_max[1]||0,d.temperature_2m_max[2]||0);
+ var mn=Math.min(d.temperature_2m_min[0],d.temperature_2m_min[1]||99,d.temperature_2m_min[2]||99);
+ var rain=Math.max(d.precipitation_probability_max[0]||0,d.precipitation_probability_max[1]||0,d.precipitation_probability_max[2]||0);
+ var rh=c.relative_humidity_2m,tn=c.temperature_2m;
+ function add(ic,col,t,dd){o.push({i:ic,c:col,t:t,d:dd})}
+
+ // EXHAUST
+ if(rh>=80||rain>=70)
+  add('EX','var(--rd)','EXHAUST — INCREASE',
+   'Humidity is '+(rh!==undefined?rh+'% ':'')+'and rain probability hits '+rain+'% in the next 3 days. Raise exhaust runtime toward 30 min on / 30 min off. Dry-clean droppings twice daily and pull wet food after 1 hour, not 2.');
+ else if(rh<=62)
+  add('EX','var(--am)','EXHAUST — REDUCE',
+   'Air is dry at '+rh+'% RH. Cut exhaust runtime, or eggs will lose weight too fast and the membrane will shrink-wrap the chick. Add a shallow water tray away from the cages.');
+ else
+  add('EX','var(--gr)','EXHAUST — HOLD','Humidity '+rh+'% is workable. Keep the 20 min on / 40 min off loop. Adjust only from egg weight loss, never from feel.');
+
+ // HEAT / COLD
+ if(mx>=34)
+  add('HT','var(--rd)','HEAT WARNING','Peak of '+mx.toFixed(0)+'°C in the next 3 days. Exhaust continuous 11:00-16:00, extra water points, no cage handling midday. Do not open nest boxes in the afternoon.');
+ else if(mn<=18)
+  add('CD','var(--cy)','COLD NIGHTS','Night low of '+mn.toFixed(0)+'°C coming. Jali fans OFF below 20°C. Deepen nest bedding, move low nests up a tier, cut overnight exhaust to minimum. Watch 4-6 AM for chilled chicks.');
+ else
+  add('HT','var(--gr)','TEMPERATURE — CLEAR','Range '+mn.toFixed(0)+'-'+mx.toFixed(0)+'°C over 3 days. No thermal action needed.');
+
+ // RAIN
+ if(rain>=60)
+  add('RN','var(--vi)','RAIN INCOMING','Up to '+rain+'% chance. Indoor humidity will spike 5-10 points behind the front. Pre-empt it: raise exhaust before the rain, not after. Check the passive inlet is not driving wet air onto cages.');
+
+ // LIGHT
+ add('LT','var(--vi)','LIGHT PROGRAM',N.light+'. '+(N.n==='SEP'?'Ramp week by week, never jump the hours.':N.n==='DEC'||N.n==='JAN'?'Critical month: natural daylight is only ~10.5h. Your lights are the only reason birds keep producing.':'Hold the schedule. Consistency matters more than the exact hour.'));
+
+ // FEED / SUPPLEMENTS
+ var feed=(N.phase==='CONDITION'||N.phase==='REST')
+  ? 'Conditioning diet: vitamin E + selenium, liquid calcium + D3, cuttlebone in every cage. No egg food surplus, you are building bodies not triggering laying.'
+  : (N.phase==='IGNITION')
+  ? 'Abundance signal: soft food, sprouted seed and egg food 3x weekly. This tells the birds the season has arrived. Keep calcium and D3 running.'
+  : 'Breeding diet: egg food daily once chicks hatch, sprouted seed, cuttlebone always. Calcium + D3 non-negotiable while hens are laying.';
+ add('FD','var(--am)','FEED &amp; SUPPLEMENTS',feed);
+
+ // HUMIDITY vs eggs
+ var tr=eggTrend(),bad=tr.filter(function(x){return x.st==='TOO WET'||x.st==='TOO DRY'});
+ if(bad.length)
+  add('EG','var(--rd)','EGGS OFF TARGET',bad.length+' egg(s) drifting outside 13-16%. Weather guidance above is secondary to this — the eggs are the real measurement. Open LOG.');
+ else if(tr.length)
+  add('EG','var(--gr)','EGGS ON TARGET','All tracked eggs inside the 13-16% window. Whatever you are doing, keep doing it.');
+
+ return o;}
+
+function drawWX(){
+ var n=document.getElementById('wxnow');if(!n)return;
+ if(!WX||!WX.current){n.innerHTML='<p class="hint">Loading live Dhaka conditions...</p>';return;}
+ var c=WX.current,d=WX.daily,N=MONTHS[nowIdx];
+ var dv=c.temperature_2m-N.max;
+ n.innerHTML='<div class="wxg">'+
+  wxc('TEMPERATURE',c.temperature_2m.toFixed(1)+'°',(dv>0?'+':'')+dv.toFixed(1)+'° vs the '+N.n+' normal of '+N.max+'°C','var(--cy)')+
+  wxc('FEELS LIKE',(c.apparent_temperature!==undefined?c.apparent_temperature.toFixed(1):'—')+'°','What the birds actually experience','var(--am)')+
+  wxc('HUMIDITY',c.relative_humidity_2m+'%',c.relative_humidity_2m>=80?'High. Watch dead-in-shell.':c.relative_humidity_2m<=62?'Dry. Watch egg over-drying.':'Workable range.',
+    c.relative_humidity_2m>=80?'var(--rd)':c.relative_humidity_2m<=62?'var(--am)':'var(--gr)')+
+  wxc('CONDITIONS',wname(c.weather_code),'Wind '+(c.wind_speed_10m||0).toFixed(0)+' km/h','var(--vi)')+
+  wxc('RAIN TODAY',(d.precipitation_probability_max[0]||0)+'%',(d.precipitation_sum[0]||0).toFixed(1)+' mm expected','var(--gr)')+
+  '</div>';
+ var o=orders(),h='';
+ for(var i=0;i<o.length;i++)
+  h+='<div class="ord"><div class="oi" style="background:'+o[i].c+'22;color:'+o[i].c+
+     ';border:1px solid '+o[i].c+'55">'+o[i].i+'</div><div><div class="ot" style="color:'+o[i].c+'">'+
+     o[i].t+'</div><div class="od">'+o[i].d+'</div></div></div>';
+ document.getElementById('wxact').innerHTML=h||'<p class="hint">Waiting for forecast data.</p>';
+ var f='';
+ for(var k=0;k<Math.min(4,d.time.length);k++){
+  var dt=new Date(d.time[k]+'T00:00:00');
+  var nm=k===0?'TODAY':k===1?'TOMORROW':dt.toLocaleDateString('en-GB',{weekday:'long'}).toUpperCase();
+  var hi=d.temperature_2m_max[k],lo=d.temperature_2m_min[k],pp=d.precipitation_probability_max[k]||0;
+  var rhx=d.relative_humidity_2m_max?d.relative_humidity_2m_max[k]:null;
+  var v=hi>=34?'Heat risk. Exhaust continuous midday.':lo<=18?'Cold night. Fans off, deepen bedding.':
+        pp>=60?'Wet. Humidity will climb indoors.':'Good working conditions.';
+  f+='<div class="fd"><div class="fday">'+nm+'</div><div class="ftemp">'+hi.toFixed(0)+'°<span> / '+lo.toFixed(0)+'°</span></div>'+
+     '<div style="font-size:13px;color:var(--dim);margin:10px 0 14px">'+wname(d.weather_code[k])+'</div>'+
+     '<div class="frow"><span>Rain chance</span><b>'+pp+'%</b></div>'+
+     '<div class="frow"><span>Rainfall</span><b>'+(d.precipitation_sum[k]||0).toFixed(1)+' mm</b></div>'+
+     (rhx!==null?'<div class="frow"><span>Humidity max</span><b>'+rhx+'%</b></div>':'')+
+     '<div class="fv">'+v+'</div></div>';}
+ document.getElementById('wxfc').innerHTML=f;
+ var M=MONTHS[nowIdx],nx=MONTHS[(nowIdx+1)%MONTHS.length];
+ document.getElementById('wxmon').innerHTML='<div class="wxg">'+
+  wxc(M.n+' NORMAL',M.max+'° / '+M.min+'°',M.rh+'% RH · '+M.rain+' mm expected this month','var(--cy)')+
+  wxc('PHASE',M.phase,M.sub,M.col)+
+  wxc(nx.n+' AHEAD',nx.max+'° / '+nx.min+'°',nx.rh+'% RH · becomes '+nx.phase,nx.col)+
+  '</div>';}
+function wxc(l,v,d,c){return '<div class="wx"><div class="wl">'+l+'</div><div class="wv" style="color:'+c+
+ '">'+v+'</div><div class="wd">'+d+'</div></div>'}
+
+function drawBD(){
+ var t=document.getElementById('wxbd');if(!t)return;
+ if(!WXBD){t.innerHTML='<tr><td style="color:var(--dim2)">Loading network...</td></tr>';return;}
+ var h='<tr><th>CITY</th><th>NOW</th><th>RH</th><th>TOMORROW MAX</th><th>RAIN</th><th>CONDITIONS</th></tr>';
+ var dk=WXBD[0]&&WXBD[0].current?WXBD[0].current.temperature_2m:null;
+ for(var i=0;i<BDC.length&&i<WXBD.length;i++){
+  var w=WXBD[i];if(!w||!w.current)continue;
+  var isD=BDC[i][0]==='DHAKA';
+  var tmr=w.daily&&w.daily.temperature_2m_max?w.daily.temperature_2m_max[1]:null;
+  var pp=w.daily&&w.daily.precipitation_probability_max?w.daily.precipitation_probability_max[1]:null;
+  h+='<tr'+(isD?' style="background:rgba(244,114,182,.07)"':'')+'>'+
+     '<td style="color:'+(isD?'var(--mg)':'var(--cy)')+'">'+BDC[i][0]+'</td>'+
+     '<td>'+w.current.temperature_2m.toFixed(1)+'°C</td>'+
+     '<td style="color:'+(w.current.relative_humidity_2m>=82?'var(--rd)':'var(--tx)')+'">'+w.current.relative_humidity_2m+'%</td>'+
+     '<td>'+(tmr!==null?tmr.toFixed(0)+'°C':'—')+'</td>'+
+     '<td>'+(pp!==null?pp+'%':'—')+'</td>'+
+     '<td style="color:var(--dim)">'+wname(w.current.weather_code)+'</td></tr>';}
+ t.innerHTML=h;}
+
 /* ================= PROACTIVE INTEL ================= */
 function dhakaDate(){
  var p=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Dhaka',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
@@ -1311,13 +1494,20 @@ function drawIntel(){
  // 2 photoperiod
  var lt=N.light;
  h+=icard('LIGHT PROGRAM',(lt.match(/\d+h/)||['—'])[0],lt,'var(--vi)');
- // 3 live temp vs normal
- var t=TEMP['DHAKA'];
- if(t!==undefined){
-  var dl=t-N.max, c=t>N.max+2?'var(--rd)':t<N.min-2?'var(--cy)':'var(--gr)';
+ // 3 live conditions
+ var cc=WX&&WX.current?WX.current:null;
+ var t=cc?cc.temperature_2m:TEMP['DHAKA'];
+ if(t!==undefined&&t!==null){
+  var dl=t-N.max;
   h+=icard('DHAKA LIVE',t.toFixed(1)+'°C',
-   (dl>0?'+'+dl.toFixed(1):dl.toFixed(1))+'°C vs the '+N.n+' daytime normal of '+N.max+'°C','var(--cy)');
- } else h+=icard('DHAKA LIVE','—','Fetching live temperature...','var(--dim)');
+   (cc?cc.relative_humidity_2m+'% RH · '+wname(cc.weather_code)+' · ':'')+
+   (dl>0?'+'+dl.toFixed(1):dl.toFixed(1))+'° vs '+N.n+' normal','var(--cy)');
+ } else h+=icard('DHAKA LIVE','—','Fetching live conditions...','var(--dim)');
+ // 3b top weather order
+ var oo=orders();
+ if(oo.length){var top=oo[0];
+  for(var z=0;z<oo.length;z++)if(oo[z].c==='var(--rd)'){top=oo[z];break;}
+  h+=icard('WEATHER ORDER',top.t.replace(/ —.*/,'').replace(/&amp;/g,'&'),top.d.slice(0,110)+'...',top.c);}
  // 4 egg alerts
  var tr=eggTrend(),bad=tr.filter(function(x){return x.st==='TOO WET'||x.st==='TOO DRY'});
  if(tr.length) h+=icard('EGGS TRACKED',tr.length+(bad.length?' · '+bad.length+' OFF':''),
@@ -1335,6 +1525,7 @@ function drawIntel(){
 
 loadDB();drawCloud();if(CLOUD)cloudPull();
 buildStrip();render();buildChk();loadTasks();drawTasks();drawLog();drawIntel();drawCds();
+loadWX();setInterval(loadWX,900000);
 setInterval(function(){drawIntel();drawCds();},45000);
 setInterval(function(){var m=dhakaMonth();
  for(var i=0;i<MONTHS.length;i++)if(MONTHS[i].i===m&&nowIdx!==i){nowIdx=i;buildStrip();render();drawIntel();break;}},60000);
